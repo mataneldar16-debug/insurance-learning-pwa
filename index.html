@@ -1,0 +1,1307 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ביטוח Pro">
+<link rel="manifest" id="pwa-manifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="ארגז הכלים של הסוכן הישראלי — ידע, כלים, אנציקלופדיה וסימולטור">
+<title>מערכת לימוד ביטוח | סוכן ישראלי</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f0f0f;--card:#1a1a1a;--card2:#202020;--border:#2a2a2a;
+  --text:#e8e8e8;--muted:#888;--muted2:#666;
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,.12);--blue-ring:rgba(59,130,246,.35);
+  --orange:#f97316;--orange-dim:rgba(249,115,22,.12);--orange-ring:rgba(249,115,22,.35);
+  --green:#22c55e;--green-dim:rgba(34,197,94,.12);--green-ring:rgba(34,197,94,.35);
+  --red:#ef4444;--red-dim:rgba(239,68,68,.12);--red-ring:rgba(239,68,68,.35);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,.12);--purple-ring:rgba(168,85,247,.35);
+  --yellow:#eab308;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI','Arial',system-ui,sans-serif;direction:rtl;min-height:100vh;line-height:1.6}
+a{color:var(--blue)}
+
+/* ===== HEADER ===== */
+.hero{background:linear-gradient(135deg,#0d1117 0%,#161b22 40%,#0d1b2a 100%);padding:36px 20px 28px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(59,130,246,.08) 0%,transparent 70%)}
+.hero h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;color:#fff;margin-bottom:6px;position:relative}
+.hero h1 span{background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--muted);font-size:.95rem;position:relative}
+
+/* ===== TABS ===== */
+.tab-bar{background:var(--card);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;position:sticky;top:0;z-index:99;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);padding:15px 20px;cursor:pointer;font-size:.9rem;font-weight:500;white-space:nowrap;transition:all .2s;font-family:inherit}
+.tab-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* ===== LAYOUT ===== */
+main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
+.tab-pane{display:none;animation:fadeUp .3s ease}
+.tab-pane.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.section-head{margin-bottom:20px}
+.section-head h2{font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:4px}
+.section-head p{font-size:.88rem;color:var(--muted)}
+
+/* ===== PRODUCT CARDS (Tab 1) ===== */
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.product-card:hover{border-color:#3a3a3a}
+.pc-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;user-select:none}
+.pc-left{display:flex;align-items:center;gap:14px}
+.pc-icon{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.pc-title{font-size:1rem;font-weight:700;color:#fff;margin-bottom:2px}
+.pc-price{font-size:.78rem;color:var(--muted)}
+.pc-chevron{color:var(--muted);font-size:.85rem;transition:transform .3s}
+.product-card.open .pc-chevron{transform:rotate(180deg)}
+
+.pc-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.product-card.open .pc-body{max-height:3000px}
+.pc-inner{padding:0 22px 22px}
+.pc-divider{border:none;border-top:1px solid var(--border);margin-bottom:18px}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:560px){.info-grid{grid-template-columns:1fr}}
+
+.ib{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;padding:14px}
+.ib h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:7px;font-weight:600}
+.ib ul{padding-right:16px;font-size:.87rem;color:#c5c5c5}
+.ib ul li{margin-bottom:3px}
+.ib p{font-size:.87rem;color:#c5c5c5}
+
+.trigger-box{border-radius:9px;padding:14px;margin-top:10px}
+.trigger-box h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:6px}
+.trigger-box p{font-size:.88rem;color:#ccc;font-style:italic}
+
+/* color variants */
+.c-blue .pc-icon{background:var(--blue-dim);color:var(--blue)}
+.c-blue.open{border-color:var(--blue-ring)}
+.c-blue .trigger-box{background:var(--blue-dim);border:1px solid var(--blue-ring)}
+.c-blue .trigger-box h4{color:var(--blue)}
+
+.c-orange .pc-icon{background:var(--orange-dim);color:var(--orange)}
+.c-orange.open{border-color:var(--orange-ring)}
+.c-orange .trigger-box{background:var(--orange-dim);border:1px solid var(--orange-ring)}
+.c-orange .trigger-box h4{color:var(--orange)}
+
+.c-green .pc-icon{background:var(--green-dim);color:var(--green)}
+.c-green.open{border-color:var(--green-ring)}
+.c-green .trigger-box{background:var(--green-dim);border:1px solid var(--green-ring)}
+.c-green .trigger-box h4{color:var(--green)}
+
+.c-red .pc-icon{background:var(--red-dim);color:var(--red)}
+.c-red.open{border-color:var(--red-ring)}
+.c-red .trigger-box{background:var(--red-dim);border:1px solid var(--red-ring)}
+.c-red .trigger-box h4{color:var(--red)}
+
+.c-purple .pc-icon{background:var(--purple-dim);color:var(--purple)}
+.c-purple.open{border-color:var(--purple-ring)}
+.c-purple .trigger-box{background:var(--purple-dim);border:1px solid var(--purple-ring)}
+.c-purple .trigger-box h4{color:var(--purple)}
+
+/* ===== DECISION TREE (Tab 2) ===== */
+.tree-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;min-height:420px}
+
+.prog-track{display:flex;align-items:center;gap:6px;margin-bottom:24px}
+.prog-dot{height:8px;border-radius:4px;background:var(--border);transition:all .35s}
+.prog-dot.done{background:var(--green);width:28px}
+.prog-dot.cur{background:var(--blue);width:36px}
+.prog-dot.todo{width:8px}
+
+.tree-step{display:none}
+.tree-step.active{display:block;animation:fadeUp .25s ease}
+
+.step-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.step-q{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:6px;line-height:1.4}
+.step-sub{font-size:.86rem;color:var(--muted);margin-bottom:22px}
+
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.opts-grid{grid-template-columns:1fr}}
+
+.opt-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;text-align:right;transition:all .2s;color:var(--text);font-family:inherit;width:100%}
+.opt-btn:hover{background:rgba(59,130,246,.1);border-color:var(--blue-ring);color:#fff}
+.opt-em{font-size:1.5rem;display:block;margin-bottom:6px}
+.opt-lbl{font-size:.92rem;font-weight:700;display:block;margin-bottom:3px}
+.opt-desc{font-size:.78rem;color:var(--muted)}
+
+/* Result */
+#tree-result{animation:fadeUp .3s ease}
+.context-bar{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:12px 16px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:8px;font-size:.8rem;color:var(--muted)}
+.ctx-tag{background:rgba(255,255,255,.07);border-radius:6px;padding:3px 10px;color:#bbb}
+
+.rec-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.rec-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:16px}
+.rec-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.badge-p{background:var(--green-dim);color:var(--green)}
+.badge-s{background:var(--blue-dim);color:var(--blue)}
+.badge-u{background:var(--purple-dim);color:var(--purple)}
+.rec-name{font-size:1rem;font-weight:700;color:#fff;margin-bottom:5px}
+.rec-why{font-size:.86rem;color:#bbb;line-height:1.5}
+
+.lines-box{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:18px}
+.lines-title{font-size:.75rem;text-transform:uppercase;letter-spacing:.6px;color:var(--blue);font-weight:700;margin-bottom:12px}
+.line-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:.88rem;color:#ccc;line-height:1.5}
+.line-row:last-child{margin-bottom:0}
+.line-num{background:var(--blue);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;margin-top:2px}
+
+.restart-btn{background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);padding:11px 22px;border-radius:8px;cursor:pointer;font-size:.88rem;margin-top:20px;transition:all .2s;font-family:inherit}
+.restart-btn:hover{background:rgba(255,255,255,.13);color:#fff}
+
+/* ===== ENCYCLOPEDIA (Tab 3) ===== */
+.term-card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.term-h{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;cursor:pointer;transition:background .15s}
+.term-h:hover{background:rgba(255,255,255,.03)}
+.term-title{font-size:.97rem;font-weight:700;color:#fff}
+.term-preview{font-size:.78rem;color:var(--muted);margin-top:2px}
+.term-chevron{color:var(--muted);font-size:.8rem;flex-shrink:0;margin-right:8px;transition:transform .3s}
+.term-card.open .term-chevron{transform:rotate(180deg)}
+
+.term-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.term-card.open .term-body{max-height:600px}
+.term-inner{border-top:1px solid var(--border);padding:16px 18px}
+.def-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;color:var(--blue);font-weight:700;margin-bottom:5px;margin-top:12px}
+.def-label:first-child{margin-top:0}
+.def-text{font-size:.88rem;color:#ccc;line-height:1.6;margin-bottom:4px}
+.example-box{background:rgba(255,255,255,.04);border-right:3px solid var(--yellow);border-radius:5px;padding:10px 12px;font-size:.84rem;color:#bbb;font-style:italic;margin:6px 0}
+.sales-tip{background:var(--green-dim);border:1px solid var(--green-ring);border-radius:6px;padding:10px 12px;font-size:.84rem;color:#aff0c4}
+
+/* ===== QUIZ (Tab 4) ===== */
+.quiz-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px}
+
+.qprog-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.qprog-bar-bg{flex:1;background:var(--border);border-radius:10px;height:5px;overflow:hidden}
+.qprog-bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:10px;transition:width .4s ease;width:0%}
+.qprog-txt{font-size:.78rem;color:var(--muted);white-space:nowrap;flex-shrink:0}
+
+.q-num{font-size:.75rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.q-text{font-size:1.02rem;font-weight:600;color:#fff;margin-bottom:20px;line-height:1.55}
+
+.q-options{display:flex;flex-direction:column;gap:9px}
+.q-opt{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:13px 15px;cursor:pointer;display:flex;align-items:flex-start;gap:11px;transition:all .2s;font-family:inherit;color:var(--text);text-align:right;width:100%;font-size:.9rem;line-height:1.45}
+.q-opt .ol{background:var(--border);color:var(--muted);width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;transition:all .2s}
+.q-opt:hover:not(.locked){background:rgba(59,130,246,.08);border-color:var(--blue-ring)}
+.q-opt:hover:not(.locked) .ol{background:var(--blue);color:#fff}
+.q-opt.correct{background:var(--green-dim);border-color:var(--green-ring)}
+.q-opt.correct .ol{background:var(--green);color:#fff}
+.q-opt.wrong{background:var(--red-dim);border-color:var(--red-ring);opacity:.75}
+.q-opt.wrong .ol{background:var(--red);color:#fff}
+.q-opt.locked{cursor:default}
+
+.q-fb{margin-top:14px;padding:13px 15px;border-radius:8px;font-size:.88rem;display:none;line-height:1.5;animation:fadeUp .2s ease}
+.q-fb.show{display:block}
+.q-fb.fb-ok{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffd6}
+.q-fb.fb-err{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffd0d0}
+.q-fb strong{display:block;margin-bottom:4px;font-size:.93rem}
+
+.next-q-btn{background:var(--blue);border:none;color:#fff;padding:12px 28px;border-radius:8px;cursor:pointer;font-size:.92rem;font-weight:700;margin-top:15px;display:none;transition:all .2s;font-family:inherit}
+.next-q-btn:hover{background:#2563eb;transform:translateY(-1px)}
+.next-q-btn.show{display:inline-block}
+
+/* Results */
+.quiz-results{text-align:center;padding:16px 0;animation:fadeUp .3s ease}
+.res-circle{width:120px;height:120px;border-radius:50%;border:4px solid var(--blue);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 20px}
+.res-score{font-size:2.2rem;font-weight:800;color:var(--blue);line-height:1}
+.res-of{font-size:.8rem;color:var(--muted)}
+.res-msg{font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:6px}
+.res-sub{font-size:.88rem;color:var(--muted);margin-bottom:24px}
+.res-bar-wrap{background:var(--border);border-radius:10px;height:8px;max-width:320px;margin:0 auto 24px;overflow:hidden}
+.res-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width 1s ease}
+.restart-quiz-btn{background:var(--blue);border:none;color:#fff;padding:13px 32px;border-radius:9px;cursor:pointer;font-size:.97rem;font-weight:700;transition:all .2s;font-family:inherit}
+.restart-quiz-btn:hover{background:#2563eb;transform:translateY(-2px)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+
+/* ===== MOBILE PWA IMPROVEMENTS ===== */
+@media(max-width:480px){
+  body{font-size:16px}
+  .tab-btn{padding:14px 15px;font-size:.83rem;min-height:44px}
+  .opt-btn{min-height:44px;padding:13px 11px;font-size:.88rem}
+  .q-opt{min-height:44px;padding:12px 12px;font-size:.87rem}
+  .restart-btn,.restart-quiz-btn,.next-q-btn{min-height:44px;font-size:.9rem;padding:13px 24px}
+  .step-q{font-size:1.05rem}
+  .q-text{font-size:.97rem;margin-bottom:16px}
+  main{padding:18px 12px 90px}
+  .pc-header{padding:15px 16px}
+  .pc-inner{padding:0 14px 16px}
+  .tree-wrap{padding:18px 16px}
+  .quiz-wrap{padding:18px 14px}
+  .rec-card{padding:14px}
+  .lines-box{padding:14px}
+  .hero{padding:28px 14px 22px}
+  .hero h1{font-size:1.4rem}
+}
+@media(max-width:360px){
+  .tab-btn{padding:13px 11px;font-size:.78rem}
+}
+
+/* Smooth card hover animations */
+.product-card{transition:border-color .2s,box-shadow .25s}
+.product-card:hover{box-shadow:0 4px 24px rgba(0,0,0,.35)}
+.term-card{transition:border-color .2s,box-shadow .2s}
+.term-card.open{box-shadow:0 2px 16px rgba(0,0,0,.28)}
+.rec-card{transition:box-shadow .2s}
+.rec-card:hover{box-shadow:0 3px 14px rgba(0,0,0,.2)}
+
+/* ===== PWA TOAST BANNER ===== */
+#pwa-toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:rgba(18,18,18,.97);border:1px solid #3c3c3c;
+  border-radius:18px;padding:13px 14px;
+  display:flex;align-items:center;gap:10px;
+  z-index:9999;
+  box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.04);
+  max-width:370px;width:calc(100% - 28px);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  animation:pwaSlide .45s cubic-bezier(.16,1,.3,1)
+}
+#pwa-toast.hidden{display:none!important}
+@keyframes pwaSlide{
+  from{opacity:0;transform:translateX(-50%) translateY(22px)}
+  to{opacity:1;transform:translateX(-50%) translateY(0)}
+}
+.toast-icon{font-size:1.55rem;flex-shrink:0;line-height:1}
+.toast-text{flex:1;font-size:.82rem;line-height:1.45;color:#cccccc}
+.toast-text strong{color:#ffffff;font-size:.88rem;display:block;margin-bottom:2px}
+#pwa-install-btn{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border:none;color:#fff;padding:8px 13px;border-radius:9px;
+  cursor:pointer;font-size:.78rem;font-weight:700;
+  white-space:nowrap;font-family:inherit;flex-shrink:0;
+  display:none;transition:opacity .15s
+}
+#pwa-install-btn:hover{opacity:.85}
+.toast-close{
+  background:none;border:none;color:#555;cursor:pointer;
+  font-size:1.35rem;padding:2px 3px;line-height:1;
+  flex-shrink:0;transition:color .15s
+}
+.toast-close:hover{color:#ccc}
+
+/* ===== SAFE AREA (notch phones) ===== */
+@supports(padding:max(0px)){
+  main{padding-bottom:max(60px,env(safe-area-inset-bottom)+60px)}
+  #pwa-toast{bottom:max(20px,env(safe-area-inset-bottom)+8px)}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== PWA Install Toast ===== -->
+<div id="pwa-toast" class="hidden" role="status" aria-live="polite">
+  <span class="toast-icon">🛡️</span>
+  <div class="toast-text">
+    <strong>ביטוח Pro</strong>
+    💡 הוסף לדף הבית לגישה מהירה
+  </div>
+  <button id="pwa-install-btn" aria-label="התקן אפליקציה">הוסף +</button>
+  <button class="toast-close" onclick="closePwaToast()" aria-label="סגור">×</button>
+</div>
+
+<!-- ===== App SVG Icon (inline, referenced by PWA setup JS) ===== -->
+<svg id="app-svg-icon" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" aria-hidden="true">
+  <rect width="192" height="192" fill="#0f0f0f" rx="40"/>
+  <defs>
+    <linearGradient id="icon-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+  <!-- Shield outline -->
+  <path d="M96 22L163 52v50c0 40-33 62-67 72-34-10-67-32-67-72V52z"
+    fill="rgba(59,130,246,.1)" stroke="url(#icon-g)" stroke-width="6.5" stroke-linejoin="round"/>
+  <!-- Checkmark -->
+  <path d="M72 95l16 16 32-32"
+    stroke="url(#icon-g)" stroke-width="9.5" fill="none"
+    stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+<div class="hero">
+  <h1>🛡️ מערכת <span>לימוד ביטוח</span></h1>
+  <p>ארגז הכלים של הסוכן הישראלי — ידע, כלים, אנציקלופדיה וסימולטור</p>
+</div>
+
+<nav class="tab-bar" role="tablist">
+  <button class="tab-btn active" data-tab="toolbox">🗂️ ארגז הכלים</button>
+  <button class="tab-btn" data-tab="tree">🌳 עץ החלטות</button>
+  <button class="tab-btn" data-tab="encyclopedia">📚 אנציקלופדיה</button>
+  <button class="tab-btn" data-tab="quiz">🎯 סימולטור</button>
+</nav>
+
+<main>
+<!-- ===================== TAB 1: TOOLBOX ===================== -->
+<section id="toolbox" class="tab-pane active">
+  <div class="section-head">
+    <h2>5 המוצרים שאתה מוכר</h2>
+    <p>לחץ על מוצר לפתיחת כרטיס הידע המלא</p>
+  </div>
+
+  <!-- 1. Health -->
+  <div class="product-card c-blue" id="pc-health">
+    <div class="pc-header" onclick="toggleCard('pc-health')">
+      <div class="pc-left">
+        <div class="pc-icon">🏥</div>
+        <div>
+          <div class="pc-title">ביטוח בריאות קבוצתי — קולקטיב</div>
+          <div class="pc-price">פרמיה טיפוסית: 150–330 ₪/חודש</div>
+        </div>
+      </div>
+      <span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body">
+      <div class="pc-inner">
+        <hr class="pc-divider">
+        <div class="info-grid">
+          <div class="ib">
+            <h4>✅ מה כולל</h4>
+            <ul>
+              <li>ניתוחים פרטיים ללא תור</li>
+              <li>תרופות מחוץ לסל הבסיסי</li>
+              <li>השתלות בארץ ובחו"ל</li>
+              <li>שירותים אמבולטוריים</li>
+              <li>ייעוץ מומחים פרטיים</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>❌ מה לא כולל</h4>
+            <ul>
+              <li>מחלות קשות / CI</li>
+              <li>אובדן כושר עבודה (אכ"ע)</li>
+              <li>ביטוח ריסק / חיים</li>
+              <li>סיעוד</li>
+              <li>נכות כללית</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>💡 יתרון קולקטיב על פרטי</h4>
+            <ul>
+              <li>חיתום קבוצתי — קל יותר להצטרף</li>
+              <li>פרמיה נמוכה משמעותית</li>
+              <li>מקבל גם מי שיש לו בעיות רפואיות</li>
+              <li>לא דורש הצהרת בריאות מפורטת</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>⚠️ נקודות תשומת לב</h4>
+            <ul>
+              <li>תלוי בהמשך עבודה (לחלק מהפוליסות)</li>
+              <li>תקופת אכשרה קצרה בתחילה</li>
+              <li>יש לבדוק שקל ראשון / משלים שב"ן</li>
+              <li>כיסוי שונה בין קולקטיבים</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trigger-box">
+          <h4>🎯 טריגר מכירה</h4>
+          <p>"יש לך ביטוח בריאות? בוא נבדוק מה בדיוק מכוסה — כי שב"ן של קופה ומה שאנחנו מציעים זה לא אותו דבר בכלל."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Critical Illness -->
+  <div class="product-card c-orange" id="pc-critical">
+    <div class="pc-header" onclick="toggleCard('pc-critical')">
+      <div class="pc-left">
+        <div class="pc-icon">💊</div>
+        <div>
+          <div class="pc-title">מחלות קשות — Critical Illness</div>
+          <div class="pc-price">פרמיה טיפוסית: 80–250 ₪/חודש (לפי גיל וסכום)</div>
+        </div>
+      </div>
+      <span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body">
+      <div class="pc-inner">
+        <hr class="pc-divider">
+        <div class="info-grid">
+          <div class="ib">
+            <h4>✅ המהות — תשלום חד-פעמי</h4>
+            <ul>
+              <li>סרטן (כולל בחלק IN SITU)</li>
+              <li>ניתוח לב פתוח</li>
+              <li>שבץ מוחי</li>
+              <li>השתלות איברים</li>
+              <li>אי ספיקת כליות ועוד</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>🔑 ההבדל הקריטי מביטוח בריאות</h4>
+            <ul>
+              <li>לא שיפוי — כסף ישיר לכיס</li>
+              <li>ללא קשר להוצאות בפועל</li>
+              <li>משלמים עם האבחנה, לא אחרי הטיפול</li>
+              <li>הכסף לכל מטרה — שכ"ד, ילדים, חו"ל</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>⚠️ דקויות חשובות</h4>
+            <ul>
+              <li>ימי שרידות: 14–30 יום (יש מי שביטל)</li>
+              <li>תגמול חלקי: 10–25% על IN SITU</li>
+              <li>שחיקת גיל מ-65/70</li>
+              <li>יש לבדוק ספי מחלה בפוליסה</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>👤 מי הכי צריך</h4>
+            <ul>
+              <li>כולם! אבל במיוחד:</li>
+              <li>מי שהורה חלה במחלה קשה</li>
+              <li>בעלי ילדים קטנים</li>
+              <li>"לא רוצה לכלות חסכונות"</li>
+              <li>עצמאים ללא רשת ביטחון</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trigger-box">
+          <h4>🎯 טריגר מכירה</h4>
+          <p>"אם תאובחן עם סרטן מחר — האם הביטוח שלך ייתן לך כסף מזומן כדי להמשיך לממן את החיים? או שרק ישלם על הניתוח?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Disability -->
+  <div class="product-card c-green" id="pc-disability">
+    <div class="pc-header" onclick="toggleCard('pc-disability')">
+      <div class="pc-left">
+        <div class="pc-icon">⚡</div>
+        <div>
+          <div class="pc-title">אכ"ע — אובדן כושר עבודה</div>
+          <div class="pc-price">פרמיה טיפוסית: 100–400 ₪/חודש (לפי שכר וגיל)</div>
+        </div>
+      </div>
+      <span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body">
+      <div class="pc-inner">
+        <hr class="pc-divider">
+        <div class="info-grid">
+          <div class="ib">
+            <h4>✅ מה זה</h4>
+            <ul>
+              <li>קצבה חודשית: 60–80% מההכנסה</li>
+              <li>בשל מחלה OR תאונה</li>
+              <li>ממשיך עד שחוזר לעבוד</li>
+              <li>תחליף ההכנסה שהאדם לא יכול לייצר</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>🔑 ההבדל הכי חשוב</h4>
+            <p style="font-size:.87rem;color:#ccc"><strong style="color:#fff">"עיסוק ספציפי"</strong> — קצבה גם אם יכול לעבוד בעיסוק אחר. דוגמה: רופא שאיבד יכולת לנתח מקבל קצבה גם אם יכול להרצות.<br><br><strong style="color:#fff">"כל עיסוק"</strong> — רק אם לא יכול לעבוד בשום עיסוק סביר. הרבה יותר קשה לקבל.</p>
+          </div>
+          <div class="ib">
+            <h4>⏱️ פרמטרים מרכזיים</h4>
+            <ul>
+              <li>Franchise: 30–90 יום המתנה</li>
+              <li>תקופת תשלום: עד 67 / 5 שנות — הבדל ענק!</li>
+              <li>אחוז נכות מינימלי לזכאות (בדרך כלל 25-75%)</li>
+              <li>הצמדה למדד / עדכון שכר</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>👤 מי הכי צריך</h4>
+            <ul>
+              <li>עצמאים — קריטי, אין מעסיק</li>
+              <li>שכירים ללא 12 חודשי חיסכון</li>
+              <li>מפרנסים עיקריים</li>
+              <li>מי שיש לו משכנתא</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trigger-box">
+          <h4>🎯 טריגר מכירה</h4>
+          <p>"אם תעצור לעבוד מחר בגלל מחלה — כמה חודשים תוכל להחזיק? מה קורה לאחר מכן עם המשכנתא?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Life -->
+  <div class="product-card c-red" id="pc-life">
+    <div class="pc-header" onclick="toggleCard('pc-life')">
+      <div class="pc-left">
+        <div class="pc-icon">❤️</div>
+        <div>
+          <div class="pc-title">ריסק — ביטוח חיים</div>
+          <div class="pc-price">פרמיה טיפוסית: 50–200 ₪/חודש (לפי גיל וסכום)</div>
+        </div>
+      </div>
+      <span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body">
+      <div class="pc-inner">
+        <hr class="pc-divider">
+        <div class="info-grid">
+          <div class="ib">
+            <h4>✅ מה זה</h4>
+            <ul>
+              <li>תשלום חד-פעמי לנהנים בפטירה</li>
+              <li>סכום מוסכם מראש</li>
+              <li>ריסק קבוע / יורד / הון</li>
+              <li>אפשר להגדיר מי הנהנים</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>💡 כמה לקנות?</h4>
+            <ul>
+              <li>כלל אצבע: 70–100x הכנסה חודשית</li>
+              <li>= 6–8 שנות שכר</li>
+              <li>לחלופין: יתרת משכנתא + 3 שנות הוצאות</li>
+              <li>כל מקרה שונה — חשב עם הלקוח</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>👤 מי צריך</h4>
+            <ul>
+              <li>מי שיש לו תלויים (ילדים, אישה)</li>
+              <li>בעלי משכנתא</li>
+              <li>מי שיש לו הורים תלויים</li>
+              <li>שותפים עסקיים</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>⚠️ מי פחות זקוק</h4>
+            <ul>
+              <li>רווק ללא תלויים (נמוך בסדר עדיפויות)</li>
+              <li>אלא אם יש הורים תלויים</li>
+              <li>מי שיש לו נכסים גדולים</li>
+              <li>גמלאי עם הכנסות פנסיוניות יציבות</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trigger-box">
+          <h4>🎯 טריגר מכירה</h4>
+          <p>"אם משהו יקרה לך מחר — מה יקרה לאישה ולילדים שלך? הריסק הוא לא בשבילך, הוא בשביל האנשים שתשאיר אחריך."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Nursing -->
+  <div class="product-card c-purple" id="pc-nursing">
+    <div class="pc-header" onclick="toggleCard('pc-nursing')">
+      <div class="pc-left">
+        <div class="pc-icon">🤲</div>
+        <div>
+          <div class="pc-title">ביטוח סיעוד</div>
+          <div class="pc-price">פרמיה טיפוסית: 100–350 ₪/חודש (תלוי גיל)</div>
+        </div>
+      </div>
+      <span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body">
+      <div class="pc-inner">
+        <hr class="pc-divider">
+        <div class="info-grid">
+          <div class="ib">
+            <h4>✅ מה מפעיל את הביטוח</h4>
+            <ul>
+              <li>אי-יכולת לבצע 2-3 מתוך 6 ADL:</li>
+              <li>אכילה, לבוש, רחצה, ניידות</li>
+              <li>שליטה בסוגרים, העברה ממיטה</li>
+              <li>גם דמנציה / אלצהיימר מכוסים</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>💡 ממלכתי vs פרטי</h4>
+            <ul>
+              <li>ביטוח לאומי: רק לנזקקים, בחינת נכסים</li>
+              <li>פרטי: לכולם, ללא קשר לנכסים/הכנסה</li>
+              <li>עלות מטפל ביתי: 7,000–12,000 ₪/חודש</li>
+              <li>בית אבות מועלה: 12,000–25,000 ₪/חודש</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>👤 מי הכי צריך</h4>
+            <ul>
+              <li>45+ — הפרמיה עוד זולה</li>
+              <li>"לא רוצה להיות נטל על הילדים"</li>
+              <li>מי שהורה היה בסיעוד — חוויה אישית</li>
+              <li>ממוצע גיל כניסה לסיעוד: 78</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>⏱️ זמן — הנכס הכי יקר</h4>
+            <ul>
+              <li>גיל 45 → פרמיה נמוכה</li>
+              <li>גיל 55 → פרמיה גבוהה ב-40%</li>
+              <li>גיל 65 → פרמיה גבוהה ב-120%</li>
+              <li>מחלות קודמות = החרגות</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trigger-box">
+          <h4>🎯 טריגר מכירה</h4>
+          <p>"אמא שלי הייתה בסיעוד שלוש שנים — זה עלה לנו 10,000 ₪ בחודש. ביטוח סיעוד לא עבורך — הוא עבור הילדים שלך."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===================== TAB 2: DECISION TREE ===================== -->
+<section id="tree" class="tab-pane">
+  <div class="section-head">
+    <h2>עץ החלטות — מה הלקוח הזה צריך?</h2>
+    <p>ענה על 3 שאלות וקבל המלצת מוצר מדורגת ומשפטי פתיחה</p>
+  </div>
+
+  <div class="tree-wrap">
+    <!-- Progress -->
+    <div class="prog-track" id="prog-track">
+      <div class="prog-dot cur" id="pd1"></div>
+      <div class="prog-dot todo" id="pd2"></div>
+      <div class="prog-dot todo" id="pd3"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="tree-step active" id="tstep-1">
+      <div class="step-label">שאלה 1 מתוך 3</div>
+      <div class="step-q">מה הסטטוס המשפחתי של הלקוח?</div>
+      <div class="step-sub">זה ישפיע ישירות על סדר עדיפות המוצרים</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(1,'single')"><span class="opt-em">🧍</span><span class="opt-lbl">רווק / רווקה</span><span class="opt-desc">ללא תלויים</span></button>
+        <button class="opt-btn" onclick="treeSelect(1,'married')"><span class="opt-em">👫</span><span class="opt-lbl">נשוי/ה — ללא ילדים</span><span class="opt-desc">זוג צעיר / בלי ילדים</span></button>
+        <button class="opt-btn" onclick="treeSelect(1,'married_kids')"><span class="opt-em">👨‍👩‍👧‍👦</span><span class="opt-lbl">נשוי/ה עם ילדים</span><span class="opt-desc">ילד אחד ומעלה</span></button>
+        <button class="opt-btn" onclick="treeSelect(1,'retiree')"><span class="opt-em">🌅</span><span class="opt-lbl">גמלאי/ת</span><span class="opt-desc">60+ / כבר בפנסיה</span></button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="tree-step" id="tstep-2">
+      <div class="step-label">שאלה 2 מתוך 3</div>
+      <div class="step-q">מה רמת הכיסוי הביטוחי הנוכחית?</div>
+      <div class="step-sub">נבין מה יש ומה חסר</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(2,'none')"><span class="opt-em">🚫</span><span class="opt-lbl">כלום</span><span class="opt-desc">רק ביטוח לאומי / ממלכתי</span></button>
+        <button class="opt-btn" onclick="treeSelect(2,'basic')"><span class="opt-em">🏥</span><span class="opt-lbl">רק שב"ן קופה</span><span class="opt-desc">מושלם / מכבי שלי / שלמה</span></button>
+        <button class="opt-btn" onclick="treeSelect(2,'collective')"><span class="opt-em">🤝</span><span class="opt-lbl">יש קולקטיב</span><span class="opt-desc">ביטוח קבוצתי דרך העבודה</span></button>
+        <button class="opt-btn" onclick="treeSelect(2,'collective_private')"><span class="opt-em">✅</span><span class="opt-lbl">קולקטיב + פרטי</span><span class="opt-desc">כיסוי בריאות טוב כבר</span></button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="tree-step" id="tstep-3">
+      <div class="step-label">שאלה 3 מתוך 3</div>
+      <div class="step-q">מה הנושא הכי רגיש / מדאיג את הלקוח?</div>
+      <div class="step-sub">הפחד הזה הוא הפתח לשיחה</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(3,'illness')"><span class="opt-em">🧬</span><span class="opt-lbl">פחד ממחלה קשה</span><span class="opt-desc">סרטן, לב, שבץ — "מה אם..."</span></button>
+        <button class="opt-btn" onclick="treeSelect(3,'family')"><span class="opt-em">👨‍👩‍👧</span><span class="opt-lbl">דאגה לפרנסת המשפחה</span><span class="opt-desc">מה יהיה עליהם אם משהו יקרה לי</span></button>
+        <button class="opt-btn" onclick="treeSelect(3,'burden')"><span class="opt-em">🙏</span><span class="opt-lbl">לא רוצה להיות נטל</span><span class="opt-desc">לא רוצה שהילדים יטפלו בי</span></button>
+        <button class="opt-btn" onclick="treeSelect(3,'savings')"><span class="opt-em">💰</span><span class="opt-lbl">לא לכלות חסכונות</span><span class="opt-desc">כלכלה — שמירה על הנכסים</span></button>
+      </div>
+    </div>
+
+    <!-- Result (hidden by default) -->
+    <div id="tree-result" style="display:none"></div>
+  </div>
+</section>
+
+<!-- ===================== TAB 3: ENCYCLOPEDIA ===================== -->
+<section id="encyclopedia" class="tab-pane">
+  <div class="section-head">
+    <h2>אנציקלופדיה — מונחים שחייב לדעת</h2>
+    <p>לחץ על מונח לפתיחת הגדרה + דוגמה + טיפ מכירה</p>
+  </div>
+
+  <div id="terms-list"></div>
+</section>
+
+<!-- ===================== TAB 4: QUIZ ===================== -->
+<section id="quiz" class="tab-pane">
+  <div class="section-head">
+    <h2>סימולטור — 20 שאלות</h2>
+    <p>בחן את הידע שלך. כל שאלה עם משוב מיידי והסבר</p>
+  </div>
+
+  <div class="quiz-wrap">
+    <div id="quiz-inner">
+      <!-- Dynamically populated -->
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+/* =========================================
+   PWA SETUP
+   ========================================= */
+(function initPWA(){
+  // Build icon data-URL from inline SVG
+  var svgEl = document.getElementById('app-svg-icon');
+  var iconUrl = svgEl
+    ? 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgEl.outerHTML)
+    : '';
+
+  // Favicon
+  if(iconUrl){
+    var fav = document.createElement('link');
+    fav.rel = 'icon'; fav.type = 'image/svg+xml'; fav.href = iconUrl;
+    document.head.appendChild(fav);
+
+    // Apple Touch Icon (iOS home screen)
+    var ati = document.createElement('link');
+    ati.rel = 'apple-touch-icon'; ati.href = iconUrl;
+    document.head.appendChild(ati);
+  }
+
+  // Web App Manifest (blob URL — same origin as page)
+  try {
+    var manifest = {
+      name: 'מערכת לימוד ביטוח',
+      short_name: 'ביטוח Pro',
+      description: 'ארגז הכלים של הסוכן הישראלי — ידע, כלים, אנציקלופדיה וסימולטור',
+      theme_color: '#0f0f0f',
+      background_color: '#0f0f0f',
+      display: 'standalone',
+      start_url: '.',
+      lang: 'he',
+      dir: 'rtl',
+      orientation: 'any',
+      categories: ['education','finance'],
+      icons: iconUrl ? [
+        { src: iconUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
+        { src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+      ] : []
+    };
+    var mb = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+    var mu = URL.createObjectURL(mb);
+    var ml = document.createElement('link');
+    ml.rel = 'manifest'; ml.href = mu;
+    document.head.appendChild(ml);
+  } catch(e){}
+
+  // Service Worker — cache-as-you-go (works on HTTPS / surge.sh)
+  if('serviceWorker' in navigator && location.protocol !== 'file:'){
+    var swCode = [
+      "const CACHE='bituch-pro-v1';",
+      "self.addEventListener('install',e=>{self.skipWaiting();});",
+      "self.addEventListener('activate',e=>{",
+      "  e.waitUntil(caches.keys().then(ks=>Promise.all(",
+      "    ks.filter(k=>k!==CACHE).map(k=>caches.delete(k))",
+      "  )).then(()=>self.clients.claim()));",
+      "});",
+      "self.addEventListener('fetch',e=>{",
+      "  if(e.request.method!=='GET')return;",
+      "  e.respondWith(",
+      "    caches.match(e.request).then(cached=>{",
+      "      var net=fetch(e.request).then(res=>{",
+      "        if(res&&res.ok&&res.type!=='opaque'){",
+      "          var c=res.clone();",
+      "          caches.open(CACHE).then(ca=>ca.put(e.request,c));",
+      "        }",
+      "        return res;",
+      "      }).catch(()=>cached||new Response('Offline — פתח שוב כשיש רשת',{status:503,headers:{'Content-Type':'text/plain;charset=utf-8'}}));",
+      "      return cached||net;",
+      "    })",
+      "  );",
+      "});"
+    ].join('\n');
+    try {
+      var sb = new Blob([swCode],{type:'application/javascript'});
+      var su = URL.createObjectURL(sb);
+      navigator.serviceWorker.register(su).catch(function(){});
+    } catch(e){}
+  }
+
+  // ---- Toast logic ----
+  var TOAST_KEY = 'pwa-toast-v1';
+  var isDismissed = function(){ try{ return localStorage.getItem(TOAST_KEY); }catch(e){ return false; } };
+  var isStandalone = function(){
+    return window.matchMedia('(display-mode:standalone)').matches ||
+           window.navigator.standalone === true;
+  };
+
+  window.closePwaToast = function(){
+    var t = document.getElementById('pwa-toast');
+    if(t) t.classList.add('hidden');
+    try{ localStorage.setItem(TOAST_KEY,'1'); }catch(e){}
+  };
+
+  function showToast(){
+    if(isDismissed() || isStandalone()) return;
+    var t = document.getElementById('pwa-toast');
+    if(t) t.classList.remove('hidden');
+  }
+
+  // Chrome / Android: show install button when prompt available
+  var deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(showToast, 1800);
+    var btn = document.getElementById('pwa-install-btn');
+    if(btn){
+      btn.style.display = 'inline-block';
+      btn.addEventListener('click', function(){
+        if(!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function(){ deferredPrompt=null; closePwaToast(); });
+      });
+    }
+  });
+
+  // iOS Safari: show hint toast (no install prompt event on iOS)
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isIOS && !isStandalone()){
+    setTimeout(showToast, 2000);
+  }
+
+  // After install — hide toast
+  window.addEventListener('appinstalled', function(){ closePwaToast(); deferredPrompt=null; });
+})();
+
+/* =========================================
+   TAB SWITCHING
+   ========================================= */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+/* =========================================
+   PRODUCT CARDS (Tab 1)
+   ========================================= */
+function toggleCard(id){
+  const c=document.getElementById(id);
+  c.classList.toggle('open');
+}
+
+/* =========================================
+   DECISION TREE (Tab 2)
+   ========================================= */
+let tS={status:null,coverage:null,concern:null};
+
+const labels={
+  single:'רווק/ה',married:'נשוי/ה ללא ילדים',married_kids:'נשוי/ה עם ילדים',retiree:'גמלאי/ת',
+  none:'ללא ביטוח',basic:'שב"ן קופה בלבד',collective:'קולקטיב',collective_private:'קולקטיב + פרטי',
+  illness:'פחד ממחלה קשה',family:'דאגה לפרנסת המשפחה',burden:'לא רוצה להיות נטל',savings:'לא לכלות חסכונות'
+};
+const productNames={
+  health:'ביטוח בריאות קבוצתי (קולקטיב)',
+  critical:'מחלות קשות (Critical Illness)',
+  disability:'אכ"ע — אובדן כושר עבודה',
+  life:'ריסק / ביטוח חיים',
+  nursing:'ביטוח סיעוד'
+};
+const productEmoji={health:'🏥',critical:'💊',disability:'⚡',life:'❤️',nursing:'🤲'};
+
+function treeSelect(step, val){
+  if(step===1){tS.status=val; showTreeStep(2);}
+  else if(step===2){tS.coverage=val; showTreeStep(3);}
+  else if(step===3){tS.concern=val; showTreeResult();}
+}
+
+function showTreeStep(n){
+  for(let i=1;i<=3;i++){
+    const el=document.getElementById('tstep-'+i);
+    el.classList.toggle('active', i===n);
+  }
+  updateProgress(n);
+}
+
+function updateProgress(cur){
+  ['pd1','pd2','pd3'].forEach((id,i)=>{
+    const d=document.getElementById(id);
+    d.className='prog-dot '+(i+1<cur?'done':i+1===cur?'cur':'todo');
+  });
+}
+
+function getRec(status, coverage, concern){
+  let primary,secondary,upsell,reasons={},lines=[];
+
+  if(status==='retiree'){
+    primary='nursing'; secondary='critical'; upsell='health';
+    reasons.primary='בגיל הזה, הסיכוי לסיעוד הוא הגבוה ביותר. עלות מטפל ביתי עומדת על 8,000–12,000 ₪ לחודש ללא ביטוח.';
+    reasons.secondary='מחלות קשות רלוונטיות מאוד לגיל זה, אם כי שימו לב לשחיקת גיל בפוליסה מגיל 70.';
+    reasons.upsell=coverage==='none'?'אין כיסוי בריאות כלל — זה הצעד הראשון שצריך לסגור.':'השלמת ביטוח בריאות תמיד שווה לבדוק.';
+    if(concern==='burden') lines=['כמה עלה לך לטפל בהורים שלך? עכשיו הזמן לוודא שהילדים שלך לא יעברו אותו דבר.','ביטוח סיעוד הוא לא בשבילך — הוא בשביל הילדים. הם לא יצטרכו לעזוב את העבודה בגללך.','10,000 ₪ בחודש לבית אבות מועלה. הביטוח יכסה את זה. בלי הביטוח — החסכונות שלך.'];
+    else if(concern==='savings') lines=['בית אבות מועלה = 12,000–25,000 ₪ לחודש. 3 שנות סיעוד = 0.5–1 מיליון ₪. הביטוח עוצר את זה.','ביטוח סיעוד הוא ה"פוליסה שמגנה על כל שאר הפוליסות" — בלעדיו, מחלה ממושכת מכלה הכל.','פרמיה של 200 ₪ לחודש = 72,000 ₪ ב-30 שנה. לעומת עשרות אלפים שמכלים חסכונות בלי ביטוח.'];
+    else lines=['בגיל הזה, ביטוח סיעוד הוא ההגנה הדחופה ביותר. כל יום שמחכים — הפרמיה עולה.','ספרו לי — מה קרה להורים שלכם בגיל מבוגר? מי טיפל בהם? מי שילם?','הממוצע בישראל: אדם נמצא בסיעוד 3.5 שנים. על 10,000 ₪/חודש = 420,000 ₪. ביטוח מכסה את זה.'];
+  }
+  else if(status==='married_kids'){
+    if(concern==='family'){
+      primary='life'; secondary='disability'; upsell='critical';
+      reasons.primary='יש לך תלויים — ילדים ובן/בת זוג. הריסק הוא ה"שכר" שתמשיך לספק גם אם לא תהיה.';
+      reasons.secondary='ריסק מגן על מקרה מוות — אכ"ע מגן על מקרה שאתה חי אבל לא יכול לעבוד. שניהם נחוצים.';
+      reasons.upsell='אם תאובחן עם מחלה קשה — תצטרך גם כסף לטיפולים וגם פרנסה. CI נותן את שניהם.';
+      lines=['אם משהו יקרה לך מחר — מה יהיה עם הילדים? המשכנתא? הלחץ על בן/בת הזוג?','הריסק הוא לא בשבילך — הוא בשביל האנשים שתשאיר. בכמה שנים יצטרכו את ההכנסה שלך?','כמה שנים עד שהילדים עצמאיים? זה מה שצריך לכסות. חשבנו ביחד.'];
+    } else if(concern==='illness'||concern==='savings'){
+      primary='critical'; secondary='disability'; upsell='life';
+      reasons.primary='מחלה קשה פוגעת פעמיים: בגוף ובארנק. CI נותן כסף מיידי עם האבחנה — לא אחרי הניתוח.';
+      reasons.secondary='מחלה שמשאירה אותך חי אבל לא יכול לעבוד — אכ"ע מחליף את ההכנסה חודש אחרי חודש.';
+      reasons.upsell='ריסק הוא ה"ביטחון האחרון" — לוודא שאם קורה הגרוע, המשפחה שלך מכוסה.';
+      if(concern==='savings') lines=['מחלה קשה לא רק עולה כסף על טיפולים — גורמת לך לעצור לעבוד. שתי מכות באותו זמן.','ניתוח לב פתוח בחו"ל עולה 500,000–800,000 ₪. CI ישלם לך סכום מוסכם מראש, ללא ויכוחים.','הכסף מ-CI לא חייב להיות על הניתוח — אפשר על שכ"ד, ילדים, חיסכון. הכסף שלך לגמרי.'];
+      else lines=['אם תאובחן עם סרטן — CI ישלם לך בחשבון. הביטוח הרגיל יכסה ניתוחים, CI נותן לך נשימה.','פחד ממחלה קשה הוא הפחד הבריא ביותר שיש — הוא מניע אנשים לעשות דברים חכמים.','לקוח שהיה לי חלה בסרטן בגיל 45 — ה-CI שלו שילם לו 500,000 ₪. הוא לא נגע לחסכונות.'];
+    } else {
+      primary='disability'; secondary='critical'; upsell='nursing';
+      reasons.primary='ה"נטל" הגדול ביותר הוא לחיות ולא יכול לעבוד. אכ"ע מונע את זה — קצבה כל חודש.';
+      reasons.secondary='מחלה קשה = ייתכן גם אובדן כושר עבודה. CI + אכ"ע יחד = כיסוי מלא.';
+      reasons.upsell='כבר עכשיו לחשוב על הדור הבא — סיעוד מגן על הילדים שלך מנטל עתידי.';
+      lines=['לא רוצה להיות נטל — בדיוק בשביל זה אכ"ע קיים. אם לא תוכל לעבוד, הביטוח עובד בשבילך.','הדבר הכי קשה הוא לראות אדם בריא, כשיר, שנאלץ לבקש כסף מהמשפחה. אכ"ע מונע את זה.','קצבה חודשית של 15,000 ₪ מאכ"ע = 180,000 ₪ בשנה. 5 שנות נכות = 900,000 ₪. בלי ביטוח.'];
+    }
+  }
+  else if(status==='married'){
+    if(concern==='family'){
+      primary='life'; secondary='disability'; upsell='critical';
+      reasons.primary='יש לך בן/בת זוג שתלוי/ה גם בהכנסה שלך. ריסק מבטיח שהם ממשיכים גם בלעדיך.';
+      reasons.secondary='מוות הוא לא הסיכון היחיד — נכות ממחלה שכיחה הרבה יותר. אכ"ע מגן על שניכם.';
+      reasons.upsell='CI ייתן לכם נשימה כלכלית במקרה של אבחנה — ללא תלות בהוצאות הרפואיות.';
+      lines=['מה קורה עם המשכנתא שלכם אם משהו יקרה לך? הריסק הוא הפתרון הפשוט ביותר.','זוג ללא ילדים — פחות פוליסות נחוצות, אבל ריסק + אכ"ע הם הבסיס ההכרחי.','כמה שנים נשארות על המשכנתא? זה הסכום המינימלי שצריך לכסות בריסק.'];
+    } else {
+      primary='disability'; secondary='critical'; upsell='nursing';
+      reasons.primary='הכנסה = הנכס הגדול ביותר שלך. אכ"ע מגן עליה אם לא תוכל לעבוד.';
+      reasons.secondary='CI + אכ"ע = כיסוי דואלי — אחד לכסף לטיפולים, אחד להכנסה שוטפת.';
+      reasons.upsell='גיל מוקדם = פרמיית סיעוד נמוכה. שווה לנעול עכשיו לפני שיתייקר.';
+      lines=['כמה חודשים אתה יכול לשרוד בלי משכורת? שלושה? שישה? אכ"ע נותן לך יותר מזה.','המחיר של אכ"ע הוא שבריר מהמשכורת שהוא מגן עליה. זה לא ביטוח — זה השקעה.','בוא נחשב: 70% מהמשכורת שלך כקצבה = כמה זה? בואו נראה אם זה מתאים.'];
+    }
+  }
+  else { // single
+    primary='disability'; secondary='critical';
+    upsell=(concern==='burden'||concern==='savings')?'nursing':'life';
+    reasons.primary='רווק/ה — ההכנסה שלך היא הנכס היחיד שלך. אין גב מישהו אחר. אכ"ע מגן עליה.';
+    reasons.secondary='CI נותן כסף מיידי עם אבחנה — לא תצטרך לכלות חסכונות על מחלה.';
+    reasons.upsell=upsell==='nursing'?'גיל צעיר = פרמיית סיעוד זולה. לנעול עכשיו לפני שיתייקר.':'ריסק עכשיו פחות דחוף ללא תלויים, אבל שווה לדון אם יש הורים תלויים.';
+    if(concern==='savings') lines=['מחלה קשה יכולה לכלות חסכונות של 10 שנות עבודה בתוך שנה. CI ו-אכ"ע מונעים את זה.','בתור רווק/ה — אין מי שיממן אותך חוץ מביטוח. CI + אכ"ע = הרשת הביטחונית שלך.','פרמיה חודשית של 300 ₪ מגנה על הכנסה שנתית של 200,000 ₪. זה המתמטיקה.'];
+    else if(concern==='illness') lines=['רווק/ה עם מחלה קשה = בלי גב משפחתי ובלי הכנסה. CI נותן את הכסף לנשום.','לא צריך לחכות לניתוח — CI משלם עם האבחנה. ברגע שמאשפזים אותך, הכסף בדרך.','שמעת על מישהו שחלה? בלי ביטוח מחלות קשות, כל חיסכון שיש לך יכול להיעלם.'];
+    else lines=['כרווק/ה, אתה המפרנס היחיד של עצמך. אכ"ע הוא לא "עוד הוצאה" — הוא ה-safety net שלך.','כמה חודשים תחזיק אם תפסיק לעבוד? 3? 6? אכ"ע ממלא את הפער עד שתחזור.','ביטוח זה לא בשביל אחרים — זה בשביל הגרסה העתידית שלך, שאולי לא תוכל לעבוד.'];
+  }
+
+  return {primary,secondary,upsell,reasons,lines};
+}
+
+function showTreeResult(){
+  for(let i=1;i<=3;i++) document.getElementById('tstep-'+i).classList.remove('active');
+  updateProgress(4);
+
+  const r=getRec(tS.status, tS.coverage, tS.concern);
+  const el=document.getElementById('tree-result');
+
+  el.innerHTML=`
+    <div class="context-bar">
+      <span>👤 ${labels[tS.status]}</span>
+      <span class="ctx-tag">📋 ${labels[tS.coverage]}</span>
+      <span class="ctx-tag">❤️ ${labels[tS.concern]}</span>
+    </div>
+
+    <div class="rec-cards">
+      <div class="rec-card">
+        <div class="rec-badge badge-p">✅ ראשוני — דחוף</div>
+        <div class="rec-name">${productEmoji[r.primary]} ${productNames[r.primary]}</div>
+        <div class="rec-why">${r.reasons.primary}</div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-badge badge-s">🔵 שניוני — חשוב</div>
+        <div class="rec-name">${productEmoji[r.secondary]} ${productNames[r.secondary]}</div>
+        <div class="rec-why">${r.reasons.secondary}</div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-badge badge-u">💜 Upsell — שכבה נוספת</div>
+        <div class="rec-name">${productEmoji[r.upsell]} ${productNames[r.upsell]}</div>
+        <div class="rec-why">${r.reasons.upsell}</div>
+      </div>
+    </div>
+
+    <div class="lines-box">
+      <div class="lines-title">💬 3 משפטי פתיחה לפרופיל הזה</div>
+      ${r.lines.map((l,i)=>`<div class="line-row"><span class="line-num">${i+1}</span><span>${l}</span></div>`).join('')}
+    </div>
+
+    <button class="restart-btn" onclick="treeReset()">🔄 התחל מחדש</button>
+  `;
+
+  el.style.display='block';
+}
+
+function treeReset(){
+  tS={status:null,coverage:null,concern:null};
+  document.getElementById('tree-result').style.display='none';
+  showTreeStep(1);
+}
+
+/* =========================================
+   ENCYCLOPEDIA (Tab 3)
+   ========================================= */
+const terms=[
+  {
+    title:'שב"ן — שירותי בריאות נוספים',
+    preview:'הביטוח המשלים של קופות החולים',
+    def:'שב"ן הוא ביטוח בריאות המשלים שכל קופה מציעה: מכבי שלי, מושלם כלל, שלמה של מאוחדת. הוא מכסה שירותים מעבר לסל הבסיסי — אך בתוך רשת הקופה.',
+    example:'"יש לי מכבי זהב" — מדבר על שב"ן. יש לו כיסוי מסוים, אבל מוגבל לרשת מכבי בלבד.',
+    sales:'ב-90% מהמקרים לקוח שאומר "יש לי ביטוח" מתכוון לשב"ן. זו ההזדמנות לשאול: "מה בדיוק כולל? מה לא?". שב"ן לא כולל CI, אכ"ע, ריסק, סיעוד.'
+  },
+  {
+    title:'שקל ראשון vs משלים שב"ן',
+    preview:'הבדל קריטי בין שני סוגי ביטוח בריאות',
+    def:`<strong>שקל ראשון</strong> = הביטוח הפרטי משלם מהרגע הראשון, גם אם השב"ן כבר כיסה חלק.<br><strong>משלים שב"ן</strong> = הביטוח הפרטי משלם רק מה שהשב"ן לא כיסה.`,
+    example:'ניתוח עלה 50,000 ₪. שב"ן שילם 30,000. בביטוח "שקל ראשון" תקבל עוד 50,000 (סה"כ 80,000). ב"משלים" תקבל רק 20,000.',
+    sales:'לקוח שיש לו ביטוח "שקל ראשון" — הוא בכלל לא זקוק לשב"ן כדי לפעיל את הביטוח. זה יתרון עצום שכדאי להדגיש.'
+  },
+  {
+    title:'ימי שרידות — Survival Period',
+    preview:'כמה זמן חייבים לשרוד אחרי אבחנת מחלה קשה',
+    def:'בחלק מפוליסות מחלות קשות, קיימת דרישה שהמבוטח ישרוד מינימום 14–30 יום מרגע האבחנה כדי לקבל את הסכום. חלק מהחברות (כגון הפניקס) ביטלו דרישה זו.',
+    example:'מבוטח אובחן עם התקף לב ונפטר ב-day 10. בפוליסה עם 14 ימי שרידות — המשפחה לא מקבלת.',
+    sales:'חשוב לבדוק בכל פוליסה — האם יש ימי שרידות ולמה? זה הבדל שיכול לעלות מאות אלפי ₪ ביום הקריטי ביותר.'
+  },
+  {
+    title:'תקופת אכשרה — Waiting Period',
+    preview:'תקופה בתחילת הביטוח שבה לא מכוסים',
+    def:'תקופה בתחילת הפוליסה שבה מחלות קיימות (Pre-existing Conditions) לא מכוסות. בביטוח קולקטיב — בדרך כלל קצרה יותר מביטוח פרטי. נעה בין 1–24 חודשים לפי המחלה.',
+    example:'הצטרפת לקולקטיב נמל חיפה. חודש אחרי — גלית גידול. אם יש 3 חודשי אכשרה לסרטן — לא מכוסה.',
+    sales:'קולקטיב = אכשרה קצרה = יתרון גדול על פרטי. זו נקודת מכירה חשובה לאנשים עם בעיות רפואיות קיימות.'
+  },
+  {
+    title:'Franchise — תקופת המתנה לאכ"ע',
+    preview:'ימי ההמתנה לפני שמתחילים לקבל קצבה',
+    def:'בביטוח אכ"ע, Franchise הוא מספר ימי ההמתנה מרגע הנכות ועד לקבלת הקצבה הראשונה. נפוץ: 30, 60, 90 ימים. ככל שה-Franchise ארוך יותר — הפרמיה זולה יותר.',
+    example:'נכה מ-1 בינואר, Franchise=60 יום. קצבה ראשונה מגיעה ב-1 במרץ. מה קרה בינואר-פברואר?',
+    sales:'לקוח עם Franchise של 90 יום צריך חיסכון שיכסה 3 חודשים. חשוב לשאול: "כמה יש לך חסוך ל-90 ימי המתנה?"'
+  },
+  {
+    title:'Clawback — זכות החזר לחברת הביטוח',
+    preview:'מה קורה אם הצהרת הבריאות הייתה לא מדויקת',
+    def:'Clawback היא זכות חברת הביטוח לדרוש החזר של תגמולים ששולמו, אם מתברר שהמבוטח הסתיר מידע רפואי רלוונטי בעת הצטרפות לפוליסה.',
+    example:'מבוטח קיבל 400,000 ₪ ל-CI. אחר כך התגלה שלא ציין טיפול פסיכיאטרי קודם. החברה תובעת החזר.',
+    sales:'הגנה על הלקוח: הקפד שהצהרת הבריאות מלאה ומדויקת. "אל תסתיר כלום — מה שלא תצהיר עכשיו יעלה לך ביום שתצטרך."'
+  },
+  {
+    title:'קבוצת סיכון',
+    preview:'איך חברות ביטוח מחשבות פרמיות',
+    def:'קבוצת סיכון היא קבוצת מבוטחים בעלי מאפיינים דומים (גיל, מין, מצב בריאותי, עיסוק) שמשמשת לחישוב הפרמיה. ככל שהסיכון גבוה יותר — הפרמיה גבוהה יותר.',
+    example:'גבר 45 מעשן = קבוצת סיכון גבוהה לסרטן ולב. אישה 35 לא מעשנת = קבוצת סיכון נמוכה. הפרמיה שלה תהיה נמוכה משמעותית.',
+    sales:'טריגר: "קניית ביטוח עכשיו = קבוצת סיכון נמוכה = פרמיה זולה. מחכים לגיל 55 = הפרמיה מוכפלת." דחיינות עולה כסף.'
+  },
+  {
+    title:'עיסוק ספציפי vs כל עיסוק',
+    preview:'ההגדרה הכי חשובה באכ"ע — שווה עשרות אלפי שקלים',
+    def:`<strong>עיסוק ספציפי:</strong> מקבלים קצבה אם לא יכולים לעבוד בעיסוק הספציפי שלהם — גם אם יכולים לעבוד בעיסוק אחר.<br><br><strong>כל עיסוק:</strong> מקבלים קצבה רק אם לא יכולים לעבוד בשום עיסוק סביר. הרבה יותר קשה לזכות בקצבה.`,
+    example:'רופא מנתח איבד שימוש ביד. ב"עיסוק ספציפי" — מקבל קצבה מלאה גם כשמרצה. ב"כל עיסוק" — מרצה = עובד = לא מקבל.',
+    sales:'זו ההגדרה שסוכנים לא מסבירים מספיק. "עיסוק ספציפי" = פרמיה גבוהה יותר אבל כיסוי שוה הרבה יותר. רופאים, עורכי דין, ואחיות — חייבים "עיסוק ספציפי".'
+  },
+  {
+    title:'IN SITU — סרטן בשלב מוקדם',
+    preview:'כיסוי חלקי על גידול לא פולשני',
+    def:'IN SITU פירושו "במקום" — גידול סרטני שטרם עבר גרורות ולא פלש לרקמות סמוכות. נחשב לשלב מוקדם ביותר. פוליסות רבות משלמות 10–25% מסכום הביטוח על IN SITU.',
+    example:'מבוטח אובחן עם סרטן שד IN SITU. סכום הביטוח: 500,000 ₪. תשלום: 15% = 75,000 ₪. אם הסרטן היה פולשני — 500,000 ₪.',
+    sales:'חשוב לבדוק: האם הפוליסה מכסה IN SITU ובאיזה אחוז? לקוחות לא יודעים שזה קיים. זה מוסיף ערך לפוליסה שכדאי להדגיש.'
+  },
+  {
+    title:'ADL — Activities of Daily Living',
+    preview:'6 הפעולות שמגדירות סיעוד',
+    def:'ADL הן 6 פעולות יום-יומיות בסיסיות שאדם בסיעוד לא יכול לבצע לבד: (1) אכילה, (2) לבוש, (3) רחצה, (4) ניידות, (5) שליטה בסוגרים, (6) העברה ממיטה. ביטוח סיעוד מופעל בדרך כלל כש-2–3 מהן לא בוצעות.',
+    example:'סבא לא יכול ללבוש לבד (1), לא יכול לרחוץ לבד (2), לא יכול לאכול לבד (3). שלוש ADL = זכאי לסיעוד.',
+    sales:'הדגמה לחיים: "תנסה ללבוש חולצה בלי שידות — זה מה שה-ADL מגדיר." זה מחבר ריגשית ומסביר מה הביטוח מגן עליו.'
+  },
+  {
+    title:'שחיקת גיל — Age Erosion',
+    preview:'ירידה בכיסוי מחלות קשות עם הגיל',
+    def:'בחלק מפוליסות מחלות קשות, סכום הביטוח המכוסה יורד מגיל מסוים (בדרך כלל 65–70). לדוגמה: סכום ביטוח 500,000 ₪ הופך ל-250,000 ₪ בגיל 70.',
+    example:'קנית 500,000 ₪ כיסוי CI בגיל 45. בגיל 70 — הפוליסה אומרת שהכיסוי ירד ל-50%. קיבלת 250,000.',
+    sales:'הדגש: "הכיסוי הכי חשוב הוא בגיל הפעיל — 40–65. הביטוח הכי יקר בזמן שהכי פחות צריך אותו." גיל צעיר = כיסוי מלא = פרמיה נמוכה.'
+  },
+  {
+    title:'מדד בסיס — הצמדה למדד',
+    preview:'איך הפרמיה והקצבה משתנות עם הזמן',
+    def:'הצמדה למדד = הפרמיה והקצבה מתעדכנות לפי מדד המחירים לצרכן. בלי הצמדה — קצבה של 10,000 ₪ היום שווה 7,500 ₪ בכוח קנייה בעוד 10 שנים.',
+    example:'אכ"ע: קצבה של 12,000 ₪. אחרי 15 שנות אינפלציה של 3% — בלי הצמדה: שווה כ-7,700 ₪ בכוח קנייה.',
+    sales:'שאל: "אם הקצבה שלך לא תהיה צמודה למדד — כמה היא תהיה שווה בעוד 20 שנה?" מחשבון פשוט = עוצמה גדולה בשיחה.'
+  },
+  {
+    title:'קולקטיב vs ביטוח פרטי',
+    preview:'מה ההבדל ומתי להמליץ על כל אחד',
+    def:`<strong>קולקטיב:</strong> חיתום קבוצתי, פרמיה נמוכה, אכשרה קצרה, ללא שאלון בריאות מפורט. תלוי לרוב בקבוצת ההצטרפות (עבודה, ארגון).<br><br><strong>ביטוח פרטי:</strong> חיתום אישי, כיסוי מותאם, גמיש יותר, אבל יקר יותר עם החרגות אפשריות.`,
+    example:'עובד נמל חיפה עם יתר לחץ דם — קולקטיב: יצטרף בקלות. ביטוח פרטי: ייתכן שיוחרג על לב וכלי דם.',
+    sales:'קולקטיב ראשון = בסיס. פרטי = להשלמת פערים ספציפיים. הסבר ללקוח: "קולקטיב מתוך העבודה נותן לך כיסוי בלי שאלות. פרטי = מאורזים יותר, אבל יקר יותר."'
+  }
+];
+
+function buildEncyclopedia(){
+  const c=document.getElementById('terms-list');
+  c.innerHTML=terms.map((t,i)=>`
+    <div class="term-card" id="term-${i}">
+      <div class="term-h" onclick="toggleTerm(${i})">
+        <div>
+          <div class="term-title">${t.title}</div>
+          <div class="term-preview">${t.preview}</div>
+        </div>
+        <span class="term-chevron">▼</span>
+      </div>
+      <div class="term-body">
+        <div class="term-inner">
+          <div class="def-label">📖 הגדרה</div>
+          <div class="def-text">${t.def}</div>
+          <div class="def-label" style="margin-top:12px">💡 דוגמה מהחיים</div>
+          <div class="example-box">${t.example}</div>
+          <div class="def-label" style="margin-top:12px">🎯 למה זה חשוב בשיחת מכירה</div>
+          <div class="sales-tip">${t.sales}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleTerm(i){
+  document.getElementById('term-'+i).classList.toggle('open');
+}
+
+/* =========================================
+   QUIZ (Tab 4)
+   ========================================= */
+const questions=[
+  {q:'עובד נמל חיפה עם "מושלם כלל" שואל למה לקנות קולקטיב. מה עונים?',opts:['הקולקטיב זהה לשב"ן שלך — אין עניין','הקולקטיב מכסה ניתוחים פרטיים, תרופות מחוץ לסל וטיפולים שמושלם לא מכסה','הקולקטיב בדרך כלל זול יותר, זה היתרון העיקרי','אתה צודק, יש לך כיסוי מספיק'],c:1,exp:'הקולקטיב מוסיף שכבת כיסוי מסחרית. שב"ן מוגבל לרשת הקופה. קולקטיב = ניתוחים פרטיים ללא תור, תרופות מחוץ לסל, מומחים פרטיים. ועוד — ביום שיפסיק לעבוד, הקולקטיב ישמר, השב"ן ישתנה.'},
+  {q:'מה ההבדל העיקרי בין ביטוח מחלות קשות לביטוח בריאות?',opts:['הם זהים, רק שמות שונים','מחלות קשות = תשלום חד-פעמי מוסכם עם אבחנה; בריאות = שיפוי על הוצאות בפועל','ביטוח בריאות מכסה יותר סוגי מחלות','מחלות קשות מיועד רק לגיל 65+'],c:1,exp:'זה ההבדל הקריטי! בביטוח בריאות — מקבלים החזר על הוצאות בפועל. ב-CI — מקבלים סכום מוסכם ללא קשר להוצאות. הכסף לכל מטרה: שכ"ד, ילדים, חיסכון, טיפולים ניסיוניים.'},
+  {q:'לקוח 42, נשוי, 2 ילדים, שכיר. מה המוצר הדחוף ביותר שחסר לו?',opts:['סיעוד — כי כדאי לקנות מוקדם','ריסק בלבד — הוא צריך להגן על המשפחה','אכ"ע + מחלות קשות — להגן על ההכנסה','שב"ן משודרג — הבסיס הוא הבריאות'],c:2,exp:'בגיל 42 עם ילדים — הסיכון הגדול ביותר הוא אובדן הכנסה ממחלה. אכ"ע: קצבה חודשית אם לא יכול לעבוד. CI: כסף מיידי עם אבחנה. ריסק חשוב אבל אם יש משכנתא ובן/בת זוג עובד/ת — אכ"ע+CI קודמים.'},
+  {q:'מה ההגדרה של "עיסוק ספציפי" בביטוח אכ"ע?',opts:['כיסוי רק לעובדים בענפים מוגדרים','מקבלים קצבה אם לא יכולים לעבוד בעיסוקם הספציפי — גם אם יכולים לעבוד בעיסוק אחר','כיסוי רק לתאונות שקרו בזמן העבודה','אחוז נכות ספציפי (75%) הנדרש לזכאות'],c:1,exp:'דוגמה קלאסית: רופא מנתח שאיבד שימוש ביד. ב"עיסוק ספציפי" — קצבה מלאה גם כשמרצה. ב"כל עיסוק" — יכול להרצות = עובד = לא מקבל קצבה. ההגדרה הזאת שווה עשרות אלפי שקלים.'},
+  {q:'מה הם ADL בהקשר של ביטוח סיעוד?',opts:['Advanced Disability Level — דרגת נכות רשמית','Annual Disability Limit — מגבלת תשלום שנתית','Activities of Daily Living — אכילה, לבוש, רחצה, ניידות, שליטה בסוגרים, העברה ממיטה','שם של פרוטוקול ביטוחי בינלאומי'],c:2,exp:'ADL = 6 פעולות יום-יומיות. ביטוח סיעוד מופעל כשלא ניתן לבצע 2 או 3 מהן (תלוי בפוליסה). חשוב לבדוק כמה ADL דורשת הפוליסה — ההבדל בין 2/6 ל-3/6 הוא קריטי לקבלת הגמלה.'},
+  {q:'לקוח 35, רווק, ללא תלויים. מה סדר עדיפות הביטוח שלו?',opts:['ריסק — כי הוא צעיר והפרמיה זולה','קולקטיב בריאות — זה הבסיס ההכרחי','אכ"ע + מחלות קשות — ההכנסה היא הנכס הגדול שלו','אין צורך בביטוח לרווקים צעירים'],c:2,exp:'לרווק ללא תלויים — ריסק פחות דחוף (מי ייהנה?). אבל אם יחלה ולא יוכל לעבוד — מי יממן את חייו? אכ"ע = הכרחי. CI = כיסוי בעת אבחנה. ביחד = הגנה על יכולת ההשתכרות שהיא הנכס הגדול ביותר.'},
+  {q:'מה פירוש "תקופת אכשרה" בביטוח בריאות?',opts:['הזמן שאחרי סיום הפוליסה שבו עדיין מכוסים','תקופה בתחילת הפוליסה שבה מחלות קיימות מראש לא מכוסות','החודשים שמשלמים פרמיה כפולה בגלל מחלה קיימת','תקופת ניסיון שאפשר לצאת ממנה ללא קנס'],c:1,exp:'Waiting Period = תקופה שבה מחלות שהיו קיימות לפני הצטרפות לא מכוסות. קולקטיב = אכשרה קצרה יותר מפרטי. זה אחד היתרונות הגדולים של קולקטיב — קל יותר להצטרף גם עם בעיות קיימות.'},
+  {q:'מה זה ביטוח "שקל ראשון" לעומת "משלים שב"ן"?',opts:['שקל ראשון = זול יותר; משלים שב"ן = יקר יותר ועדיף','שקל ראשון = הביטוח מכסה מהרגע הראשון ללא תלות בשב"ן; משלים = מכסה רק מה שהשב"ן לא כיסה','הם זהים לגמרי, רק שמות שיווקיים','שקל ראשון = עדיף לצעירים; משלים = עדיף למבוגרים'],c:1,exp:'הבדל קריטי: "שקל ראשון" = הביטוח משלם גם אם השב"ן כבר כיסה חלק. "משלים שב"ן" = הביטוח משלם רק את מה שהשב"ן לא כיסה. בעל פוליסת "שקל ראשון" לא צריך אפילו להגיש תביעה לשב"ן.'},
+  {q:'מה זה IN SITU בביטוח מחלות קשות?',opts:['שם של חברת ביטוח מובילה','מונח משפטי שמשמעותו "בתוקף"','שלב מוקדם של סרטן שטרם התפשט — מכוסה לרוב ב-10–25% מסכום הביטוח','סוג של תשלום מפוצל על פני 3 שנים'],c:2,exp:'IN SITU (לטינית: "במקום") = גידול סרטני בשלב מוקדם לפני שפלש לרקמות אחרות. פוליסות רבות מכסות אותו בתשלום חלקי. חשוב לבדוק בכל פוליסה — האם מכסה IN SITU ובאיזה אחוז? זה ערך מוסף שרב לקוחות לא מכירים.'},
+  {q:'לקוח 55, עצמאי, ללא ביטוח כלל. מה הכי קריטי?',opts:['ריסק — כי הוא מבוגר יותר ועלול לפטור','סיעוד — כי כבר מגיע לגיל הרלוונטי','אכ"ע — עצמאי ללא הכנסה = קטסטרופה מיידית','קולקטיב בריאות — הדבר הראשון שצריך לסגור'],c:2,exp:'עצמאי = אין מעסיק, אין ימי מחלה, אין ביטוח לאומי מלא. אם עוצר לעבוד — ההכנסה עוצרת מיד. בגיל 55 מחלות קשות הן סיכון ממשי. סדר עדיפויות: אכ"ע → CI → סיעוד → ריסק. קולקטיב בריאות גם חשוב אבל אכ"ע קריטי יותר.'},
+  {q:'מה זה "franchise" בביטוח אכ"ע?',opts:['זכיינות — הסוכן פועל כנציג של חברת ביטוח','תקופת המתנה (30–90 יום) מתחילת הנכות עד לקבלת הקצבה הראשונה','עמלת הסוכן הכלולה בפרמיה','סכום השתתפות עצמית בכל תביעה'],c:1,exp:'Franchise = תקופת ההמתנה. אם הפוליסה: 60 יום — מי שנפגע ב-1/1 יקבל קצבה ב-1/3. מה קורה בינתיים? צריך חיסכון שמכסה את ה-Franchise. חשוב לשאול לקוח: "כמה יש לך חסוך לתקופת ההמתנה?"'},
+  {q:'מה הוא Clawback בביטוח?',opts:['פרמיה שמוחזרת למבוטח בסוף שנה ללא תביעות','כיסוי לחזרת מחלה שהייתה קודם','זכות חברת הביטוח לדרוש החזר תגמולים ששולמו אם הצהרת הבריאות לא הייתה מלאה','הנחה לחידוש פוליסה ותיקה'],c:2,exp:'Clawback: אם מבוטח קיבל תגמולים ואחר כך מתגלה שהצהרת הבריאות לא הייתה מלאה — החברה תובעת חזרה. לכן: הצהרת הבריאות חייבת להיות מלאה ומדויקת. "אל תסתיר כלום — מה שלא תצהיר עכשיו יעלה לך ביום שתצטרך."'},
+  {q:'מה "כלל האצבע" לחישוב סכום ביטוח חיים?',opts:['10 שנות שכר לכל מקרה','70–100 פעמים ההכנסה החודשית, או יתרת המשכנתא + 3 שנות הוצאות','מיליון ₪ לכל מבוטח עם ילדים','5 שנות שכר ולא יותר'],c:1,exp:'כלל האצבע: 70–100x הכנסה חודשית = 6–8 שנות שכר. לחלופין: יתרת משכנתא + 3 שנות הוצאות משפחה. כל משפחה שונה — חשב יחד עם הלקוח. מה הוא צריך כדי שהמשפחה תמשיך?'},
+  {q:'מה זה "שחיקת גיל" בביטוח מחלות קשות?',opts:['הפוליסה מתבטלת אוטומטית בגיל 65','הפרמיה עולה כל שנה עם הגיל','ירידה בסכום הכיסוי מגיל מסוים (לרוב 65–70) — כיסוי יורד ל-50% מהסכום המקורי','ביטול החרגות ישנות כשמגיעים לגיל מבוגר'],c:2,exp:'שחיקת גיל: קנית 500,000 ₪ כיסוי CI — בגיל 70 הפוליסה אומרת שהכיסוי ירד ל-50% = 250,000. הדגש: "הכיסוי הכי חשוב הוא בגיל הפעיל (40–65) — בדיוק כשהכי פחות צריך לדאוג לשחיקה."'},
+  {q:'לקוח נמל חיפה 20 שנה: "יש לי ביטוח דרך העבודה, אני מכוסה". מה עונים?',opts:['"צודק, לך תהנה מהיום"','"מצוין! בוא נבדוק ביחד מה כולל הקולקטיב ומה לא — ובמיוחד מה קורה אם תפסיק לעבוד שם"','"הקולקטיב שלך גרוע, כדאי מיד לעבור לביטוח פרטי"','"כמה אתה משלם? כנראה יקר לך"'],c:1,exp:'זה הפתח המושלם! הקולקטיב של נמל חיפה = ביטוח בריאות בלבד. לא כולל CI, אכ"ע, ריסק, סיעוד. ועוד: ביום שיפסיק לעבוד בנמל — הקולקטיב יסתיים. שתי נקודות שפותחות שיחה.'},
+  {q:'מה ההבדל העיקרי בין קולקטיב לביטוח בריאות פרטי?',opts:['קולקטיב יקר יותר אבל כיסוי רחב יותר','קולקטיב = חיתום קבוצתי, פרמיה נמוכה, הצטרפות קלה; פרטי = חיתום אישי, כיסוי מותאם, אבל עלות גבוהה עם החרגות','פרטי = זהה לקולקטיב אבל ללא תלות בעבודה','אין הבדל מהותי, רק שם שיווקי שונה'],c:1,exp:'קולקטיב = חיתום קבוצתי → קל יותר להצטרף גם עם בעיות רפואיות + פרמיה נמוכה. פרטי = חיתום אישי → יותר מותאם אישית אבל יקר ועם החרגות. עצה: קולקטיב ראשון, פרטי להשלמת פערים.'},
+  {q:'לקוחה 48 אומרת: "אמא שלי הייתה שנתיים בסיעוד, עלתה לנו 8,000 ₪/חודש". מה הפתח?',opts:['"כן, סיעוד יקר, בהצלחה"','"כנראה אמא שלך לא הייתה מבוטחת כמו שצריך"','בדיוק בגלל זה צריך לעשות ביטוח סיעוד עכשיו — בגיל 48 הפרמיה עדיין נגישה, ובגיל 60 היא תוכפל','"הממשלה צריכה לטפל בזה, זה לא הוגן"'],c:2,exp:'זו אמירה רגשית חזקה — הלקוחה כבר חוותה את הכאב. מצאת את המוטיבציה. עכשיו: מחבר לפתרון. גיל 48 = פרמיה עוד נגישה. כל שנה שמחכים = 5–8% עלייה בפרמיה + סיכון למחלות שיוחרגו.'},
+  {q:'מה השאלה הפותחת הטובה ביותר לשיחת ביטוח?',opts:['"כמה אתה מרוויח בחודש?"','"יש לך ביטוח? איזה סוג? בוא נבדוק מה בדיוק מכוסה ומה לא"','"אתה יודע שאתה לא מכוסה מספיק?"','"אני רוצה להציג לך מוצר מעולה"'],c:1,exp:'השאלה הפותחת הטובה ביותר גורמת ללקוח לגלות את הפערים בעצמו. "יש לך ביטוח?" → "כן" → "מה בדיוק כולל?" → 90% לא יודעים. הלקוח שמגלה שאין לו כיסוי = קל יותר מלקוח שמישהו אומר לו.'},
+  {q:'מה ההבדל בין אכ"ע "עד גיל 67" לאכ"ע "5 שנים"?',opts:['אין הבדל — שניהם משלמים עד שמחלימים','עד גיל 67 = קצבה ממשיכה עד הפנסיה; 5 שנים = לאחר 5 שנות נכות הקצבה נפסקת','5 שנים = מבצע זמני, עד 67 = מוצר קבוע','עד גיל 67 = רק לתאונות; 5 שנים = רק למחלות'],c:1,exp:'הבדל עצום! מי שנפגע בגיל 45 עם "5 שנים" יקבל קצבה עד גיל 50 — ואז לא יקבל כלום עד פנסיה. "עד 67" = 22 שנות קצבה נוספות. ההבדל בפרמיה קטן יחסית לערך הענקי. תמיד לבדוק!'},
+  {q:'מי צריך ביטוח ריסק / חיים בהכרח?',opts:['כל אדם מגיל 18, ללא יוצא מן הכלל','רק מי שיש לו חוב (משכנתא) בלבד','מי שיש לו תלויים (ילדים, בן/בת זוג), חוב גדול, או הורים שתלויים בהכנסתו','רווקים וגרושים פטורים לחלוטין'],c:2,exp:'הכלל: ריסק קיים בשביל מי שיש אחריו. ילדים? חייב ריסק. משכנתא + בן/בת זוג שמרוויח פחות? חייב ריסק. הורים שתלויים בך? חייב ריסק. רווק בלי תלויים? נמוך בסדר עדיפויות. אבל תמיד לשאול — מי יפגע אם תלך?'}
+];
+
+let qIdx=0, score=0, answered=false;
+
+function buildQuiz(){
+  const el=document.getElementById('quiz-inner');
+  if(qIdx>=questions.length){
+    showResults(); return;
+  }
+  const q=questions[qIdx];
+  const pct=Math.round(qIdx/questions.length*100);
+  el.innerHTML=`
+    <div class="qprog-wrap">
+      <div class="qprog-bar-bg"><div class="qprog-bar" id="qprog" style="width:${pct}%"></div></div>
+      <div class="qprog-txt">${qIdx+1} / ${questions.length}</div>
+    </div>
+    <div class="q-num">שאלה ${qIdx+1}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-options">
+      ${q.opts.map((o,i)=>`<button class="q-opt" id="qo-${i}" onclick="answerQ(${i})"><span class="ol">${['א','ב','ג','ד'][i]}</span><span>${o}</span></button>`).join('')}
+    </div>
+    <div class="q-fb" id="qfb"></div>
+    <button class="next-q-btn" id="qnext" onclick="nextQ()">${qIdx===questions.length-1?'ראה תוצאות':'השאלה הבאה →'}</button>
+  `;
+  answered=false;
+}
+
+function answerQ(i){
+  if(answered) return;
+  answered=true;
+  const q=questions[qIdx];
+  const isCorrect=i===q.c;
+  if(isCorrect) score++;
+  document.querySelectorAll('.q-opt').forEach((b,j)=>{
+    b.classList.add('locked');
+    if(j===q.c) b.classList.add('correct');
+    else if(j===i) b.classList.add('wrong');
+  });
+  const fb=document.getElementById('qfb');
+  fb.className='q-fb show '+(isCorrect?'fb-ok':'fb-err');
+  fb.innerHTML=`<strong>${isCorrect?'✅ נכון!':'❌ לא נכון.'}</strong>${q.exp}`;
+  document.getElementById('qnext').classList.add('show');
+}
+
+function nextQ(){
+  qIdx++;
+  buildQuiz();
+}
+
+function showResults(){
+  const pct=Math.round(score/questions.length*100);
+  let msg,sub;
+  if(score>=18){msg='🏆 מומחה ביטוח!';sub='אתה מוכן לשוק. הידע שלך ברמה גבוהה מאוד.';}
+  else if(score>=14){msg='👏 טוב מאוד!';sub='עוד קצת ותהיה מומחה. בדוק את הנושאים שפספסת.';}
+  else if(score>=10){msg='📚 בסיס טוב';sub='כדאי לחזור על ארגז הכלים והאנציקלופדיה.';}
+  else{msg='💡 יש מה ללמוד';sub='חזור על כל הטאבים ונסה שוב. ידע = מכירות.';}
+  document.getElementById('quiz-inner').innerHTML=`
+    <div class="quiz-results">
+      <div class="res-circle"><div class="res-score">${score}</div><div class="res-of">מתוך ${questions.length}</div></div>
+      <div class="res-msg">${msg}</div>
+      <div class="res-sub">${sub}</div>
+      <div class="res-bar-wrap"><div class="res-bar" id="res-bar" style="width:0%"></div></div>
+      <button class="restart-quiz-btn" onclick="restartQuiz()">🔄 נסה שוב</button>
+    </div>
+  `;
+  setTimeout(()=>{const b=document.getElementById('res-bar');if(b)b.style.width=pct+'%';},100);
+}
+
+function restartQuiz(){
+  qIdx=0;score=0;answered=false;
+  buildQuiz();
+}
+
+/* ===== INIT ===== */
+buildEncyclopedia();
+buildQuiz();
+</script>
+
+<script>
+// PWA Manifest (injected as data URI)
+(function() {
+  var manifest = {
+    name: "מערכת לימוד ביטוח קולקטיב",
+    short_name: "ביטוח קולקטיב",
+    description: "כלי לימוד מקצועי לסוכני ביטוח",
+    start_url: "./",
+    display: "standalone",
+    background_color: "#1a3a5c",
+    theme_color: "#1a3a5c",
+    orientation: "portrait",
+    icons: [
+      {
+        src: "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20192%20192%27%3E%3Crect%20width%3D%27192%27%20height%3D%27192%27%20rx%3D%2740%27%20fill%3D%27%231a3a5c%27%2F%3E%3Ctext%20y%3D%27.85em%27%20font-size%3D%27140%27%20x%3D%2715%27%3E%F0%9F%9B%A1%EF%B8%8F%3C%2Ftext%3E%3C%2Fsvg%3E",
+        sizes: "192x192",
+        type: "image/svg+xml"
+      }
+    ]
+  };
+  var el = document.getElementById('pwa-manifest');
+  if (el) {
+    var blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+    el.href = URL.createObjectURL(blob);
+  }
+})();
+
+// iOS "Add to Home Screen" banner
+window.addEventListener('DOMContentLoaded', function() {
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isStandalone = window.navigator.standalone;
+  if (isIOS && !isStandalone && !localStorage.getItem('pwa-dismissed')) {
+    var banner = document.createElement('div');
+    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a3a5c;color:white;padding:14px 16px;font-size:14px;text-align:center;z-index:9999;direction:rtl;font-family:-apple-system,sans-serif;box-shadow:0 -2px 10px rgba(0,0,0,.4);';
+    banner.innerHTML = '📱 להתקנה כאפליקציה: לחץ <strong>שתף ↑</strong> &rarr; <strong>הוסף למסך הבית</strong> <button onclick="this.parentElement.remove();localStorage.setItem(\'pwa-dismissed\',1)" style="float:left;background:transparent;border:1px solid rgba(255,255,255,.7);color:white;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:13px;">✕</button>';
+    document.body.appendChild(banner);
+  }
+});
+</script>
+</body>
+</html>

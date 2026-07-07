@@ -36,7 +36,7 @@ a{color:var(--blue)}
 /* ===== TABS ===== */
 .tab-bar{background:var(--card);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;position:sticky;top:0;z-index:99;scrollbar-width:none}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);padding:15px 20px;cursor:pointer;font-size:.9rem;font-weight:500;white-space:nowrap;transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:6px}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);padding:15px 20px;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font-size:.9rem;font-weight:500;white-space:nowrap;transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:6px}
 .tab-icon{font-size:1rem;line-height:1;flex-shrink:0}
 .tab-label{white-space:nowrap}
 @media(max-width:768px){
@@ -1205,6 +1205,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 /* =========================================
    TAB SWITCHING
    ========================================= */
+document.addEventListener('DOMContentLoaded',function(){
 document.querySelectorAll('.tab-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));

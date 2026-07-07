@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -36,14 +36,24 @@ a{color:var(--blue)}
 /* ===== TABS ===== */
 .tab-bar{background:var(--card);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;position:sticky;top:0;z-index:99;scrollbar-width:none}
 .tab-bar::-webkit-scrollbar{display:none}
-.tab-btn{background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);padding:15px 20px;cursor:pointer;font-size:.9rem;font-weight:500;white-space:nowrap;transition:all .2s;font-family:inherit}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);padding:15px 20px;cursor:pointer;font-size:.9rem;font-weight:500;white-space:nowrap;transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:6px}
+.tab-icon{font-size:1rem;line-height:1;flex-shrink:0}
+.tab-label{white-space:nowrap}
+@media(max-width:768px){
+  .tab-bar{position:fixed;bottom:0;top:auto;border-bottom:none;border-top:1px solid var(--border);z-index:100;padding-bottom:env(safe-area-inset-bottom,0px);background:rgba(26,26,26,.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);overflow-x:visible;justify-content:space-around}
+  .tab-btn{flex:1;flex-direction:column;gap:3px;padding:8px 4px 6px;border-bottom:none;border-top:3px solid transparent;font-size:.6rem;min-height:56px;justify-content:center;align-items:center}
+  .tab-btn.active{border-bottom:none;border-top-color:var(--blue)}
+  .tab-icon{font-size:1.5rem}
+  .tab-label{display:none}
+}
+@media(min-width:769px){.tab-icon{display:none}}
 .tab-btn:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
 
 /* ===== LAYOUT ===== */
 main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
-.tab-pane{display:none;animation:fadeUp .3s ease}
-.tab-pane.active{display:block}
+.tab-pane{display:none}
+.tab-pane.active{display:block;animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 .section-head{margin-bottom:20px}
@@ -51,7 +61,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 .section-head p{font-size:.88rem;color:var(--muted)}
 
 /* ===== PRODUCT CARDS (Tab 1) ===== */
-.product-card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
 .product-card:hover{border-color:#3a3a3a}
 .pc-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;user-select:none}
 .pc-left{display:flex;align-items:center;gap:14px}
@@ -106,7 +116,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 .c-purple .trigger-box h4{color:var(--purple)}
 
 /* ===== DECISION TREE (Tab 2) ===== */
-.tree-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;min-height:420px}
+.tree-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;min-height:420px}
 
 .prog-track{display:flex;align-items:center;gap:6px;margin-bottom:24px}
 .prog-dot{height:8px;border-radius:4px;background:var(--border);transition:all .35s}
@@ -172,7 +182,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 .sales-tip{background:var(--green-dim);border:1px solid var(--green-ring);border-radius:6px;padding:10px 12px;font-size:.84rem;color:#aff0c4}
 
 /* ===== QUIZ (Tab 4) ===== */
-.quiz-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:26px}
+.quiz-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px}
 
 .qprog-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px}
 .qprog-bar-bg{flex:1;background:var(--border);border-radius:10px;height:5px;overflow:hidden}
@@ -229,7 +239,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
   .restart-btn,.restart-quiz-btn,.next-q-btn{min-height:44px;font-size:.9rem;padding:13px 24px}
   .step-q{font-size:1.05rem}
   .q-text{font-size:.97rem;margin-bottom:16px}
-  main{padding:18px 12px 90px}
+  main{padding:18px 12px 100px}
   .pc-header{padding:15px 16px}
   .pc-inner{padding:0 14px 16px}
   .tree-wrap{padding:18px 16px}
@@ -321,10 +331,12 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 .toast-close:hover{color:#ccc}
 
 /* ===== SAFE AREA (notch phones) ===== */
+@media(max-width:768px){#pwa-toast{bottom:68px}}
 @supports(padding:max(0px)){
   main{padding-bottom:max(60px,env(safe-area-inset-bottom)+60px)}
   #pwa-toast{bottom:max(20px,env(safe-area-inset-bottom)+8px)}
 }
+@media(max-width:768px){main{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 80px)}#pwa-toast{bottom:calc(env(safe-area-inset-bottom,0px) + 70px)}}
 </style>
 </head>
 <body>
@@ -365,10 +377,10 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 
 
 <nav class="tab-bar" role="tablist">
-  <button class="tab-btn active" data-tab="toolbox">🗂️ ארגז הכלים</button>
-  <button class="tab-btn" data-tab="tree">🌳 עץ החלטות</button>
-  <button class="tab-btn" data-tab="encyclopedia">📚 אנציקלופדיה</button>
-  <button class="tab-btn" data-tab="quiz">🎯 סימולטור</button>
+  <button class="tab-btn active" data-tab="toolbox"><span class="tab-icon">🗂️</span><span class="tab-label"> ארגז הכלים</span></button>
+  <button class="tab-btn" data-tab="tree"><span class="tab-icon">🌳</span><span class="tab-label"> עץ החלטות</span></button>
+  <button class="tab-btn" data-tab="encyclopedia"><span class="tab-icon">📚</span><span class="tab-label"> אנציקלופדיה</span></button>
+  <button class="tab-btn" data-tab="quiz"><span class="tab-icon">🎯</span><span class="tab-label"> סימולטור</span></button>
 </nav>
 
 <main>
@@ -379,6 +391,69 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
     <p>לחץ על מוצר לפתיחת כרטיס הידע המלא</p>
   </div>
 
+
+  <!-- 0. Kidma Agency Info Card -->
+  <div class="product-card" id="pc-kidma" style="border-color:rgba(59,130,246,.35);margin-bottom:20px">
+    <div class="pc-header" onclick="toggleCard('pc-kidma')">
+      <div class="pc-left">
+        <div class="pc-icon" style="background:rgba(59,130,246,.15);color:var(--blue)">🏢</div>
+        <div>
+          <div class="pc-title">קידמה — סוכנות הביטוח שלנו</div>
+          <div class="pc-price">קולקטיבים מנוהלים, פרטי יצירת קשר ועקרונות מפתח</div>
+        </div>
+      </div>
+      <span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body">
+      <div class="pc-inner">
+        <hr class="pc-divider">
+        <div class="info-grid">
+          <div class="ib">
+            <h4>🏢 מיהי קידמה</h4>
+            <ul>
+              <li>סוכנות ביטוח קולקטיבית מובילה</li>
+              <li>מתמחה בביטוחים קבוצתיים לתעשייה</li>
+              <li>מנהלת קולקטיבים לאלפי עובדים</li>
+              <li>שותפה עם: הראל, פניקס ועוד</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>📋 קולקטיבים מנוהלים</h4>
+            <ul>
+              <li>🏗️ נמל חיפה — הראל (2025–2030)</li>
+              <li>🔥 קריית מוצקין — פניקס (2024–2029)</li>
+              <li>📡 דב"ס</li>
+              <li>🚂 רכבת ישראל</li>
+              <li>🥛 תנובה</li>
+              <li>⚓ מספנות ישראל</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>💡 יתרון קידמה</h4>
+            <ul>
+              <li>חיתום קבוצתי — ללא הצהרת בריאות</li>
+              <li>פרמיות מוזלות בכוח הקבוצה</li>
+              <li>ליווי אישי לאורך כל הדרך</li>
+              <li>ניסיון בשוק הקולקטיבי הישראלי</li>
+            </ul>
+          </div>
+          <div class="ib">
+            <h4>⚙️ עקרונות לסוכן</h4>
+            <ul>
+              <li>פרמיות מוצמדות למדד — עדכן שנתי</li>
+              <li>בדוק תמיד: שקל ראשון / משלים שב"ן</li>
+              <li>כיסויים משתנים בין קולקטיבים</li>
+              <li>תקופות אכשרה — לפי חוזה ספציפי</li>
+            </ul>
+          </div>
+        </div>
+        <div class="trigger-box" style="background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.25);border-radius:9px;padding:14px;margin-top:10px">
+          <h4 style="color:var(--blue);font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:6px">📌 עיקרון מכירה — קידמה</h4>
+          <p style="font-size:.88rem;color:#ccc;font-style:italic">"קולקטיב קידמה = כיסוי ללא שאלות רפואיות + פרמיה נמוכה + הצטרפות מהירה. הדגש ללקוח: הזדמנות שלא קיימת בכל מקום."</p>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- 1. Health -->
   <div class="product-card c-blue" id="pc-health">
     <div class="pc-header" onclick="toggleCard('pc-health')">
@@ -1517,9 +1592,9 @@ function buildQuiz(){
   el.innerHTML=`
     <div class="qprog-wrap">
       <div class="qprog-bar-bg"><div class="qprog-bar" id="qprog" style="width:${pct}%"></div></div>
-      <div class="qprog-txt">${qIdx+1} / ${questions.length}</div>
+      <div class="qprog-txt">שאלה ${qIdx+1}/${questions.length}</div>
     </div>
-    <div class="q-num">שאלה ${qIdx+1}</div>
+    <div class="q-num">שאלה ${qIdx+1} מתוך ${questions.length}</div>
     <div class="q-text">${q.q}</div>
     <div class="q-options">
       ${q.opts.map((o,i)=>`<button class="q-opt" id="qo-${i}" onclick="answerQ(${i})"><span class="ol">${['א','ב','ג','ד'][i]}</span><span>${o}</span></button>`).join('')}

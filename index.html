@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -243,6 +243,40 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
   .tab-btn{padding:13px 11px;font-size:.78rem}
 }
 
+
+/* ===== COLLECTIVE SELECTOR BAR ===== */
+.coll-select-bar{background:linear-gradient(90deg,#0d1b2a,#1a3a5c);padding:10px 16px;display:flex;align-items:center;gap:8px;direction:rtl;border-bottom:2px solid rgba(59,130,246,.3)}
+.coll-select-bar label{color:#a0c4e0;font-size:12px;white-space:nowrap;font-weight:600;letter-spacing:.3px}
+.coll-select-bar select{flex:1;padding:7px 10px;border-radius:7px;border:1px solid rgba(59,130,246,.4);font-size:13px;font-weight:600;background:#0d1b2a;color:#fff;cursor:pointer;outline:none}
+.coll-select-bar select:focus{border-color:var(--blue)}
+
+/* ===== COLLECTIVE PANEL (inside product card) ===== */
+.collective-panel{display:none;border-top:1px solid var(--border);padding-top:14px;margin-top:6px}
+.collective-panel.active{display:block;animation:fadeUp .3s ease}
+.coll-header{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.coll-badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px;letter-spacing:.4px}
+.coll-name{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:2px}
+.coll-meta{font-size:.78rem;color:var(--muted)}
+.premium-table{width:100%;border-collapse:collapse;font-size:.82rem;margin-top:10px}
+.premium-table th{background:rgba(255,255,255,.06);color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border:1px solid var(--border);text-align:center}
+.premium-table td{padding:8px 10px;border:1px solid var(--border);text-align:center;color:#ccc}
+.premium-table tr td:first-child{font-weight:700;color:#fff;text-align:right}
+
+/* ===== CONDITIONS COLLAPSIBLE ===== */
+.coll-conditions{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:12px}
+.coll-cond-h{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;transition:background .15s}
+.coll-cond-h:hover{background:rgba(255,255,255,.04)}
+.coll-cond-h span:first-child{font-size:.9rem;font-weight:700;color:#fff}
+.coll-cond-chevron{color:var(--muted);font-size:.8rem;transition:transform .3s}
+.coll-conditions.open .coll-cond-chevron{transform:rotate(180deg)}
+.coll-cond-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.coll-conditions.open .coll-cond-body{max-height:800px}
+.coll-cond-inner{border-top:1px solid var(--border);padding:14px 16px}
+.cond-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:9px;font-size:.85rem;color:#ccc;line-height:1.5}
+.cond-row:last-child{margin-bottom:0}
+.cond-icon{flex-shrink:0;width:22px;text-align:center}
+.cond-label{font-weight:700;color:#fff}
+
 /* Smooth card hover animations */
 .product-card{transition:border-color .2s,box-shadow .25s}
 .product-card:hover{box-shadow:0 4px 24px rgba(0,0,0,.35)}
@@ -329,6 +363,20 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
   <p>ארגז הכלים של הסוכן הישראלי — ידע, כלים, אנציקלופדיה וסימולטור</p>
 </div>
 
+<!-- ===== COLLECTIVE SELECTOR BAR ===== -->
+<div class="coll-select-bar">
+  <label>🏢 קולקטיב:</label>
+  <select id="active-collective" onchange="setCollective(this.value)">
+    <option value="all">כל הקולקטיבים</option>
+    <option value="namal">נמל חיפה — הראל</option>
+    <option value="kiryat">קריית מוצקין — פניקס/קידמה</option>
+    <option value="dvs">דב"ס</option>
+    <option value="rakevet">רכבת ישראל</option>
+    <option value="tnuva">תנובה</option>
+    <option value="mispanot">מספנות ישראל</option>
+  </select>
+</div>
+
 <nav class="tab-bar" role="tablist">
   <button class="tab-btn active" data-tab="toolbox">🗂️ ארגז הכלים</button>
   <button class="tab-btn" data-tab="tree">🌳 עץ החלטות</button>
@@ -403,6 +451,204 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
           <h4>🎯 טריגר מכירה</h4>
           <p>"יש לך ביטוח בריאות? בוא נבדוק מה בדיוק מכוסה — כי שב"ן של קופה ומה שאנחנו מציעים זה לא אותו דבר בכלל."</p>
         </div>
+
+        <!-- ===== COLLECTIVE PANELS ===== -->
+        <div class="collective-panel active" id="coll-panel-all">
+          <div class="ib" style="background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.2)">
+            <h4 style="color:var(--blue)">📋 בחר קולקטיב בסרגל למעלה לפרטים מלאים</h4>
+            <p>בחר קולקטיב לצפייה בפרמיות, כיסויים ותנאי הצטרפות ספציפיים לכל מקום עבודה.</p>
+          </div>
+        </div>
+
+        <div class="collective-panel" id="coll-panel-namal">
+          <div class="coll-header">
+            <div class="coll-badge">🏗️ הראל</div>
+            <div class="coll-name">קולקטיב נמל חיפה</div>
+            <div class="coll-meta">תקופה: ספטמבר 2025 — אוגוסט 2030 | מדד בסיס: 15.08.2025</div>
+          </div>
+          <table class="premium-table">
+            <tr><th>מבוטח</th><th>מסלול א (משלים שב"ן)</th><th>מסלול ב (שקל ראשון)</th></tr>
+            <tr><td>עובד</td><td>178 ₪</td><td>159 ₪</td></tr>
+            <tr><td>ילד</td><td>61.6 ₪</td><td>51.9 ₪</td></tr>
+            <tr><td>פנסיונר</td><td>329 ₪</td><td>290 ₪</td></tr>
+          </table>
+          <div class="info-grid" style="margin-top:12px">
+            <div class="ib">
+              <h4>✅ כיסויים עיקריים</h4>
+              <ul>
+                <li>השתלות לב/ריאה/כבד: עד 5M ₪</li>
+                <li>השתלות בע"ח: עד 3M ₪</li>
+                <li>מח עצם: עד 150K ₪</li>
+                <li>תרופות מחוץ לסל: עד 3M ₪</li>
+                <li>ניתוחים בחו"ל: 250% ממחיר ישראל</li>
+              </ul>
+            </div>
+            <div class="ib">
+              <h4>🏥 אמבולטורי</h4>
+              <ul>
+                <li>950 ₪ לביקור</li>
+                <li>עד 3 ביקורים לשנה</li>
+                <li>20% השתתפות עצמית</li>
+                <li>90 ימי המתנה ראשוניים</li>
+              </ul>
+            </div>
+          </div>
+          <div class="coll-conditions" id="cond-namal">
+            <div class="coll-cond-h" onclick="toggleCond('cond-namal')">
+              <span>📋 תנאי הצטרפות</span>
+              <span class="coll-cond-chevron">▼</span>
+            </div>
+            <div class="coll-cond-body"><div class="coll-cond-inner">
+              <div class="cond-row"><span class="cond-icon">👤</span><span><span class="cond-label">גיל הצטרפות:</span> עד גיל 64 + 11 חודשים</span></div>
+              <div class="cond-row"><span class="cond-icon">⏱️</span><span><span class="cond-label">תקופת אכשרה:</span> 90 יום ממועד הצטרפות</span></div>
+              <div class="cond-row"><span class="cond-icon">📝</span><span><span class="cond-label">הצהרת בריאות:</span> לא נדרשת — חיתום קבוצתי</span></div>
+              <div class="cond-row"><span class="cond-icon">👶</span><span><span class="cond-label">ילדים:</span> עד גיל 25 — 61.6/51.9 ₪ לחודש</span></div>
+              <div class="cond-row"><span class="cond-icon">🌅</span><span><span class="cond-label">פנסיונרים:</span> מסלול נפרד — 329/290 ₪ לחודש</span></div>
+              <div class="cond-row"><span class="cond-icon">📅</span><span><span class="cond-label">הצמדה:</span> למדד 15/8/2025 — עדכון שנתי</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="collective-panel" id="coll-panel-kiryat">
+          <div class="coll-header">
+            <div class="coll-badge">🔥 פניקס</div>
+            <div class="coll-name">קולקטיב קריית מוצקין — קבוצת קידמה</div>
+            <div class="coll-meta">תקופה: דצמבר 2024 — נובמבר 2029</div>
+          </div>
+          <table class="premium-table">
+            <tr><th>מבוטח</th><th>מסלול א (משלים שב"ן)</th><th>מסלול ב (שקל ראשון)</th></tr>
+            <tr><td>עובד</td><td>137 ₪</td><td>179 ₪</td></tr>
+            <tr><td>בן/בת זוג</td><td>137 ₪</td><td>179 ₪</td></tr>
+            <tr><td>ילד עד 25</td><td>137 ₪</td><td>179 ₪</td></tr>
+            <tr><td>ילד מעל 25</td><td>38 ₪</td><td>44.50 ₪</td></tr>
+          </table>
+          <div class="info-grid" style="margin-top:12px">
+            <div class="ib">
+              <h4>✅ כיסויים עיקריים</h4>
+              <ul>
+                <li>ניתוחים פרטיים — רשת Phoenix</li>
+                <li>תרופות מחוץ לסל</li>
+                <li>השתלות בארץ ובחו"ל</li>
+                <li>שירותים אמבולטוריים</li>
+              </ul>
+            </div>
+            <div class="ib">
+              <h4>⚠️ הגבלות חשובות</h4>
+              <ul>
+                <li><strong>ניתוחים: רשת Phoenix בלבד!</strong></li>
+                <li>מסלול א = משלים שב"ן</li>
+                <li>מסלול ב = שקל ראשון (עדיף)</li>
+                <li>לבדוק: תנאי השתלות ספציפיים</li>
+              </ul>
+            </div>
+          </div>
+          <div class="coll-conditions" id="cond-kiryat">
+            <div class="coll-cond-h" onclick="toggleCond('cond-kiryat')">
+              <span>📋 תנאי הצטרפות</span>
+              <span class="coll-cond-chevron">▼</span>
+            </div>
+            <div class="coll-cond-body"><div class="coll-cond-inner">
+              <div class="cond-row"><span class="cond-icon">🏗️</span><span><span class="cond-label">מסלולים:</span> א (משלים שב"ן 137 ₪) | ב (שקל ראשון 179 ₪)</span></div>
+              <div class="cond-row"><span class="cond-icon">🏥</span><span><span class="cond-label">רשת ניתוחים:</span> פניקס בלבד — לבדוק בתי חולים מכוסים</span></div>
+              <div class="cond-row"><span class="cond-icon">📝</span><span><span class="cond-label">הצהרת בריאות:</span> לא נדרשת — חיתום קבוצתי</span></div>
+              <div class="cond-row"><span class="cond-icon">👶</span><span><span class="cond-label">ילדים מעל 25:</span> 38/44.50 ₪ — פרמיה מופחתת</span></div>
+              <div class="cond-row"><span class="cond-icon">📅</span><span><span class="cond-label">חידוש:</span> עד נובמבר 2029</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="collective-panel" id="coll-panel-dvs">
+          <div class="coll-header">
+            <div class="coll-badge">📡 קולקטיב</div>
+            <div class="coll-name">קולקטיב דב"ס</div>
+            <div class="coll-meta">לפרטי פרמיות — עיין בחוזה הקולקטיב</div>
+          </div>
+          <div class="ib"><h4>📋 נקודות מפתח</h4><ul>
+            <li>קולקטיב בריאות קבוצתי לעובדי דב"ס</li>
+            <li>הצטרפות ללא הצהרת בריאות</li>
+            <li>לבדוק: שקל ראשון / משלים שב"ן</li>
+            <li>לבדוק: כיסוי השתלות, ניתוחים, תרופות</li>
+            <li>לבדוק: תקופת אכשרה ספציפית</li>
+          </ul></div>
+          <div class="coll-conditions" id="cond-dvs">
+            <div class="coll-cond-h" onclick="toggleCond('cond-dvs')"><span>📋 תנאי הצטרפות</span><span class="coll-cond-chevron">▼</span></div>
+            <div class="coll-cond-body"><div class="coll-cond-inner">
+              <div class="cond-row"><span class="cond-icon">📝</span><span><span class="cond-label">הצהרת בריאות:</span> לא נדרשת — חיתום קבוצתי</span></div>
+              <div class="cond-row"><span class="cond-icon">⏱️</span><span><span class="cond-label">תקופת אכשרה:</span> לבדוק בחוזה המלא</span></div>
+              <div class="cond-row"><span class="cond-icon">💡</span><span>עיין במסמך קולקטיב דב"ס לכל הפרטים</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="collective-panel" id="coll-panel-rakevet">
+          <div class="coll-header">
+            <div class="coll-badge">🚂 קולקטיב</div>
+            <div class="coll-name">קולקטיב רכבת ישראל</div>
+            <div class="coll-meta">לפרטי פרמיות — עיין בחוזה הקולקטיב</div>
+          </div>
+          <div class="ib"><h4>📋 נקודות מפתח</h4><ul>
+            <li>קולקטיב בריאות קבוצתי לעובדי רכבת ישראל</li>
+            <li>הצטרפות ללא הצהרת בריאות</li>
+            <li>לבדוק: שקל ראשון / משלים שב"ן</li>
+            <li>לבדוק: כיסוי ניתוחים, השתלות, תרופות</li>
+            <li>לבדוק: תנאי פנסיונרים</li>
+          </ul></div>
+          <div class="coll-conditions" id="cond-rakevet">
+            <div class="coll-cond-h" onclick="toggleCond('cond-rakevet')"><span>📋 תנאי הצטרפות</span><span class="coll-cond-chevron">▼</span></div>
+            <div class="coll-cond-body"><div class="coll-cond-inner">
+              <div class="cond-row"><span class="cond-icon">📝</span><span><span class="cond-label">הצהרת בריאות:</span> לא נדרשת — חיתום קבוצתי</span></div>
+              <div class="cond-row"><span class="cond-icon">⏱️</span><span><span class="cond-label">תקופת אכשרה:</span> לבדוק בחוזה המלא</span></div>
+              <div class="cond-row"><span class="cond-icon">💡</span><span>עיין במסמך קולקטיב רכבת ישראל לכל הפרטים</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="collective-panel" id="coll-panel-tnuva">
+          <div class="coll-header">
+            <div class="coll-badge">🥛 קולקטיב</div>
+            <div class="coll-name">קולקטיב תנובה</div>
+            <div class="coll-meta">לפרטי פרמיות — עיין בחוזה הקולקטיב</div>
+          </div>
+          <div class="ib"><h4>📋 נקודות מפתח</h4><ul>
+            <li>קולקטיב בריאות קבוצתי לעובדי תנובה</li>
+            <li>הצטרפות ללא הצהרת בריאות</li>
+            <li>לבדוק: שקל ראשון / משלים שב"ן</li>
+            <li>לבדוק: כיסוי ניתוחים, השתלות, תרופות</li>
+            <li>לבדוק: תנאי ילדים ופנסיונרים</li>
+          </ul></div>
+          <div class="coll-conditions" id="cond-tnuva">
+            <div class="coll-cond-h" onclick="toggleCond('cond-tnuva')"><span>📋 תנאי הצטרפות</span><span class="coll-cond-chevron">▼</span></div>
+            <div class="coll-cond-body"><div class="coll-cond-inner">
+              <div class="cond-row"><span class="cond-icon">📝</span><span><span class="cond-label">הצהרת בריאות:</span> לא נדרשת — חיתום קבוצתי</span></div>
+              <div class="cond-row"><span class="cond-icon">⏱️</span><span><span class="cond-label">תקופת אכשרה:</span> לבדוק בחוזה המלא</span></div>
+              <div class="cond-row"><span class="cond-icon">💡</span><span>עיין במסמך קולקטיב תנובה לכל הפרטים</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="collective-panel" id="coll-panel-mispanot">
+          <div class="coll-header">
+            <div class="coll-badge">⚓ קולקטיב</div>
+            <div class="coll-name">קולקטיב מספנות ישראל</div>
+            <div class="coll-meta">לפרטי פרמיות — עיין בחוזה הקולקטיב</div>
+          </div>
+          <div class="ib"><h4>📋 נקודות מפתח</h4><ul>
+            <li>קולקטיב בריאות קבוצתי לעובדי מספנות ישראל</li>
+            <li>הצטרפות ללא הצהרת בריאות</li>
+            <li>לבדוק: שקל ראשון / משלים שב"ן</li>
+            <li>לבדוק: כיסוי ניתוחים, השתלות, תרופות</li>
+            <li>לבדוק: תנאי הצטרפות ספציפיים</li>
+          </ul></div>
+          <div class="coll-conditions" id="cond-mispanot">
+            <div class="coll-cond-h" onclick="toggleCond('cond-mispanot')"><span>📋 תנאי הצטרפות</span><span class="coll-cond-chevron">▼</span></div>
+            <div class="coll-cond-body"><div class="coll-cond-inner">
+              <div class="cond-row"><span class="cond-icon">📝</span><span><span class="cond-label">הצהרת בריאות:</span> לא נדרשת — חיתום קבוצתי</span></div>
+              <div class="cond-row"><span class="cond-icon">⏱️</span><span><span class="cond-label">תקופת אכשרה:</span> לבדוק בחוזה המלא</span></div>
+              <div class="cond-row"><span class="cond-icon">💡</span><span>עיין במסמך קולקטיב מספנות ישראל לכל הפרטים</span></div>
+            </div></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -663,11 +909,13 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
       <div class="prog-dot cur" id="pd1"></div>
       <div class="prog-dot todo" id="pd2"></div>
       <div class="prog-dot todo" id="pd3"></div>
+      <div class="prog-dot todo" id="pd4" style="display:none"></div>
+      <div class="prog-dot todo" id="pd5" style="display:none"></div>
     </div>
 
     <!-- Step 1 -->
     <div class="tree-step active" id="tstep-1">
-      <div class="step-label">שאלה 1 מתוך 3</div>
+      <div class="step-label" id="slabel-1">שאלה 1 מתוך 3</div>
       <div class="step-q">מה הסטטוס המשפחתי של הלקוח?</div>
       <div class="step-sub">זה ישפיע ישירות על סדר עדיפות המוצרים</div>
       <div class="opts-grid">
@@ -680,7 +928,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 
     <!-- Step 2 -->
     <div class="tree-step" id="tstep-2">
-      <div class="step-label">שאלה 2 מתוך 3</div>
+      <div class="step-label" id="slabel-2">שאלה 2 מתוך 3</div>
       <div class="step-q">מה רמת הכיסוי הביטוחי הנוכחית?</div>
       <div class="step-sub">נבין מה יש ומה חסר</div>
       <div class="opts-grid">
@@ -693,7 +941,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 
     <!-- Step 3 -->
     <div class="tree-step" id="tstep-3">
-      <div class="step-label">שאלה 3 מתוך 3</div>
+      <div class="step-label" id="slabel-3">שאלה 3 מתוך 3</div>
       <div class="step-q">מה הנושא הכי רגיש / מדאיג את הלקוח?</div>
       <div class="step-sub">הפחד הזה הוא הפתח לשיחה</div>
       <div class="opts-grid">
@@ -701,6 +949,34 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
         <button class="opt-btn" onclick="treeSelect(3,'family')"><span class="opt-em">👨‍👩‍👧</span><span class="opt-lbl">דאגה לפרנסת המשפחה</span><span class="opt-desc">מה יהיה עליהם אם משהו יקרה לי</span></button>
         <button class="opt-btn" onclick="treeSelect(3,'burden')"><span class="opt-em">🙏</span><span class="opt-lbl">לא רוצה להיות נטל</span><span class="opt-desc">לא רוצה שהילדים יטפלו בי</span></button>
         <button class="opt-btn" onclick="treeSelect(3,'savings')"><span class="opt-em">💰</span><span class="opt-lbl">לא לכלות חסכונות</span><span class="opt-desc">כלכלה — שמירה על הנכסים</span></button>
+      </div>
+    </div>
+
+    <!-- Step 4: Employer -->
+    <div class="tree-step" id="tstep-4">
+      <div class="step-label" id="slabel-4">שאלה 4 מתוך 5</div>
+      <div class="step-q">מי המעסיק של הלקוח?</div>
+      <div class="step-sub">הקולקטיב נקבע לפי מקום העבודה</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(4,'namal')"><span class="opt-em">🏗️</span><span class="opt-lbl">נמל חיפה</span><span class="opt-desc">קולקטיב הראל</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'kiryat')"><span class="opt-em">🔥</span><span class="opt-lbl">קריית מוצקין / קידמה</span><span class="opt-desc">קולקטיב פניקס</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'dvs')"><span class="opt-em">📡</span><span class="opt-lbl">דב"ס</span><span class="opt-desc">קולקטיב דב"ס</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'rakevet')"><span class="opt-em">🚂</span><span class="opt-lbl">רכבת ישראל</span><span class="opt-desc">קולקטיב רכבת</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'tnuva')"><span class="opt-em">🥛</span><span class="opt-lbl">תנובה</span><span class="opt-desc">קולקטיב תנובה</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'mispanot')"><span class="opt-em">⚓</span><span class="opt-lbl">מספנות ישראל</span><span class="opt-desc">קולקטיב מספנות</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'other')"><span class="opt-em">🏢</span><span class="opt-lbl">מעסיק אחר</span><span class="opt-desc">לא בקולקטיב שלנו</span></button>
+      </div>
+    </div>
+
+    <!-- Step 5: Join Date -->
+    <div class="tree-step" id="tstep-5">
+      <div class="step-label" id="slabel-5">שאלה 5 מתוך 5</div>
+      <div class="step-q">מתי הלקוח הצטרף למעסיק הנוכחי?</div>
+      <div class="step-sub">חשוב להצטרפות לקולקטיב — תקופת אכשרה</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(5,'new')"><span class="opt-em">🆕</span><span class="opt-lbl">פחות מ-3 חודשים</span><span class="opt-desc">עובד חדש</span></button>
+        <button class="opt-btn" onclick="treeSelect(5,'mid')"><span class="opt-em">📅</span><span class="opt-lbl">3–12 חודשים</span><span class="opt-desc">בשנה הראשונה</span></button>
+        <button class="opt-btn" onclick="treeSelect(5,'veteran')"><span class="opt-em">✅</span><span class="opt-lbl">יותר משנה</span><span class="opt-desc">ותיק — זכאי מלא</span></button>
       </div>
     </div>
 
@@ -722,7 +998,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
 <!-- ===================== TAB 4: QUIZ ===================== -->
 <section id="quiz" class="tab-pane">
   <div class="section-head">
-    <h2>סימולטור — 20 שאלות</h2>
+    <h2>סימולטור — 25 שאלות</h2>
     <p>בחן את הידע שלך. כל שאלה עם משוב מיידי והסבר</p>
   </div>
 
@@ -887,7 +1163,7 @@ function toggleCard(id){
 /* =========================================
    DECISION TREE (Tab 2)
    ========================================= */
-let tS={status:null,coverage:null,concern:null};
+let tS={status:null,coverage:null,concern:null,employer:null,joinDate:null};
 
 const labels={
   single:'רווק/ה',married:'נשוי/ה ללא ילדים',married_kids:'נשוי/ה עם ילדים',retiree:'גמלאי/ת',
@@ -905,21 +1181,46 @@ const productEmoji={health:'🏥',critical:'💊',disability:'⚡',life:'❤️'
 
 function treeSelect(step, val){
   if(step===1){tS.status=val; showTreeStep(2);}
-  else if(step===2){tS.coverage=val; showTreeStep(3);}
-  else if(step===3){tS.concern=val; showTreeResult();}
+  else if(step===2){
+    tS.coverage=val;
+    showTreeStep(3);
+  }
+  else if(step===3){
+    tS.concern=val;
+    // If user has collective, ask which employer
+    if(tS.coverage==='collective'||tS.coverage==='collective_private'){
+      // Show pd4/pd5 dots
+      var d4=document.getElementById('pd4');
+      var d5=document.getElementById('pd5');
+      if(d4){d4.style.display='';} if(d5){d5.style.display='';}
+      // Update step labels to show "X of 5"
+      ['slabel-1','slabel-2','slabel-3'].forEach(function(id,i){
+        var el=document.getElementById(id);
+        if(el) el.textContent='שאלה '+(i+1)+' מתוך 5';
+      });
+      showTreeStep(4);
+    } else {
+      showTreeResult();
+    }
+  }
+  else if(step===4){tS.employer=val; showTreeStep(5);}
+  else if(step===5){tS.joinDate=val; showTreeResult();}
 }
 
 function showTreeStep(n){
-  for(let i=1;i<=3;i++){
+  for(let i=1;i<=5;i++){
     const el=document.getElementById('tstep-'+i);
-    el.classList.toggle('active', i===n);
+    if(el) el.classList.toggle('active', i===n);
   }
   updateProgress(n);
 }
 
 function updateProgress(cur){
-  ['pd1','pd2','pd3'].forEach((id,i)=>{
-    const d=document.getElementById(id);
+  var maxSteps=(tS.coverage==='collective'||tS.coverage==='collective_private')?5:3;
+  ['pd1','pd2','pd3','pd4','pd5'].forEach(function(id,i){
+    var d=document.getElementById(id);
+    if(!d) return;
+    if(i>=maxSteps) return;
     d.className='prog-dot '+(i+1<cur?'done':i+1===cur?'cur':'todo');
   });
 }
@@ -994,12 +1295,26 @@ function showTreeResult(){
   const r=getRec(tS.status, tS.coverage, tS.concern);
   const el=document.getElementById('tree-result');
 
+  // Build collective recommendation
+  var collExtra='';
+  if(tS.employer){
+    var collNames={namal:'נמל חיפה — הראל',kiryat:'קריית מוצקין — פניקס',dvs:'דב"ס',rakevet:'רכבת ישראל',tnuva:'תנובה',mispanot:'מספנות ישראל',other:'מעסיק אחר'};
+    var joinMsgs={
+      new:'<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:.88rem;color:#ffc0c0"><strong>⚠️ עובד חדש — תקופת אכשרה!</strong><br>הלקוח עובד פחות מ-3 חודשים. בדוק בחוזה הקולקטיב את תקופת האכשרה הספציפית (בד"כ 90 יום). אפשר להצטרף עכשיו — הכיסוי מתחיל אחרי האכשרה.</div>',
+      mid:'<div style="background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:.88rem;color:#ffeea0"><strong>📅 3–12 חודשים בחברה</strong><br>ייתכן שתקופת האכשרה כבר עברה — תלוי בקולקטיב הספציפי. מומלץ להצטרף עכשיו ולבדוק מועד תחילת כיסוי מלא.</div>',
+      veteran:'<div style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:.88rem;color:#c0ffd6"><strong>✅ ותיק — זכאי להצטרפות מלאה</strong><br>הלקוח עובד יותר משנה. תקופת האכשרה עברה ב-100%. ניתן להצטרף לקולקטיב עם כיסוי מלא מיידי.</div>'
+    };
+    collExtra='<div style="background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:14px 16px;margin-bottom:14px"><div style="font-size:.75rem;text-transform:uppercase;letter-spacing:.6px;color:var(--blue);font-weight:700;margin-bottom:8px">🏢 קולקטיב רלוונטי</div><div style="font-weight:700;color:#fff;font-size:.95rem;margin-bottom:8px">'+collNames[tS.employer]+'</div>'+(joinMsgs[tS.joinDate]||'')+'<div style="font-size:.82rem;color:var(--muted)">לחץ על "ארגז הכלים" → "ביטוח בריאות קבוצתי" לפרמיות מלאות</div></div>';
+  }
+
   el.innerHTML=`
     <div class="context-bar">
       <span>👤 ${labels[tS.status]}</span>
       <span class="ctx-tag">📋 ${labels[tS.coverage]}</span>
       <span class="ctx-tag">❤️ ${labels[tS.concern]}</span>
+      ${tS.employer?'<span class="ctx-tag">🏢 '+({namal:"נמל חיפה",kiryat:"קריית מוצקין",dvs:'דב"ס',rakevet:"רכבת",tnuva:"תנובה",mispanot:"מספנות",other:"מעסיק אחר"})[tS.employer]+'</span>':''}
     </div>
+    ${collExtra}
 
     <div class="rec-cards">
       <div class="rec-card">
@@ -1031,8 +1346,16 @@ function showTreeResult(){
 }
 
 function treeReset(){
-  tS={status:null,coverage:null,concern:null};
+  tS={status:null,coverage:null,concern:null,employer:null,joinDate:null};
   document.getElementById('tree-result').style.display='none';
+  // Hide pd4/pd5
+  var d4=document.getElementById('pd4'); var d5=document.getElementById('pd5');
+  if(d4){d4.style.display='none';} if(d5){d5.style.display='none';}
+  // Reset step labels back to 3
+  ['slabel-1','slabel-2','slabel-3'].forEach(function(id,i){
+    var el=document.getElementById(id);
+    if(el) el.textContent='שאלה '+(i+1)+' מתוך 3';
+  });
   showTreeStep(1);
 }
 
@@ -1185,7 +1508,12 @@ const questions=[
   {q:'לקוחה 48 אומרת: "אמא שלי הייתה שנתיים בסיעוד, עלתה לנו 8,000 ₪/חודש". מה הפתח?',opts:['"כן, סיעוד יקר, בהצלחה"','"כנראה אמא שלך לא הייתה מבוטחת כמו שצריך"','בדיוק בגלל זה צריך לעשות ביטוח סיעוד עכשיו — בגיל 48 הפרמיה עדיין נגישה, ובגיל 60 היא תוכפל','"הממשלה צריכה לטפל בזה, זה לא הוגן"'],c:2,exp:'זו אמירה רגשית חזקה — הלקוחה כבר חוותה את הכאב. מצאת את המוטיבציה. עכשיו: מחבר לפתרון. גיל 48 = פרמיה עוד נגישה. כל שנה שמחכים = 5–8% עלייה בפרמיה + סיכון למחלות שיוחרגו.'},
   {q:'מה השאלה הפותחת הטובה ביותר לשיחת ביטוח?',opts:['"כמה אתה מרוויח בחודש?"','"יש לך ביטוח? איזה סוג? בוא נבדוק מה בדיוק מכוסה ומה לא"','"אתה יודע שאתה לא מכוסה מספיק?"','"אני רוצה להציג לך מוצר מעולה"'],c:1,exp:'השאלה הפותחת הטובה ביותר גורמת ללקוח לגלות את הפערים בעצמו. "יש לך ביטוח?" → "כן" → "מה בדיוק כולל?" → 90% לא יודעים. הלקוח שמגלה שאין לו כיסוי = קל יותר מלקוח שמישהו אומר לו.'},
   {q:'מה ההבדל בין אכ"ע "עד גיל 67" לאכ"ע "5 שנים"?',opts:['אין הבדל — שניהם משלמים עד שמחלימים','עד גיל 67 = קצבה ממשיכה עד הפנסיה; 5 שנים = לאחר 5 שנות נכות הקצבה נפסקת','5 שנים = מבצע זמני, עד 67 = מוצר קבוע','עד גיל 67 = רק לתאונות; 5 שנים = רק למחלות'],c:1,exp:'הבדל עצום! מי שנפגע בגיל 45 עם "5 שנים" יקבל קצבה עד גיל 50 — ואז לא יקבל כלום עד פנסיה. "עד 67" = 22 שנות קצבה נוספות. ההבדל בפרמיה קטן יחסית לערך הענקי. תמיד לבדוק!'},
-  {q:'מי צריך ביטוח ריסק / חיים בהכרח?',opts:['כל אדם מגיל 18, ללא יוצא מן הכלל','רק מי שיש לו חוב (משכנתא) בלבד','מי שיש לו תלויים (ילדים, בן/בת זוג), חוב גדול, או הורים שתלויים בהכנסתו','רווקים וגרושים פטורים לחלוטין'],c:2,exp:'הכלל: ריסק קיים בשביל מי שיש אחריו. ילדים? חייב ריסק. משכנתא + בן/בת זוג שמרוויח פחות? חייב ריסק. הורים שתלויים בך? חייב ריסק. רווק בלי תלויים? נמוך בסדר עדיפויות. אבל תמיד לשאול — מי יפגע אם תלך?'}
+  {q:'מי צריך ביטוח ריסק / חיים בהכרח?',opts:['כל אדם מגיל 18, ללא יוצא מן הכלל','רק מי שיש לו חוב (משכנתא) בלבד','מי שיש לו תלויים (ילדים, בן/בת זוג), חוב גדול, או הורים שתלויים בהכנסתו','רווקים וגרושים פטורים לחלוטין'],c:2,exp:'הכלל: ריסק קיים בשביל מי שיש אחריו. ילדים? חייב ריסק. משכנתא + בן/בת זוג שמרוויח פחות? חייב ריסק. הורים שתלויים בך? חייב ריסק. רווק בלי תלויים? נמוך בסדר עדיפויות. אבל תמיד לשאול — מי יפגע אם תלך?'},
+  {q:'לקוח שהצטרף לנמל חיפה לפני חודשיים — מתי הוא יכול להצטרף לביטוח הקולקטיב?',opts:['מיד עם תחילת העבודה','לאחר 90 ימי אכשרה (כ-3 חודשים)','לאחר 6 חודשים בלבד','רק בתחילת שנה קלנדרית'],c:1,exp:'בקולקטיב נמל חיפה (הראל) תקופת האכשרה היא 90 יום מתחילת העבודה. עובד שהצטרף לפני חודשיים (כ-60 יום) צריך לחכות עוד כחודש. אחרי 90 יום — הצטרפות מלאה ללא הצהרת בריאות. זה אחד היתרונות הגדולים של הקולקטיב על פני ביטוח פרטי.'},
+  {q:'מה ההבדל העיקרי בין מסלול א למסלול ב בקולקטיב קריית מוצקין?',opts:['מסלול ב כולל ניתוחים מחוץ לרשת Phoenix','מסלול א הוא משלים שב"ן (137 ₪), מסלול ב הוא שקל ראשון (179 ₪)','המחיר זהה — רק היקף הכיסוי שונה','מסלול א לעובדים, מסלול ב לפנסיונרים'],c:1,exp:'מסלול א (137 ₪) = משלים שב"ן — הביטוח משלם רק מה שהשב"ן לא כיסה. מסלול ב (179 ₪) = שקל ראשון — הביטוח משלם מהרגע הראשון ללא תלות בשב"ן. ההפרש הוא 42 ₪ לחודש — ומסלול ב עדיף משמעותית כי לא צריך להגיש תביעה לשב"ן קודם.'},
+  {q:'לקוח בנמל חיפה עם ניתוח בחו"ל שעולה 100,000 ₪ כשיעלה בישראל — כמה ישלם הביטוח?',opts:['100,000 ₪ — מחיר ישראל בלבד','250,000 ₪ — 250% ממחיר ישראל','150,000 ₪ — 150% ממחיר ישראל','ניתוחים בחו"ל לא מכוסים בקולקטיב'],c:1,exp:'קולקטיב נמל חיפה כולל כיסוי ניתוחים בחו"ל ב-250% ממחיר ישראל! ניתוח שיעלה 100,000 ₪ בארץ — בחו"ל מקבלים 250,000 ₪. זה כיסוי משמעותי מאוד לניתוחים מורכבים שנדרשים לבצע בחו"ל. חשוב להדגיש ללקוחות שיש מחלות נדירות שאפשר לנתח רק בחו"ל.'},
+  {q:'מה פרמיית עובד בנמל חיפה (מסלול א) לאחר הצמדה ביולי 2026?',opts:['165 ₪ לחודש','178 ₪ לחודש','190 ₪ לחודש','210 ₪ לחודש'],c:1,exp:'לאחר הצמדה של +1.83% ליולי 2026, הפרמיה עמדה על 178 ₪ לחודש למסלול א (משלים שב"ן). מסלול ב עמד על 159 ₪. הצמדה מחושבת ממדד הבסיס של 15/8/2025. חשוב לוודא ללקוח שהפרמיה מוצמדת למדד ולא קבועה.'},
+  {q:'קולקטיב קריית מוצקין — לקוח מבקש לנתח לב בבית חולים אסותא פרטי — מה הכיסוי?',opts:['מכוסה מלא — כל בית חולים פרטי','מכוסה רק אם אסותא ברשת Phoenix — לבדוק!','לא מכוסה בכלל — רק ניתוחים ממלכתיים','מכוסה 50% בלבד בבית חולים פרטי'],c:1,exp:'קולקטיב קריית מוצקין (פניקס) מכסה ניתוחים ברשת Phoenix בלבד. אסותא היא בית חולים פרטי שעלול להיות או לא להיות ברשת. לפני כל ניתוח פרטי יש לוודא שבית החולים נמצא ברשת המאושרת של פניקס. זו נקודה קריטית שחשוב להדגיש ללקוחות לפני שמבצעים ניתוח!'
 ];
 
 let qIdx=0, score=0, answered=false;
@@ -1257,6 +1585,35 @@ function showResults(){
 function restartQuiz(){
   qIdx=0;score=0;answered=false;
   buildQuiz();
+}
+
+
+/* =========================================
+   COLLECTIVE SELECTOR
+   ========================================= */
+function setCollective(val){
+  // Update health card collective panels
+  document.querySelectorAll('.collective-panel').forEach(function(p){
+    p.classList.remove('active');
+  });
+  var panel=document.getElementById('coll-panel-'+val);
+  if(panel) panel.classList.add('active');
+  else {
+    var all=document.getElementById('coll-panel-all');
+    if(all) all.classList.add('active');
+  }
+  // Auto-open health card
+  var healthCard=document.getElementById('pc-health');
+  if(healthCard && !healthCard.classList.contains('open')){
+    healthCard.classList.add('open');
+  }
+  // Update selector to reflect context
+  var selectEl=document.getElementById('active-collective');
+  if(selectEl && selectEl.value!==val) selectEl.value=val;
+}
+
+function toggleCond(id){
+  document.getElementById(id).classList.toggle('open');
 }
 
 /* ===== INIT ===== */

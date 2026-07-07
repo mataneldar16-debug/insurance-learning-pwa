@@ -1,0 +1,2777 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ביטוח Pro">
+<link rel="manifest" id="pwa-manifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="מערכת לימוד מקצועית לסוכני ביטוח ישראלים — קולקטיבים, מוצרים, מכירה וסימולטור">
+<title>ביטוח Pro | מערכת לימוד סוכנים</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--card:#13131a;--card2:#1a1a24;--card3:#202030;
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+  --text:#e8e8e8;--muted:#888;--muted2:#555;
+  --blue:#3b82f6;--blue-d:#2563eb;--blue-dim:rgba(59,130,246,.12);--blue-ring:rgba(59,130,246,.35);
+  --gold:#f59e0b;--gold-dim:rgba(245,158,11,.12);--gold-ring:rgba(245,158,11,.35);
+  --orange:#f97316;--orange-dim:rgba(249,115,22,.12);--orange-ring:rgba(249,115,22,.35);
+  --green:#22c55e;--green-dim:rgba(34,197,94,.12);--green-ring:rgba(34,197,94,.35);
+  --red:#ef4444;--red-dim:rgba(239,68,68,.12);--red-ring:rgba(239,68,68,.35);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,.12);--purple-ring:rgba(168,85,247,.35);
+  --teal:#14b8a6;--teal-dim:rgba(20,184,166,.12);--teal-ring:rgba(20,184,166,.35);
+  --nav-h:64px;--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI','Arial',system-ui,sans-serif;direction:rtl;min-height:100vh;line-height:1.6;overflow-x:hidden}
+a{color:var(--blue);text-decoration:none}
+
+/* ===== HEADER ===== */
+.hero{background:linear-gradient(135deg,#07080f 0%,#0d0f1e 50%,#0a0e1a 100%);padding:32px 20px 24px;text-align:center;border-bottom:1px solid var(--border);position:relative;overflow:hidden;flex-shrink:0}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% -10%,rgba(59,130,246,.12) 0%,transparent 70%);pointer-events:none}
+.hero h1{font-size:clamp(1.4rem,4vw,2rem);font-weight:800;color:#fff;margin-bottom:4px;position:relative;letter-spacing:-.02em}
+.hero h1 span{background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--muted);font-size:.88rem;position:relative}
+.hero-xp{display:inline-flex;align-items:center;gap:8px;background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:20px;padding:4px 14px;margin-top:10px;font-size:.82rem;color:var(--gold);font-weight:600}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:rgba(13,13,20,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--border2);display:flex;justify-content:space-around;align-items:stretch;z-index:200}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:var(--muted);cursor:pointer;font-family:inherit;padding:6px 2px;transition:all .2s;border-top:2px solid transparent;position:relative}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{color:var(--blue);border-top-color:var(--blue)}
+.nav-btn .nav-icon{font-size:1.45rem;line-height:1;transition:transform .2s}
+.nav-btn.active .nav-icon{transform:scale(1.1)}
+.nav-btn .nav-label{font-size:.6rem;font-weight:600;letter-spacing:.02em;white-space:nowrap}
+.nav-btn .nav-badge{position:absolute;top:6px;right:calc(50% - 14px);background:var(--red);color:#fff;font-size:.55rem;font-weight:800;padding:1px 4px;border-radius:8px;min-width:14px;text-align:center;display:none}
+.nav-btn .nav-badge.show{display:block}
+
+/* ===== LAYOUT ===== */
+main{max-width:960px;margin:0 auto;padding:20px 14px calc(var(--nav-h) + var(--safe-bottom) + 16px)}
+.tab-pane{display:none}
+.tab-pane.active{display:block;animation:fadeUp .22s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section-head{margin-bottom:18px}
+.section-head h2{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:3px}
+.section-head p{font-size:.85rem;color:var(--muted)}
+
+/* ===== GLASS CARD ===== */
+.glass-card{background:rgba(255,255,255,.04);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--border2);border-radius:16px}
+
+/* ===== TAB 1: LEARNING PATH ===== */
+.chapter-card{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.chapter-card.locked{opacity:.6;pointer-events:none}
+.chapter-card:not(.locked):hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.chapter-header{display:flex;align-items:center;gap:14px;padding:18px 20px;cursor:pointer;user-select:none}
+.chapter-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.ch-blue{background:var(--blue-dim);color:var(--blue)}
+.ch-green{background:var(--green-dim);color:var(--green)}
+.ch-purple{background:var(--purple-dim);color:var(--purple)}
+.chapter-info{flex:1;min-width:0}
+.chapter-title{font-size:1rem;font-weight:700;color:#fff;margin-bottom:2px}
+.chapter-meta{font-size:.78rem;color:var(--muted)}
+.chapter-progress-wrap{margin-top:8px}
+.chapter-prog-bar{background:var(--border);border-radius:8px;height:4px;overflow:hidden;margin-bottom:4px}
+.chapter-prog-fill{height:100%;border-radius:8px;transition:width .6s ease}
+.chapter-prog-txt{font-size:.72rem;color:var(--muted)}
+.chapter-chevron{color:var(--muted);font-size:.9rem;transition:transform .3s;flex-shrink:0}
+.chapter-card.open .chapter-chevron{transform:rotate(180deg)}
+
+.chapter-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1)}
+.chapter-card.open .chapter-body{max-height:3000px}
+
+.lesson-list{padding:0 18px 16px}
+.lesson-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .2s;border:1px solid transparent;position:relative}
+.lesson-item:hover{background:rgba(255,255,255,.04);border-color:var(--border)}
+.lesson-item.active-lesson{background:var(--blue-dim);border-color:var(--blue-ring)}
+.lesson-item.completed-lesson{background:var(--green-dim);border-color:var(--green-ring)}
+.lesson-number{width:30px;height:30px;border-radius:50%;background:var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;transition:all .2s}
+.lesson-item.active-lesson .lesson-number{background:var(--blue);color:#fff}
+.lesson-item.completed-lesson .lesson-number{background:var(--green);color:#fff}
+.lesson-check{font-size:1rem}
+.lesson-info{flex:1;min-width:0}
+.lesson-title-text{font-size:.9rem;font-weight:600;color:#fff;margin-bottom:1px}
+.lesson-desc{font-size:.75rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson-xp{font-size:.7rem;color:var(--gold);font-weight:700;background:var(--gold-dim);padding:2px 7px;border-radius:10px;flex-shrink:0}
+
+/* Lesson viewer */
+.lesson-viewer{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:24px;margin-bottom:16px;animation:fadeUp .3s ease}
+.lesson-viewer-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px}
+.lesson-viewer-title{font-size:1.15rem;font-weight:800;color:#fff;line-height:1.3}
+.lesson-viewer-meta{font-size:.78rem;color:var(--muted);margin-top:3px}
+.lesson-close-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .2s;flex-shrink:0}
+.lesson-close-btn:hover{background:var(--border);color:var(--text)}
+.lesson-content{font-size:.9rem;color:#ccc;line-height:1.75;margin-bottom:20px}
+.lesson-content h4{color:#fff;font-size:.95rem;margin:16px 0 8px;font-weight:700}
+.lesson-content p{margin-bottom:10px}
+.lesson-content strong{color:#fff}
+.lesson-content ul{padding-right:20px;margin-bottom:10px}
+.lesson-content li{margin-bottom:4px}
+.lesson-content .highlight-box{background:var(--blue-dim);border:1px solid var(--blue-ring);border-radius:8px;padding:12px 14px;margin:12px 0}
+.lesson-content .warn-box{background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:8px;padding:12px 14px;margin:12px 0}
+.lesson-content .example-box{background:rgba(255,255,255,.04);border-right:3px solid var(--gold);border-radius:6px;padding:10px 14px;font-style:italic;color:#bbb;margin:10px 0}
+.lesson-takeaways{background:var(--card2);border-radius:10px;padding:16px;margin-bottom:20px}
+.lesson-takeaways h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.6px;color:var(--gold);font-weight:700;margin-bottom:10px}
+.lesson-takeaways ul{padding-right:18px;font-size:.88rem;color:#ccc}
+.lesson-takeaways li{margin-bottom:6px}
+
+.lesson-complete-row{display:flex;align-items:center;gap:14px;background:var(--green-dim);border:1px solid var(--green-ring);border-radius:10px;padding:14px 18px}
+.lesson-complete-row label{font-size:.9rem;color:#c0ffd6;cursor:pointer;flex:1;font-weight:600}
+.lesson-complete-check{width:22px;height:22px;cursor:pointer;accent-color:var(--green);flex-shrink:0}
+.lesson-complete-row.done{background:var(--green-dim);opacity:.8}
+
+/* ===== TAB 2: TOOLS ===== */
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;overflow:hidden;transition:border-color .2s,box-shadow .25s}
+.product-card:hover{box-shadow:0 4px 24px rgba(0,0,0,.35)}
+.pc-header{display:flex;align-items:center;justify-content:space-between;padding:17px 20px;cursor:pointer;user-select:none}
+.pc-left{display:flex;align-items:center;gap:13px}
+.pc-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.pc-title{font-size:.97rem;font-weight:700;color:#fff;margin-bottom:2px}
+.pc-price{font-size:.76rem;color:var(--muted)}
+.pc-chevron{color:var(--muted);font-size:.85rem;transition:transform .3s}
+.product-card.open .pc-chevron{transform:rotate(180deg)}
+.pc-body{max-height:0;overflow:hidden;transition:max-height .42s ease}
+.product-card.open .pc-body{max-height:4000px}
+.pc-inner{padding:0 20px 20px}
+.pc-divider{border:none;border-top:1px solid var(--border);margin-bottom:16px}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+@media(max-width:560px){.info-grid{grid-template-columns:1fr}}
+.ib{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;padding:13px}
+.ib h4{font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.ib ul{padding-right:15px;font-size:.85rem;color:#c5c5c5}
+.ib ul li{margin-bottom:3px}
+.ib p{font-size:.85rem;color:#c5c5c5}
+
+.trigger-box{border-radius:9px;padding:13px;margin-top:10px}
+.trigger-box h4{font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:5px}
+.trigger-box p{font-size:.87rem;color:#ccc;font-style:italic}
+
+.c-blue .pc-icon{background:var(--blue-dim);color:var(--blue)}
+.c-blue.open{border-color:var(--blue-ring)}
+.c-blue .trigger-box{background:var(--blue-dim);border:1px solid var(--blue-ring)}
+.c-blue .trigger-box h4{color:var(--blue)}
+.c-orange .pc-icon{background:var(--orange-dim);color:var(--orange)}
+.c-orange.open{border-color:var(--orange-ring)}
+.c-orange .trigger-box{background:var(--orange-dim);border:1px solid var(--orange-ring)}
+.c-orange .trigger-box h4{color:var(--orange)}
+.c-green .pc-icon{background:var(--green-dim);color:var(--green)}
+.c-green.open{border-color:var(--green-ring)}
+.c-green .trigger-box{background:var(--green-dim);border:1px solid var(--green-ring)}
+.c-green .trigger-box h4{color:var(--green)}
+.c-red .pc-icon{background:var(--red-dim);color:var(--red)}
+.c-red.open{border-color:var(--red-ring)}
+.c-red .trigger-box{background:var(--red-dim);border:1px solid var(--red-ring)}
+.c-red .trigger-box h4{color:var(--red)}
+.c-purple .pc-icon{background:var(--purple-dim);color:var(--purple)}
+.c-purple.open{border-color:var(--purple-ring)}
+.c-purple .trigger-box{background:var(--purple-dim);border:1px solid var(--purple-ring)}
+.c-purple .trigger-box h4{color:var(--purple)}
+
+/* Collective panels */
+.coll-panel{display:none;border-top:1px solid var(--border);padding-top:14px;margin-top:6px}
+.coll-panel.show{display:block;animation:fadeUp .3s ease}
+.coll-hdr{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:13px 15px;margin-bottom:12px}
+.coll-badge{display:inline-flex;align-items:center;gap:5px;background:var(--blue);color:#fff;font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:7px}
+.coll-name{font-size:1rem;font-weight:800;color:#fff;margin-bottom:2px}
+.coll-meta{font-size:.76rem;color:var(--muted)}
+.premium-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:10px}
+.premium-table th{background:rgba(255,255,255,.06);color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;padding:7px 9px;border:1px solid var(--border);text-align:center}
+.premium-table td{padding:7px 9px;border:1px solid var(--border);text-align:center;color:#ccc}
+.premium-table tr td:first-child{font-weight:700;color:#fff;text-align:right}
+.coll-cond{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:12px}
+.coll-cond-h{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:pointer;transition:background .15s}
+.coll-cond-h:hover{background:rgba(255,255,255,.04)}
+.coll-cond-h span:first-child{font-size:.88rem;font-weight:700;color:#fff}
+.coll-cond-chevron{color:var(--muted);font-size:.8rem;transition:transform .3s}
+.coll-cond.open .coll-cond-chevron{transform:rotate(180deg)}
+.coll-cond-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.coll-cond.open .coll-cond-body{max-height:600px}
+.coll-cond-inner{border-top:1px solid var(--border);padding:13px 15px}
+.cond-row{display:flex;align-items:flex-start;gap:9px;margin-bottom:8px;font-size:.83rem;color:#ccc;line-height:1.5}
+.cond-row:last-child{margin-bottom:0}
+.cond-icon{flex-shrink:0;width:20px;text-align:center}
+.cond-label{font-weight:700;color:#fff}
+
+/* ===== TAB 3: DECISION TREE ===== */
+.tree-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;min-height:380px}
+.prog-track{display:flex;align-items:center;gap:5px;margin-bottom:22px}
+.prog-dot{height:7px;border-radius:4px;background:var(--border);transition:all .35s}
+.prog-dot.done{background:var(--green);width:26px}
+.prog-dot.cur{background:var(--blue);width:34px}
+.prog-dot.todo{width:7px}
+.tree-step{display:none}
+.tree-step.active{display:block;animation:fadeUp .25s ease}
+.step-label{font-size:.73rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;font-weight:600}
+.step-q{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:5px;line-height:1.4}
+.step-sub{font-size:.84rem;color:var(--muted);margin-bottom:20px}
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:480px){.opts-grid{grid-template-columns:1fr}}
+.opt-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;text-align:right;transition:all .2s;color:var(--text);font-family:inherit;width:100%}
+.opt-btn:hover{background:rgba(59,130,246,.1);border-color:var(--blue-ring);color:#fff}
+.opt-em{font-size:1.4rem;display:block;margin-bottom:5px}
+.opt-lbl{font-size:.9rem;font-weight:700;display:block;margin-bottom:2px}
+.opt-desc{font-size:.76rem;color:var(--muted)}
+#tree-result{animation:fadeUp .3s ease}
+.context-bar{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:11px 14px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:7px;font-size:.78rem;color:var(--muted)}
+.ctx-tag{background:rgba(255,255,255,.07);border-radius:6px;padding:2px 9px;color:#bbb}
+.rec-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.rec-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:14px;transition:box-shadow .2s}
+.rec-card:hover{box-shadow:0 3px 14px rgba(0,0,0,.2)}
+.rec-badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px}
+.badge-p{background:var(--green-dim);color:var(--green)}
+.badge-s{background:var(--blue-dim);color:var(--blue)}
+.badge-u{background:var(--purple-dim);color:var(--purple)}
+.rec-name{font-size:.97rem;font-weight:700;color:#fff;margin-bottom:4px}
+.rec-why{font-size:.84rem;color:#bbb;line-height:1.5}
+.lines-box{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:16px}
+.lines-title{font-size:.73rem;text-transform:uppercase;letter-spacing:.6px;color:var(--blue);font-weight:700;margin-bottom:11px}
+.line-row{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px;font-size:.86rem;color:#ccc;line-height:1.5}
+.line-row:last-child{margin-bottom:0}
+.line-num{background:var(--blue);color:#fff;width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.restart-btn{background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.86rem;margin-top:18px;transition:all .2s;font-family:inherit}
+.restart-btn:hover{background:rgba(255,255,255,.13);color:#fff}
+
+/* ===== TAB 4: ENCYCLOPEDIA ===== */
+.search-wrap{position:relative;margin-bottom:14px}
+.search-input{width:100%;background:var(--card);border:1px solid var(--border2);border-radius:10px;padding:11px 42px 11px 14px;font-size:.92rem;color:var(--text);font-family:inherit;outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--blue-ring)}
+.search-input::placeholder{color:var(--muted)}
+.search-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem;pointer-events:none}
+.term-cat-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted2);font-weight:700;padding:12px 4px 6px;margin-top:6px}
+.term-cat-label:first-child{padding-top:0;margin-top:0}
+.term-card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:7px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.term-card.open{box-shadow:0 2px 16px rgba(0,0,0,.28)}
+.term-h{display:flex;align-items:center;justify-content:space-between;padding:14px 17px;cursor:pointer;transition:background .15s}
+.term-h:hover{background:rgba(255,255,255,.03)}
+.term-title{font-size:.94rem;font-weight:700;color:#fff}
+.term-preview{font-size:.76rem;color:var(--muted);margin-top:2px}
+.term-chevron{color:var(--muted);font-size:.78rem;flex-shrink:0;margin-right:8px;transition:transform .3s}
+.term-card.open .term-chevron{transform:rotate(180deg)}
+.term-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.term-card.open .term-body{max-height:700px}
+.term-inner{border-top:1px solid var(--border);padding:15px 17px}
+.def-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.6px;color:var(--blue);font-weight:700;margin-bottom:4px;margin-top:11px}
+.def-label:first-child{margin-top:0}
+.def-text{font-size:.86rem;color:#ccc;line-height:1.65;margin-bottom:4px}
+.ex-box{background:rgba(255,255,255,.04);border-right:3px solid var(--gold);border-radius:5px;padding:9px 12px;font-size:.83rem;color:#bbb;font-style:italic;margin:5px 0}
+.sales-tip{background:var(--green-dim);border:1px solid var(--green-ring);border-radius:6px;padding:9px 12px;font-size:.83rem;color:#aff0c4}
+
+/* ===== TAB 5: GAME / SIMULATOR ===== */
+.game-mode-bar{display:flex;gap:8px;margin-bottom:18px;background:var(--card);border-radius:12px;padding:6px}
+.game-mode-btn{flex:1;padding:10px 12px;border:none;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.88rem;font-weight:700;transition:all .2s;color:var(--muted);background:transparent}
+.game-mode-btn.active{background:var(--blue);color:#fff}
+.game-pane{display:none}
+.game-pane.active{display:block;animation:fadeUp .2s ease}
+
+/* Quiz */
+.quiz-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+.qprog-wrap{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.qprog-bar-bg{flex:1;background:var(--border);border-radius:10px;height:5px;overflow:hidden}
+.qprog-bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:10px;transition:width .4s ease}
+.qprog-txt{font-size:.76rem;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.q-num{font-size:.73rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:5px;font-weight:600}
+.q-text{font-size:1rem;font-weight:600;color:#fff;margin-bottom:18px;line-height:1.55}
+.q-options{display:flex;flex-direction:column;gap:8px}
+.q-opt{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px;transition:all .2s;font-family:inherit;color:var(--text);text-align:right;width:100%;font-size:.88rem;line-height:1.45}
+.q-opt .ol{background:var(--border);color:var(--muted);width:25px;height:25px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;transition:all .2s}
+.q-opt:hover:not(.locked){background:rgba(59,130,246,.08);border-color:var(--blue-ring)}
+.q-opt:hover:not(.locked) .ol{background:var(--blue);color:#fff}
+.q-opt.correct{background:var(--green-dim);border-color:var(--green-ring)}
+.q-opt.correct .ol{background:var(--green);color:#fff}
+.q-opt.wrong{background:var(--red-dim);border-color:var(--red-ring);opacity:.75}
+.q-opt.wrong .ol{background:var(--red);color:#fff}
+.q-opt.locked{cursor:default}
+.q-fb{margin-top:12px;padding:12px 14px;border-radius:8px;font-size:.86rem;display:none;line-height:1.5;animation:fadeUp .2s ease}
+.q-fb.show{display:block}
+.q-fb.fb-ok{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffd6}
+.q-fb.fb-err{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffd0d0}
+.q-fb strong{display:block;margin-bottom:3px;font-size:.9rem}
+.next-q-btn{background:var(--blue);border:none;color:#fff;padding:11px 26px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:700;margin-top:13px;display:none;transition:all .2s;font-family:inherit}
+.next-q-btn:hover{background:var(--blue-d);transform:translateY(-1px)}
+.next-q-btn.show{display:inline-block}
+.quiz-results{text-align:center;padding:16px 0;animation:fadeUp .3s ease}
+.res-circle{width:110px;height:110px;border-radius:50%;border:4px solid var(--blue);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 18px}
+.res-score{font-size:2rem;font-weight:800;color:var(--blue);line-height:1}
+.res-of{font-size:.76rem;color:var(--muted)}
+.res-msg{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:5px}
+.res-sub{font-size:.86rem;color:var(--muted);margin-bottom:22px}
+.res-bar-wrap{background:var(--border);border-radius:10px;height:7px;max-width:300px;margin:0 auto 22px;overflow:hidden}
+.res-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width 1s ease}
+.restart-quiz-btn{background:var(--blue);border:none;color:#fff;padding:12px 30px;border-radius:9px;cursor:pointer;font-size:.94rem;font-weight:700;transition:all .2s;font-family:inherit}
+.restart-quiz-btn:hover{background:var(--blue-d);transform:translateY(-2px)}
+
+/* Roleplay */
+.roleplay-wrap{animation:fadeUp .2s ease}
+.scenario-select{margin-bottom:16px}
+.scenario-select-label{font-size:.78rem;color:var(--muted);margin-bottom:8px;font-weight:600}
+.scenario-cards-grid{display:flex;flex-direction:column;gap:9px}
+.scenario-card-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px 18px;cursor:pointer;text-align:right;transition:all .2s;font-family:inherit;color:var(--text);width:100%}
+.scenario-card-btn:hover{border-color:var(--blue-ring);background:var(--blue-dim)}
+.scen-title{font-size:.94rem;font-weight:700;color:#fff;margin-bottom:3px}
+.scen-desc{font-size:.78rem;color:var(--muted)}
+.scen-badge{display:inline-block;font-size:.65rem;background:var(--purple-dim);color:var(--purple);padding:2px 8px;border-radius:10px;margin-bottom:6px;font-weight:700}
+
+.rp-active{animation:fadeUp .25s ease}
+.rp-back-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:inherit;margin-bottom:14px;transition:all .2s}
+.rp-back-btn:hover{border-color:var(--border2);color:var(--text)}
+.client-card{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:18px;margin-bottom:14px}
+.client-card h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.7px;color:var(--blue);font-weight:700;margin-bottom:10px}
+.client-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;font-size:.84rem}
+.client-field{display:flex;flex-direction:column;gap:2px}
+.client-field span:first-child{font-size:.7rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.client-field span:last-child{color:#fff;font-weight:600}
+.help-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:14px}
+.help-card h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin-bottom:10px}
+.help-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.help-col h5{font-size:.72rem;font-weight:700;margin-bottom:6px}
+.help-col.covered h5{color:var(--green)}
+.help-col.notcovered h5{color:var(--red)}
+.help-col ul{padding-right:14px;font-size:.8rem;color:#bbb}
+.help-col li{margin-bottom:3px}
+
+.rp-decision{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:12px}
+.rp-step-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--purple);font-weight:700;margin-bottom:6px}
+.rp-question{font-size:.96rem;font-weight:700;color:#fff;margin-bottom:14px;line-height:1.45}
+.rp-options{display:flex;flex-direction:column;gap:8px}
+.rp-opt{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:12px 15px;cursor:pointer;text-align:right;transition:all .2s;font-family:inherit;color:var(--text);font-size:.87rem;width:100%;line-height:1.45}
+.rp-opt:hover:not(.locked){border-color:var(--purple-ring);background:var(--purple-dim)}
+.rp-opt.locked{cursor:default}
+.rp-opt.chosen-good{background:var(--green-dim);border-color:var(--green-ring)}
+.rp-opt.chosen-ok{background:var(--gold-dim);border-color:var(--gold-ring)}
+.rp-opt.chosen-bad{background:var(--red-dim);border-color:var(--red-ring)}
+.rp-feedback{margin-top:11px;padding:11px 14px;border-radius:8px;font-size:.85rem;line-height:1.5;display:none}
+.rp-feedback.show{display:block;animation:fadeUp .2s ease}
+.rp-feedback.fb-good{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffd6}
+.rp-feedback.fb-ok{background:var(--gold-dim);border:1px solid var(--gold-ring);color:#fff0c0}
+.rp-feedback.fb-bad{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffd0d0}
+.rp-script{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:7px;padding:10px 12px;margin-top:8px;font-size:.84rem;color:#ccc;font-style:italic}
+.rp-script strong{color:#fff;font-style:normal;font-size:.75rem;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;color:var(--blue)}
+.rp-next-btn{background:var(--purple);border:none;color:#fff;padding:10px 22px;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:700;margin-top:11px;display:none;transition:all .2s;font-family:inherit}
+.rp-next-btn.show{display:inline-block}
+.rp-next-btn:hover{opacity:.85;transform:translateY(-1px)}
+.rp-score-card{background:var(--card);border:1px solid var(--purple-ring);border-radius:16px;padding:24px;text-align:center;animation:fadeUp .3s ease}
+.rp-score-circle{width:90px;height:90px;border-radius:50%;border:4px solid var(--purple);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px}
+.rp-score-num{font-size:1.8rem;font-weight:800;color:var(--purple);line-height:1}
+.rp-score-label{font-size:.65rem;color:var(--muted)}
+.rp-score-title{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:6px}
+.rp-score-sub{font-size:.84rem;color:var(--muted);margin-bottom:18px}
+.rp-restart-btn{background:var(--purple);border:none;color:#fff;padding:11px 28px;border-radius:9px;cursor:pointer;font-size:.9rem;font-weight:700;font-family:inherit;transition:all .2s}
+.rp-restart-btn:hover{opacity:.85}
+
+/* ===== TAB 6: PROGRESS ===== */
+.progress-header-card{background:linear-gradient(135deg,#0d1117,#161b2a);border:1px solid var(--blue-ring);border-radius:16px;padding:22px;margin-bottom:16px;text-align:center}
+.level-badge-big{display:inline-flex;align-items:center;gap:10px;margin-bottom:14px}
+.level-icon-big{font-size:2.5rem}
+.level-info h2{font-size:1.3rem;font-weight:800;color:#fff;margin-bottom:2px}
+.level-info p{font-size:.82rem;color:var(--muted)}
+.xp-bar-wrap{background:rgba(255,255,255,.08);border-radius:20px;height:12px;overflow:hidden;margin-bottom:6px}
+.xp-bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.xp-bar-labels{display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted)}
+
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.stat-num{font-size:1.6rem;font-weight:800;color:var(--blue);line-height:1;margin-bottom:3px}
+.stat-label{font-size:.74rem;color:var(--muted)}
+.stat-box.gold .stat-num{color:var(--gold)}
+.stat-box.green .stat-num{color:var(--green)}
+.stat-box.purple .stat-num{color:var(--purple)}
+.stat-box.red .stat-num{color:var(--red)}
+.stat-box.teal .stat-num{color:var(--teal)}
+
+.badges-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.badges-section h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin-bottom:14px}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.badge-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:14px 12px;text-align:center;transition:all .2s}
+.badge-item.earned{background:var(--gold-dim);border-color:var(--gold-ring)}
+.badge-item.earned:hover{box-shadow:0 3px 12px rgba(245,158,11,.2)}
+.badge-item.locked-badge{opacity:.4}
+.badge-emoji{font-size:1.8rem;display:block;margin-bottom:6px}
+.badge-name{font-size:.78rem;font-weight:700;color:#fff;margin-bottom:2px}
+.badge-desc{font-size:.68rem;color:var(--muted);line-height:1.35}
+.badge-item.earned .badge-name{color:var(--gold)}
+
+.xp-log{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+.xp-log h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin-bottom:12px}
+.xp-log-list{display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto}
+.xp-log-item{display:flex;align-items:center;gap:10px;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:7px;font-size:.82rem}
+.xp-log-item .xp-amt{color:var(--gold);font-weight:700;white-space:nowrap;margin-right:auto}
+
+/* ===== XP TOAST ===== */
+.xp-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:20px;padding:10px 18px;display:flex;align-items:center;gap:8px;z-index:1000;font-size:.9rem;font-weight:700;color:var(--gold);transition:transform .4s cubic-bezier(.16,1,.3,1),opacity .3s;opacity:0;pointer-events:none}
+.xp-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ===== PWA TOAST ===== */
+#pwa-toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:rgba(18,18,18,.97);border:1px solid #3c3c3c;border-radius:18px;padding:12px 13px;display:flex;align-items:center;gap:9px;z-index:9999;box-shadow:0 8px 40px rgba(0,0,0,.7);max-width:360px;width:calc(100% - 28px);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);animation:pwaSlide .45s cubic-bezier(.16,1,.3,1)}
+#pwa-toast.hidden{display:none!important}
+@keyframes pwaSlide{from{opacity:0;transform:translateX(-50%) translateY(22px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.toast-icon{font-size:1.5rem;flex-shrink:0}
+.toast-text{flex:1;font-size:.8rem;line-height:1.45;color:#ccc}
+.toast-text strong{color:#fff;font-size:.86rem;display:block;margin-bottom:1px}
+#pwa-install-btn{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;color:#fff;padding:7px 12px;border-radius:9px;cursor:pointer;font-size:.76rem;font-weight:700;white-space:nowrap;font-family:inherit;flex-shrink:0;display:none}
+.toast-close{background:none;border:none;color:#555;cursor:pointer;font-size:1.3rem;padding:2px;line-height:1;flex-shrink:0}
+.toast-close:hover{color:#ccc}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+
+/* ===== MOBILE ===== */
+@media(max-width:480px){
+  body{font-size:15px}
+  main{padding:16px 10px calc(var(--nav-h) + var(--safe-bottom) + 12px)}
+  .hero{padding:24px 14px 18px}
+  .tree-wrap{padding:18px 14px}
+  .quiz-wrap{padding:18px 13px}
+  .lesson-viewer{padding:18px 14px}
+  .chapter-header{padding:15px 14px}
+  .lesson-list{padding:0 12px 12px}
+  .stats-grid{grid-template-columns:repeat(3,1fr);gap:7px}
+  .stat-box{padding:11px 6px}
+  .stat-num{font-size:1.3rem}
+  .badges-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+  .client-grid{grid-template-columns:1fr 1fr}
+  .help-grid{grid-template-columns:1fr}
+}
+
+/* ===== SRS / ADAPTIVE v4 ===== */
+.today-panel{background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(168,85,247,.08));border:1px solid var(--blue-ring);border-radius:14px;padding:18px;margin-bottom:16px}
+.today-panel-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.7px;color:var(--blue);font-weight:700;margin-bottom:12px}
+.today-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.84rem;color:#ccc;line-height:1.45}
+.today-item:last-child{border-bottom:none;padding-bottom:0}
+.today-icon{flex-shrink:0;width:20px;text-align:center}
+.today-cta{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.today-btn{padding:9px 15px;border:none;border-radius:8px;cursor:pointer;font-size:.82rem;font-weight:700;font-family:inherit;transition:all .2s}
+.today-btn.primary{background:var(--blue);color:#fff}
+.today-btn.primary:hover{filter:brightness(1.1)}
+.today-btn.secondary{background:var(--card2);border:1px solid var(--border2);color:var(--text)}
+.weakness-section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-top:14px}
+.weakness-section h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin-bottom:14px}
+.weakness-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.weakness-label{font-size:.82rem;color:#ccc;width:140px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.weakness-bar-wrap{flex:1;background:var(--border);border-radius:6px;height:8px;overflow:hidden}
+.weakness-bar-fill{height:100%;border-radius:6px;transition:width .6s ease}
+.weakness-pct{font-size:.73rem;color:var(--muted);width:38px;text-align:left;flex-shrink:0}
+.weakness-empty{color:var(--muted);font-size:.84rem;padding:8px 0;text-align:center}
+.quiz-mode-selector{display:flex;gap:6px;margin-bottom:14px;background:var(--card2);border-radius:10px;padding:5px;border:1px solid var(--border)}
+.quiz-mode-sel-btn{flex:1;padding:8px 10px;border:none;border-radius:7px;cursor:pointer;font-family:inherit;font-size:.81rem;font-weight:700;transition:all .2s;color:var(--muted);background:transparent;display:flex;align-items:center;justify-content:center;gap:5px}
+.quiz-mode-sel-btn.active{background:var(--blue);color:#fff}
+.due-badge{background:var(--red);color:#fff;font-size:.62rem;font-weight:800;padding:1px 6px;border-radius:10px;line-height:1.4}
+.srs-indicator{display:inline-flex;align-items:center;gap:5px;background:var(--blue-dim);border:1px solid var(--blue-ring);border-radius:8px;padding:3px 9px;font-size:.72rem;color:var(--blue);font-weight:700;margin-bottom:8px}
+.srs-review-indicator{background:var(--gold-dim);border-color:var(--gold-ring);color:var(--gold)}
+.terms-mode-bar{display:flex;gap:7px;margin-bottom:14px;background:var(--card);border-radius:10px;padding:5px;border:1px solid var(--border)}
+.terms-mode-btn{flex:1;padding:9px 10px;border:none;border-radius:7px;cursor:pointer;font-family:inherit;font-size:.83rem;font-weight:700;transition:all .2s;color:var(--muted);background:transparent}
+.terms-mode-btn.active{background:var(--gold);color:#000}
+.insights-panel{display:none}
+.insights-panel.active{display:block}
+.terms-panel.hidden{display:none!important}
+.insight-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.insight-card.open{border-color:var(--gold-ring)}
+.insight-header{display:flex;align-items:center;gap:12px;padding:15px 17px;cursor:pointer;user-select:none}
+.insight-icon{font-size:1.4rem;flex-shrink:0}
+.insight-title{font-size:.93rem;font-weight:700;color:#fff;flex:1;line-height:1.3}
+.insight-principle{font-size:.75rem;color:var(--muted);margin-top:2px}
+.insight-chevron{color:var(--muted);font-size:.8rem;transition:transform .3s;flex-shrink:0}
+.insight-card.open .insight-chevron{transform:rotate(180deg)}
+.insight-body{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.insight-card.open .insight-body{max-height:600px}
+.insight-inner{border-top:1px solid var(--border);padding:15px 17px}
+.insight-detail{font-size:.85rem;color:#ccc;line-height:1.65;margin-bottom:10px}
+.insight-example{background:rgba(255,255,255,.04);border-right:3px solid var(--gold);padding:10px 13px;border-radius:0 6px 6px 0;font-size:.83rem;color:#bbb;font-style:italic;margin-bottom:10px;line-height:1.6}
+.insight-tip{background:var(--blue-dim);border:1px solid var(--blue-ring);border-radius:7px;padding:9px 12px;font-size:.8rem;color:#b0d0ff;line-height:1.5}
+.intel-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.intel-card h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin-bottom:13px}
+.intel-row{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid var(--border);font-size:.84rem}
+.intel-row:last-child{border-bottom:none}
+.intel-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center;margin-top:1px}
+.intel-text{flex:1;color:#ccc;line-height:1.45}
+.intel-text strong{color:#fff}
+.intel-badge{padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.badge-strong{background:var(--green-dim);color:var(--green)}
+.badge-weak{background:var(--red-dim);color:var(--red)}
+.badge-review{background:var(--blue-dim);color:var(--blue)}
+.readiness-panel{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(59,130,246,.06));border:1px solid rgba(34,197,94,.2);border-radius:14px;padding:18px;margin-bottom:14px;text-align:center}
+.readiness-num{font-size:3rem;font-weight:900;line-height:1;margin-bottom:4px}
+.readiness-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin-bottom:12px}
+.readiness-bar-outer{background:rgba(255,255,255,.1);border-radius:8px;height:10px;overflow:hidden;margin-bottom:8px}
+.readiness-bar-inner{height:100%;border-radius:8px;transition:width 1s ease}
+.readiness-desc{font-size:.82rem;color:#ccc}
+.next-step-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ns-btn{padding:10px 15px;border-radius:9px;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:700;border:none;transition:all .2s;flex:1;min-width:110px}
+.ns-btn.blue{background:var(--blue);color:#fff}
+.ns-btn.purple{background:var(--purple);color:#fff}
+.ns-btn.gold{background:var(--gold);color:#000}
+.ns-btn:hover{filter:brightness(1.1)}
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+@media(max-width:480px){.persona-grid{grid-template-columns:1fr}}
+.persona-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:14px;cursor:pointer;transition:all .2s;font-family:inherit;text-align:right;width:100%}
+.persona-card:hover{border-color:var(--purple-ring);background:var(--purple-dim);transform:translateY(-1px)}
+.persona-emoji{font-size:1.7rem;display:block;margin-bottom:7px}
+.persona-name{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:3px;line-height:1.3}
+.persona-desc{font-size:.73rem;color:var(--muted);line-height:1.4;margin-bottom:6px}
+.persona-type-badge{display:inline-block;font-size:.62rem;background:var(--purple-dim);color:var(--purple);padding:2px 7px;border-radius:8px;font-weight:700}
+.rp-persona-profile{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-bottom:14px;display:flex;align-items:flex-start;gap:14px}
+.rp-persona-emoji-big{font-size:2.4rem;flex-shrink:0}
+.rp-persona-info h3{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:4px}
+.rp-persona-info p{font-size:.76rem;color:var(--muted);line-height:1.5}
+.rp-persona-type{font-size:.67rem;background:var(--purple-dim);color:var(--purple);padding:2px 8px;border-radius:8px;font-weight:700;display:inline-block;margin-top:6px}
+
+</style>
+</head>
+<body>
+
+<!-- XP Toast -->
+<div class="xp-toast" id="xp-toast">⭐ <span id="xp-toast-msg">+15 XP</span></div>
+
+<!-- PWA Toast -->
+<div id="pwa-toast" class="hidden" role="status">
+  <span class="toast-icon">🛡️</span>
+  <div class="toast-text"><strong>ביטוח Pro</strong>💡 הוסף לדף הבית לגישה מהירה</div>
+  <button id="pwa-install-btn">הוסף +</button>
+  <button class="toast-close" onclick="closePwaToast()">×</button>
+</div>
+
+<div class="hero">
+  <h1>🛡️ ביטוח <span>Pro</span></h1>
+  <p>מערכת לימוד לסוכן הישראלי — קידמה</p>
+  <div class="hero-xp" id="hero-xp-display">⭐ 0 XP | מתחיל 🌱</div>
+</div>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav" role="tablist">
+  <button class="nav-btn active" data-tab="path" onclick="switchTab('path',this)">
+    <span class="nav-icon">🎯</span><span class="nav-label">מסלול</span>
+    <span class="nav-badge" id="badge-path"></span>
+  </button>
+  <button class="nav-btn" data-tab="tools" onclick="switchTab('tools',this)">
+    <span class="nav-icon">🗂️</span><span class="nav-label">כלים</span>
+  </button>
+  <button class="nav-btn" data-tab="tree" onclick="switchTab('tree',this)">
+    <span class="nav-icon">🌳</span><span class="nav-label">עץ</span>
+  </button>
+  <button class="nav-btn" data-tab="terms" onclick="switchTab('terms',this)">
+    <span class="nav-icon">📚</span><span class="nav-label">מונחים</span>
+  </button>
+  <button class="nav-btn" data-tab="game" onclick="switchTab('game',this)">
+    <span class="nav-icon">🎮</span><span class="nav-label">משחק</span>
+  </button>
+  <button class="nav-btn" data-tab="progress" onclick="switchTab('progress',this)">
+    <span class="nav-icon">🏆</span><span class="nav-label">התקדמות</span>
+  </button>
+</nav>
+
+<main>
+
+<!-- ===================== TAB 1: LEARNING PATH ===================== -->
+<section id="tab-path" class="tab-pane active">
+  <div id="today-panel-container"></div>
+  <div class="section-head">
+    <h2>🎯 מסלול הלימוד</h2>
+    <p>3 פרקים · 16 שיעורים · השלם בסדר כדי לפתוח את הבא</p>
+  </div>
+
+  <div id="lesson-viewer-container"></div>
+
+  <!-- Chapter 1 -->
+  <div class="chapter-card" id="chap-1">
+    <div class="chapter-header" onclick="toggleChapter(1)">
+      <div class="chapter-icon ch-blue">📖</div>
+      <div class="chapter-info">
+        <div class="chapter-title">פרק 1 — יסודות הביטוח</div>
+        <div class="chapter-meta">5 שיעורים · הבסיס שכל סוכן חייב לדעת</div>
+        <div class="chapter-progress-wrap">
+          <div class="chapter-prog-bar"><div class="chapter-prog-fill" id="prog-fill-1" style="background:var(--blue);width:0%"></div></div>
+          <div class="chapter-prog-txt" id="prog-txt-1">0/5 שיעורים</div>
+        </div>
+      </div>
+      <span class="chapter-chevron">▼</span>
+    </div>
+    <div class="chapter-body">
+      <div class="lesson-list" id="lessons-chap-1">
+        <div class="lesson-item" id="li-1-1" onclick="openLesson('1.1')">
+          <div class="lesson-number">1</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">מה זה ביטוח בריאות?</div>
+            <div class="lesson-desc">שב"ן, קולקטיב, פרטי — 3 השכבות</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-1-2" onclick="openLesson('1.2')">
+          <div class="lesson-number">2</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">מה מכסה קופת החולים</div>
+            <div class="lesson-desc">ומה שלא מכוסה — הפערים הקריטיים</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-1-3" onclick="openLesson('1.3')">
+          <div class="lesson-number">3</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">שקל ראשון vs משלים שב"ן</div>
+            <div class="lesson-desc">ההבדל שמשנה הכל — עם מספרים</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-1-4" onclick="openLesson('1.4')">
+          <div class="lesson-number">4</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">מחלות קשות — CI בסיסי</div>
+            <div class="lesson-desc">מה זה, למה שונה מבריאות, מי צריך</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-1-5" onclick="openLesson('1.5')">
+          <div class="lesson-number">5</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">אכ"ע, ריסק, סיעוד</div>
+            <div class="lesson-desc">3 מוצרים קריטיים — מה ומתי</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter 2 -->
+  <div class="chapter-card" id="chap-2">
+    <div class="chapter-header" onclick="toggleChapter(2)">
+      <div class="chapter-icon ch-green">🏗️</div>
+      <div class="chapter-info">
+        <div class="chapter-title">פרק 2 — הקולקטיבים שלנו</div>
+        <div class="chapter-meta">6 שיעורים · כל קולקטיב לעומק</div>
+        <div class="chapter-progress-wrap">
+          <div class="chapter-prog-bar"><div class="chapter-prog-fill" id="prog-fill-2" style="background:var(--green);width:0%"></div></div>
+          <div class="chapter-prog-txt" id="prog-txt-2">0/6 שיעורים</div>
+        </div>
+      </div>
+      <span class="chapter-chevron">▼</span>
+    </div>
+    <div class="chapter-body">
+      <div class="lesson-list" id="lessons-chap-2">
+        <div class="lesson-item" id="li-2-1" onclick="openLesson('2.1')">
+          <div class="lesson-number">1</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">נמל חיפה — הראל</div>
+            <div class="lesson-desc">פרמיות, כיסויים, תנאי הצטרפות</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-2-2" onclick="openLesson('2.2')">
+          <div class="lesson-number">2</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">קריית מוצקין — פניקס</div>
+            <div class="lesson-desc">מסלולים, רשת, הגבלות</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-2-3" onclick="openLesson('2.3')">
+          <div class="lesson-number">3</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">דב"ס</div>
+            <div class="lesson-desc">קולקטיב ומה ידוע עליו</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-2-4" onclick="openLesson('2.4')">
+          <div class="lesson-number">4</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">רכבת ישראל</div>
+            <div class="lesson-desc">קולקטיב עובדי הרכבת</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-2-5" onclick="openLesson('2.5')">
+          <div class="lesson-number">5</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">תנובה</div>
+            <div class="lesson-desc">קולקטיב עובדי תנובה</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-2-6" onclick="openLesson('2.6')">
+          <div class="lesson-number">6</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">מספנות ישראל</div>
+            <div class="lesson-desc">קולקטיב עובדי המספנות</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapter 3 -->
+  <div class="chapter-card" id="chap-3">
+    <div class="chapter-header" onclick="toggleChapter(3)">
+      <div class="chapter-icon ch-purple">💼</div>
+      <div class="chapter-info">
+        <div class="chapter-title">פרק 3 — מכירה</div>
+        <div class="chapter-meta">5 שיעורים · מהפרופיל ועד הסגירה</div>
+        <div class="chapter-progress-wrap">
+          <div class="chapter-prog-bar"><div class="chapter-prog-fill" id="prog-fill-3" style="background:var(--purple);width:0%"></div></div>
+          <div class="chapter-prog-txt" id="prog-txt-3">0/5 שיעורים</div>
+        </div>
+      </div>
+      <span class="chapter-chevron">▼</span>
+    </div>
+    <div class="chapter-body">
+      <div class="lesson-list" id="lessons-chap-3">
+        <div class="lesson-item" id="li-3-1" onclick="openLesson('3.1')">
+          <div class="lesson-number">1</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">פרופיל הלקוח — 4 סוגים</div>
+            <div class="lesson-desc">מה מניע כל לקוח ואיך מדברים אליו</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-3-2" onclick="openLesson('3.2')">
+          <div class="lesson-number">2</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">שאלות פתיחה שעובדות</div>
+            <div class="lesson-desc">5 פתיחות שגורמות ללקוח לדבר</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-3-3" onclick="openLesson('3.3')">
+          <div class="lesson-number">3</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">התנגדויות ותשובות</div>
+            <div class="lesson-desc">"יקר לי", "יש לי ביטוח", "אחשוב"</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-3-4" onclick="openLesson('3.4')">
+          <div class="lesson-number">4</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">השוואה לשב"ן</div>
+            <div class="lesson-desc">מה לומר ללקוח שחושב שיש לו הכל</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+        <div class="lesson-item" id="li-3-5" onclick="openLesson('3.5')">
+          <div class="lesson-number">5</div>
+          <div class="lesson-info">
+            <div class="lesson-title-text">סגירה — מתי ואיך</div>
+            <div class="lesson-desc">איתותים, שאלות סגירה, וטכניקות</div>
+          </div>
+          <div class="lesson-xp">+15 XP</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TAB 2: TOOLS ===================== -->
+<section id="tab-tools" class="tab-pane">
+  <div class="section-head"><h2>🗂️ ארגז הכלים</h2><p>5 מוצרים + 6 קולקטיבים — לחץ לפתיחה</p></div>
+
+  <!-- Health / Collective -->
+  <div class="product-card c-blue" id="pc-health">
+    <div class="pc-header" onclick="toggleCard('pc-health')">
+      <div class="pc-left"><div class="pc-icon">🏥</div>
+        <div><div class="pc-title">ביטוח בריאות — קולקטיב</div><div class="pc-price">פרמיה טיפוסית: 137–330 ₪/חודש</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div class="info-grid">
+        <div class="ib"><h4>✅ מה כולל</h4><ul><li>ניתוחים פרטיים ללא תור</li><li>תרופות מחוץ לסל הבסיסי</li><li>השתלות בארץ ובחו"ל</li><li>ייעוץ מומחים פרטיים</li><li>שירותים אמבולטוריים</li></ul></div>
+        <div class="ib"><h4>❌ מה לא כולל</h4><ul><li>מחלות קשות / CI</li><li>אובדן כושר עבודה (אכ"ע)</li><li>ריסק / חיים</li><li>סיעוד</li><li>נכות כללית</li></ul></div>
+        <div class="ib"><h4>💡 יתרון קולקטיב</h4><ul><li>חיתום קבוצתי — ללא שאלות רפואיות</li><li>פרמיה נמוכה בכוח הקבוצה</li><li>מקבל גם מי שיש לו בעיות</li><li>הצטרפות מהירה ופשוטה</li></ul></div>
+        <div class="ib"><h4>⚠️ נקודות תשומת לב</h4><ul><li>לבדוק: שקל ראשון / משלים שב"ן</li><li>כיסוי שונה בין קולקטיבים</li><li>תקופת אכשרה בתחילה</li><li>תלוי בהמשך עבודה (חלק)</li></ul></div>
+      </div>
+      <div class="trigger-box"><h4>🎯 טריגר מכירה</h4><p>"יש לך ביטוח בריאות? בוא נבדוק מה בדיוק מכוסה — שב"ן של קופה ומה שאנחנו מציעים זה לא אותו דבר בכלל."</p></div>
+
+      <!-- Collectives -->
+      <div style="margin-top:18px">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin-bottom:10px">📋 בחר קולקטיב לפרטים:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">
+          <button onclick="showColl('namal')" style="background:var(--blue-dim);border:1px solid var(--blue-ring);color:var(--blue);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;font-family:inherit">🏗️ נמל חיפה</button>
+          <button onclick="showColl('kiryat')" style="background:var(--orange-dim);border:1px solid var(--orange-ring);color:var(--orange);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;font-family:inherit">🔥 קריית מוצקין</button>
+          <button onclick="showColl('dvs')" style="background:var(--teal-dim);border:1px solid var(--teal-ring);color:var(--teal);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;font-family:inherit">📡 דב"ס</button>
+          <button onclick="showColl('rakevet')" style="background:var(--green-dim);border:1px solid var(--green-ring);color:var(--green);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;font-family:inherit">🚂 רכבת</button>
+          <button onclick="showColl('tnuva')" style="background:var(--purple-dim);border:1px solid var(--purple-ring);color:var(--purple);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;font-family:inherit">🥛 תנובה</button>
+          <button onclick="showColl('mispanot')" style="background:var(--red-dim);border:1px solid var(--red-ring);color:var(--red);padding:5px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-weight:700;font-family:inherit">⚓ מספנות</button>
+        </div>
+
+        <div class="coll-panel" id="coll-namal">
+          <div class="coll-hdr"><div class="coll-badge">🏗️ הראל</div><div class="coll-name">קולקטיב נמל חיפה</div><div class="coll-meta">תקופה: ספטמבר 2025 — אוגוסט 2030 | מדד בסיס: 15.08.2025</div></div>
+          <table class="premium-table"><tr><th>מבוטח</th><th>מסלול א (משלים שב"ן)</th><th>מסלול ב (שקל ראשון)</th></tr>
+            <tr><td>עובד</td><td>178 ₪</td><td>159 ₪</td></tr>
+            <tr><td>ילד (עד 25)</td><td>61.6 ₪</td><td>51.9 ₪</td></tr>
+            <tr><td>פנסיונר</td><td>329 ₪</td><td>290 ₪</td></tr>
+          </table>
+          <div class="info-grid" style="margin-top:12px">
+            <div class="ib"><h4>✅ כיסויים עיקריים</h4><ul><li>השתלות לב/ריאה/כבד: עד 5M ₪</li><li>תרופות מחוץ לסל: עד 3M ₪</li><li>ניתוחים בחו"ל: 250% ממחיר ישראל</li><li>אמבולטורי: 950 ₪ לביקור (3 בשנה)</li></ul></div>
+            <div class="ib"><h4>📋 תנאי הצטרפות</h4><ul><li>גיל עד 64+11 חודשים</li><li>אכשרה: 90 יום ממועד הצטרפות</li><li>ללא הצהרת בריאות</li><li>הצמדה למדד שנתית</li></ul></div>
+          </div>
+          <div class="coll-cond" id="cond-namal"><div class="coll-cond-h" onclick="toggleCond('cond-namal')"><span>📋 פרטים נוספים</span><span class="coll-cond-chevron">▼</span></div>
+            <div class="coll-cond-body"><div class="coll-cond-inner">
+              <div class="cond-row"><span class="cond-icon">💡</span><span>מסלול א — משלים שב"ן: הביטוח משלים מה שהשב"ן לא כיסה</span></div>
+              <div class="cond-row"><span class="cond-icon">⭐</span><span>מסלול ב — שקל ראשון: הביטוח משלם מהרגע הראשון, ללא תלות בשב"ן</span></div>
+              <div class="cond-row"><span class="cond-icon">🌍</span><span><span class="cond-label">ניתוחים בחו"ל:</span> 250% ממחיר ישראל — יתרון עצום לניתוחים מורכבים</span></div>
+              <div class="cond-row"><span class="cond-icon">👶</span><span><span class="cond-label">ילדים:</span> עד גיל 25 — 61.6/51.9 ₪ לחודש</span></div>
+              <div class="cond-row"><span class="cond-icon">📅</span><span><span class="cond-label">20% השתתפות עצמית</span> בביקורים אמבולטוריים</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <div class="coll-panel" id="coll-kiryat">
+          <div class="coll-hdr"><div class="coll-badge">🔥 פניקס</div><div class="coll-name">קולקטיב קריית מוצקין</div><div class="coll-meta">תקופה: דצמבר 2024 — נובמבר 2029</div></div>
+          <table class="premium-table"><tr><th>מבוטח</th><th>מסלול א (משלים שב"ן)</th><th>מסלול ב (שקל ראשון)</th></tr>
+            <tr><td>עובד</td><td>137 ₪</td><td>179 ₪</td></tr>
+            <tr><td>בן/בת זוג</td><td>137 ₪</td><td>179 ₪</td></tr>
+            <tr><td>ילד עד 25</td><td>137 ₪</td><td>179 ₪</td></tr>
+            <tr><td>ילד מעל 25</td><td>38 ₪</td><td>44.5 ₪</td></tr>
+          </table>
+          <div class="info-grid" style="margin-top:12px">
+            <div class="ib"><h4>✅ כיסויים עיקריים</h4><ul><li>ניתוחים ברשת Phoenix</li><li>תרופות מחוץ לסל</li><li>השתלות בארץ ובחו"ל</li><li>שירותים אמבולטוריים</li></ul></div>
+            <div class="ib"><h4>⚠️ הגבלות חשובות</h4><ul><li><strong>ניתוחים ברשת Phoenix בלבד!</strong></li><li>יש לוודא בי"ח מכוסה לפני ניתוח</li><li>מסלול ב (שקל ראשון) — עדיף!</li></ul></div>
+          </div>
+        </div>
+
+        <div class="coll-panel" id="coll-dvs">
+          <div class="coll-hdr"><div class="coll-badge">📡 קולקטיב</div><div class="coll-name">קולקטיב דב"ס</div><div class="coll-meta">לפרטי פרמיות — עיין בחוזה הקולקטיב</div></div>
+          <div class="ib"><h4>📋 נקודות מפתח</h4><ul><li>קולקטיב בריאות קבוצתי לעובדי דב"ס</li><li>הצטרפות ללא הצהרת בריאות</li><li>לבדוק: שקל ראשון / משלים שב"ן</li><li>לבדוק: כיסוי השתלות, ניתוחים, תרופות</li></ul></div>
+        </div>
+
+        <div class="coll-panel" id="coll-rakevet">
+          <div class="coll-hdr"><div class="coll-badge">🚂 קולקטיב</div><div class="coll-name">קולקטיב רכבת ישראל</div><div class="coll-meta">לפרטי פרמיות — עיין בחוזה הקולקטיב</div></div>
+          <div class="ib"><h4>📋 נקודות מפתח</h4><ul><li>קולקטיב בריאות קבוצתי לעובדי רכבת ישראל</li><li>הצטרפות ללא הצהרת בריאות</li><li>לבדוק: שקל ראשון / משלים שב"ן</li><li>לבדוק: תנאי פנסיונרים ספציפיים</li></ul></div>
+        </div>
+
+        <div class="coll-panel" id="coll-tnuva">
+          <div class="coll-hdr"><div class="coll-badge">🥛 קולקטיב</div><div class="coll-name">קולקטיב תנובה</div><div class="coll-meta">לפרטי פרמיות — עיין בחוזה הקולקטיב</div></div>
+          <div class="ib"><h4>📋 נקודות מפתח</h4><ul><li>קולקטיב בריאות קבוצתי לעובדי תנובה</li><li>הצטרפות ללא הצהרת בריאות</li><li>לבדוק: שקל ראשון / משלים שב"ן</li><li>לבדוק: כיסוי ניתוחים, השתלות, תרופות</li></ul></div>
+        </div>
+
+        <div class="coll-panel" id="coll-mispanot">
+          <div class="coll-hdr"><div class="coll-badge">⚓ קולקטיב</div><div class="coll-name">קולקטיב מספנות ישראל</div><div class="coll-meta">לפרטי פרמיות — עיין בחוזה הקולקטיב</div></div>
+          <div class="ib"><h4>📋 נקודות מפתח</h4><ul><li>קולקטיב בריאות קבוצתי לעובדי מספנות ישראל</li><li>הצטרפות ללא הצהרת בריאות</li><li>לבדוק: שקל ראשון / משלים שב"ן</li><li>לבדוק: תנאי הצטרפות ספציפיים</li></ul></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- Critical Illness -->
+  <div class="product-card c-orange" id="pc-critical">
+    <div class="pc-header" onclick="toggleCard('pc-critical')">
+      <div class="pc-left"><div class="pc-icon">💊</div>
+        <div><div class="pc-title">מחלות קשות — Critical Illness</div><div class="pc-price">פרמיה טיפוסית: 80–250 ₪/חודש</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div class="info-grid">
+        <div class="ib"><h4>✅ תשלום חד-פעמי על</h4><ul><li>סרטן (כולל IN SITU חלקי)</li><li>ניתוח לב פתוח / עוקפים</li><li>שבץ מוחי</li><li>השתלות איברים</li><li>אי ספיקת כליות</li></ul></div>
+        <div class="ib"><h4>🔑 ההבדל הקריטי מבריאות</h4><ul><li>לא שיפוי — כסף ישיר לכיס</li><li>ללא קשר להוצאות בפועל</li><li>משלמים עם האבחנה</li><li>הכסף לכל מטרה</li></ul></div>
+        <div class="ib"><h4>⚠️ דקויות</h4><ul><li>ימי שרידות: 14–30 יום (חלק ביטלו)</li><li>IN SITU: 10–25% מהסכום</li><li>שחיקת גיל מ-65/70</li><li>יש לבדוק ספי מחלה</li></ul></div>
+        <div class="ib"><h4>👤 מי הכי צריך</h4><ul><li>כולם! במיוחד:</li><li>מי שהורה חלה במחלה קשה</li><li>בעלי ילדים קטנים</li><li>"לא רוצה לכלות חסכונות"</li></ul></div>
+      </div>
+      <div class="trigger-box"><h4>🎯 טריגר מכירה</h4><p>"אם תאובחן עם סרטן מחר — האם הביטוח שלך ייתן לך כסף מזומן להמשיך לממן את החיים? או שרק ישלם על הניתוח?"</p></div>
+    </div></div>
+  </div>
+
+  <!-- Disability -->
+  <div class="product-card c-green" id="pc-disability">
+    <div class="pc-header" onclick="toggleCard('pc-disability')">
+      <div class="pc-left"><div class="pc-icon">⚡</div>
+        <div><div class="pc-title">אכ"ע — אובדן כושר עבודה</div><div class="pc-price">פרמיה טיפוסית: 100–400 ₪/חודש</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div class="info-grid">
+        <div class="ib"><h4>✅ מה זה</h4><ul><li>קצבה חודשית: 60–80% מהכנסה</li><li>בשל מחלה OR תאונה</li><li>ממשיך עד חזרה לעבוד</li></ul></div>
+        <div class="ib"><h4>🔑 עיסוק ספציפי vs כל עיסוק</h4><p><strong>עיסוק ספציפי:</strong> קצבה גם אם יכול לעבוד בעיסוק אחר.<br><strong>כל עיסוק:</strong> רק אם לא יכול לעבוד בשום עיסוק סביר.</p></div>
+        <div class="ib"><h4>⏱️ פרמטרים</h4><ul><li>Franchise: 30–90 יום המתנה</li><li>תשלום: עד 67 / 5 שנות — הבדל ענק!</li><li>אחוז נכות מינימלי לזכאות</li></ul></div>
+        <div class="ib"><h4>👤 מי הכי צריך</h4><ul><li>עצמאים — קריטי!</li><li>שכירים ללא חיסכון</li><li>מפרנסים עיקריים</li><li>מי שיש לו משכנתא</li></ul></div>
+      </div>
+      <div class="trigger-box"><h4>🎯 טריגר מכירה</h4><p>"אם תעצור לעבוד מחר בגלל מחלה — כמה חודשים תוכל להחזיק? מה קורה אחר כך עם המשכנתא?"</p></div>
+    </div></div>
+  </div>
+
+  <!-- Life -->
+  <div class="product-card c-red" id="pc-life">
+    <div class="pc-header" onclick="toggleCard('pc-life')">
+      <div class="pc-left"><div class="pc-icon">❤️</div>
+        <div><div class="pc-title">ריסק — ביטוח חיים</div><div class="pc-price">פרמיה טיפוסית: 50–200 ₪/חודש</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div class="info-grid">
+        <div class="ib"><h4>✅ מה זה</h4><ul><li>תשלום חד-פעמי לנהנים בפטירה</li><li>סכום מוסכם מראש</li><li>ריסק קבוע / יורד / הון</li></ul></div>
+        <div class="ib"><h4>💡 כמה לקנות?</h4><ul><li>כלל אצבע: 70–100x הכנסה חודשית</li><li>= 6–8 שנות שכר</li><li>או: יתרת משכנתא + 3 שנות הוצאות</li></ul></div>
+        <div class="ib"><h4>👤 מי צריך</h4><ul><li>בעלי תלויים (ילדים, בן/בת זוג)</li><li>בעלי משכנתא</li><li>שותפים עסקיים</li></ul></div>
+        <div class="ib"><h4>⚠️ מי פחות זקוק</h4><ul><li>רווק ללא תלויים</li><li>מי שיש לו נכסים גדולים</li></ul></div>
+      </div>
+      <div class="trigger-box"><h4>🎯 טריגר מכירה</h4><p>"אם משהו יקרה לך מחר — מה יקרה לאישה ולילדים שלך? הריסק הוא לא בשבילך, הוא בשביל האנשים שתשאיר אחריך."</p></div>
+    </div></div>
+  </div>
+
+  <!-- Nursing -->
+  <div class="product-card c-purple" id="pc-nursing">
+    <div class="pc-header" onclick="toggleCard('pc-nursing')">
+      <div class="pc-left"><div class="pc-icon">🤲</div>
+        <div><div class="pc-title">ביטוח סיעוד</div><div class="pc-price">פרמיה טיפוסית: 100–350 ₪/חודש</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div class="info-grid">
+        <div class="ib"><h4>✅ מה מפעיל</h4><ul><li>אי-יכולת לבצע 2–3 מתוך 6 ADL:</li><li>אכילה, לבוש, רחצה, ניידות</li><li>שליטה בסוגרים, העברה ממיטה</li><li>גם דמנציה/אלצהיימר מכוסים</li></ul></div>
+        <div class="ib"><h4>💡 ממלכתי vs פרטי</h4><ul><li>ביטוח לאומי: רק לנזקקים, בחינת נכסים</li><li>פרטי: לכולם, ללא קשר לנכסים</li><li>מטפל ביתי: 7,000–12,000 ₪/חודש</li></ul></div>
+        <div class="ib"><h4>👤 מי הכי צריך</h4><ul><li>45+ — הפרמיה עוד זולה</li><li>"לא רוצה להיות נטל על הילדים"</li><li>מי שהורה היה בסיעוד</li></ul></div>
+        <div class="ib"><h4>⏱️ זמן = נכס</h4><ul><li>גיל 45 → פרמיה נמוכה</li><li>גיל 55 → +40%</li><li>גיל 65 → +120%</li></ul></div>
+      </div>
+      <div class="trigger-box"><h4>🎯 טריגר מכירה</h4><p>"אמא שלי הייתה בסיעוד שלוש שנים — עלתה לנו 10,000 ₪ בחודש. ביטוח סיעוד הוא לא עבורך — הוא עבור הילדים שלך."</p></div>
+    </div></div>
+  </div>
+  <div class="weakness-section"><h3>📊 נקודות חולשה</h3><div id="weakness-content"><div class="weakness-empty">ענה על כמה שאלות כדי לגלות את נקודות החולשה שלך</div></div></div>
+</section>
+
+<!-- ===================== TAB 3: DECISION TREE ===================== -->
+<section id="tab-tree" class="tab-pane">
+  <div class="section-head"><h2>🌳 עץ החלטות</h2><p>ענה על שאלות וקבל המלצת מוצר + משפטי פתיחה</p></div>
+  <div class="tree-wrap">
+    <div class="prog-track" id="prog-track">
+      <div class="prog-dot cur" id="pd1"></div>
+      <div class="prog-dot todo" id="pd2"></div>
+      <div class="prog-dot todo" id="pd3"></div>
+      <div class="prog-dot todo" id="pd4" style="display:none"></div>
+      <div class="prog-dot todo" id="pd5" style="display:none"></div>
+    </div>
+    <div class="tree-step active" id="tstep-1">
+      <div class="step-label" id="slabel-1">שאלה 1 מתוך 3</div>
+      <div class="step-q">מה הסטטוס המשפחתי של הלקוח?</div>
+      <div class="step-sub">זה ישפיע ישירות על סדר עדיפות המוצרים</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(1,'single')"><span class="opt-em">🧍</span><span class="opt-lbl">רווק / רווקה</span><span class="opt-desc">ללא תלויים</span></button>
+        <button class="opt-btn" onclick="treeSelect(1,'married')"><span class="opt-em">👫</span><span class="opt-lbl">נשוי/ה ללא ילדים</span><span class="opt-desc">זוג צעיר / בלי ילדים</span></button>
+        <button class="opt-btn" onclick="treeSelect(1,'married_kids')"><span class="opt-em">👨‍👩‍👧‍👦</span><span class="opt-lbl">נשוי/ה עם ילדים</span><span class="opt-desc">ילד אחד ומעלה</span></button>
+        <button class="opt-btn" onclick="treeSelect(1,'retiree')"><span class="opt-em">🌅</span><span class="opt-lbl">גמלאי/ת</span><span class="opt-desc">60+ / כבר בפנסיה</span></button>
+      </div>
+    </div>
+    <div class="tree-step" id="tstep-2">
+      <div class="step-label" id="slabel-2">שאלה 2 מתוך 3</div>
+      <div class="step-q">מה רמת הכיסוי הביטוחי הנוכחית?</div>
+      <div class="step-sub">נבין מה יש ומה חסר</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(2,'none')"><span class="opt-em">🚫</span><span class="opt-lbl">כלום</span><span class="opt-desc">רק ביטוח לאומי</span></button>
+        <button class="opt-btn" onclick="treeSelect(2,'basic')"><span class="opt-em">🏥</span><span class="opt-lbl">רק שב"ן קופה</span><span class="opt-desc">מושלם / מכבי שלי / שלמה</span></button>
+        <button class="opt-btn" onclick="treeSelect(2,'collective')"><span class="opt-em">🤝</span><span class="opt-lbl">יש קולקטיב</span><span class="opt-desc">ביטוח קבוצתי דרך עבודה</span></button>
+        <button class="opt-btn" onclick="treeSelect(2,'collective_private')"><span class="opt-em">✅</span><span class="opt-lbl">קולקטיב + פרטי</span><span class="opt-desc">כיסוי בריאות טוב</span></button>
+      </div>
+    </div>
+    <div class="tree-step" id="tstep-3">
+      <div class="step-label" id="slabel-3">שאלה 3 מתוך 3</div>
+      <div class="step-q">מה הנושא הכי מדאיג את הלקוח?</div>
+      <div class="step-sub">הפחד הזה הוא הפתח לשיחה</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(3,'illness')"><span class="opt-em">🧬</span><span class="opt-lbl">פחד ממחלה קשה</span><span class="opt-desc">סרטן, לב, שבץ</span></button>
+        <button class="opt-btn" onclick="treeSelect(3,'family')"><span class="opt-em">👨‍👩‍👧</span><span class="opt-lbl">דאגה לפרנסת המשפחה</span><span class="opt-desc">מה יהיה עליהם</span></button>
+        <button class="opt-btn" onclick="treeSelect(3,'burden')"><span class="opt-em">🙏</span><span class="opt-lbl">לא רוצה להיות נטל</span><span class="opt-desc">לא רוצה שהילדים יטפלו</span></button>
+        <button class="opt-btn" onclick="treeSelect(3,'savings')"><span class="opt-em">💰</span><span class="opt-lbl">לא לכלות חסכונות</span><span class="opt-desc">שמירה על הנכסים</span></button>
+      </div>
+    </div>
+    <div class="tree-step" id="tstep-4">
+      <div class="step-label" id="slabel-4">שאלה 4 מתוך 5</div>
+      <div class="step-q">מי המעסיק של הלקוח?</div>
+      <div class="step-sub">הקולקטיב נקבע לפי מקום העבודה</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(4,'namal')"><span class="opt-em">🏗️</span><span class="opt-lbl">נמל חיפה</span><span class="opt-desc">קולקטיב הראל</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'kiryat')"><span class="opt-em">🔥</span><span class="opt-lbl">קריית מוצקין</span><span class="opt-desc">קולקטיב פניקס</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'dvs')"><span class="opt-em">📡</span><span class="opt-lbl">דב"ס</span><span class="opt-desc">קולקטיב דב"ס</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'rakevet')"><span class="opt-em">🚂</span><span class="opt-lbl">רכבת ישראל</span><span class="opt-desc">קולקטיב רכבת</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'tnuva')"><span class="opt-em">🥛</span><span class="opt-lbl">תנובה</span><span class="opt-desc">קולקטיב תנובה</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'mispanot')"><span class="opt-em">⚓</span><span class="opt-lbl">מספנות ישראל</span><span class="opt-desc">קולקטיב מספנות</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'other')"><span class="opt-em">🏢</span><span class="opt-lbl">מעסיק אחר</span><span class="opt-desc">לא בקולקטיב שלנו</span></button>
+      </div>
+    </div>
+    <div class="tree-step" id="tstep-5">
+      <div class="step-label" id="slabel-5">שאלה 5 מתוך 5</div>
+      <div class="step-q">מתי הלקוח הצטרף למעסיק?</div>
+      <div class="step-sub">חשוב לגבי תקופת אכשרה</div>
+      <div class="opts-grid">
+        <button class="opt-btn" onclick="treeSelect(5,'new')"><span class="opt-em">🆕</span><span class="opt-lbl">פחות מ-3 חודשים</span><span class="opt-desc">עובד חדש</span></button>
+        <button class="opt-btn" onclick="treeSelect(5,'mid')"><span class="opt-em">📅</span><span class="opt-lbl">3–12 חודשים</span><span class="opt-desc">בשנה הראשונה</span></button>
+        <button class="opt-btn" onclick="treeSelect(5,'veteran')"><span class="opt-em">✅</span><span class="opt-lbl">יותר משנה</span><span class="opt-desc">ותיק — זכאי מלא</span></button>
+      </div>
+    </div>
+    <div id="tree-result" style="display:none"></div>
+  </div>
+</section>
+
+<!-- ===================== TAB 4: ENCYCLOPEDIA ===================== -->
+<section id="tab-terms" class="tab-pane">
+  <div class="terms-mode-bar">
+    <button class="terms-mode-btn active" onclick="switchTermsMode('dict',this)">📚 מילון</button>
+    <button class="terms-mode-btn" onclick="switchTermsMode('insights',this)">💡 תובנות מכירה</button>
+  </div>
+  <div class="terms-panel" id="terms-dict-panel">
+  <div class="section-head" style="margin-bottom:10px"><h2>📚 מונחים</h2><p>לחץ על מונח לפתיחת הגדרה מלאה + דוגמה + טיפ מכירה</p></div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="term-search" placeholder="חפש מונח..." oninput="filterTerms(this.value)">
+  </div>
+  <div id="terms-list"></div>
+  </div>
+  <div class="insights-panel" id="insights-panel">
+    <div class="section-head" style="margin-bottom:10px"><h2>💡 תובנות מכירה</h2><p>7 עקרונות שמייצרים סגירות</p></div>
+    <div id="sales-insights-list"></div>
+  </div>
+</section>
+
+<!-- ===================== TAB 5: GAME ===================== -->
+<section id="tab-game" class="tab-pane">
+  <div class="section-head"><h2>🎮 סימולטור</h2><p>חידון ידע + סימולטור מכירה אינטראקטיבי</p></div>
+  <div class="game-mode-bar">
+    <button class="game-mode-btn active" onclick="switchGame('quiz',this)">🧠 חידון — 25 שאלות</button>
+    <button class="game-mode-btn" onclick="switchGame('roleplay',this)">🎭 סימולטור מכירה</button>
+  </div>
+  <div class="game-pane active" id="game-quiz">
+    <div class="quiz-mode-selector">
+      <button class="quiz-mode-sel-btn active" id="qmode-normal" onclick="setQuizMode('normal',this)">📝 רגיל</button>
+      <button class="quiz-mode-sel-btn" id="qmode-srs" onclick="setQuizMode('srs',this)"><span class="due-badge" id="srs-due-count">0</span> 🔁 חזרה חכמה</button>
+    </div>
+    <div class="quiz-wrap"><div id="quiz-inner"></div></div>
+  </div>
+  <div class="game-pane" id="game-roleplay">
+    <div class="roleplay-wrap" id="rp-select-view">
+      <div class="scenario-select-label">8 סוגי לקוח — בחר אישיות לסימולציה:</div>
+      <div class="persona-grid" id="scenario-cards"></div>
+    </div>
+    <div id="rp-active-view" style="display:none"></div>
+  </div>
+</section>
+
+<!-- ===================== TAB 6: PROGRESS ===================== -->
+<section id="tab-progress" class="tab-pane">
+  <div class="section-head"><h2>🏆 התקדמות</h2><p>XP, רמות, תגים וסטטיסטיקות</p></div>
+  <div id="progress-intelligence"></div>
+  <div class="progress-header-card">
+    <div class="level-badge-big">
+      <span class="level-icon-big" id="level-icon">🌱</span>
+      <div class="level-info">
+        <h2 id="level-name">מתחיל</h2>
+        <p id="level-sub">רמה 1</p>
+      </div>
+    </div>
+    <div style="font-size:1.4rem;font-weight:800;color:var(--gold);margin-bottom:12px" id="xp-display">0 XP</div>
+    <div class="xp-bar-wrap"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+    <div class="xp-bar-labels"><span id="xp-curr-level">0 XP</span><span id="xp-next-level">100 XP לרמה הבאה</span></div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-num" id="stat-lessons">0/16</div><div class="stat-label">שיעורים</div></div>
+    <div class="stat-box gold"><div class="stat-num" id="stat-chapters">0/3</div><div class="stat-label">פרקים</div></div>
+    <div class="stat-box green"><div class="stat-num" id="stat-quiz">—</div><div class="stat-label">ניקוד חידון</div></div>
+    <div class="stat-box purple"><div class="stat-num" id="stat-roleplays">0</div><div class="stat-label">סימולציות</div></div>
+    <div class="stat-box red"><div class="stat-num" id="stat-streak">🔥 0</div><div class="stat-label">ימים ברצף</div></div>
+    <div class="stat-box teal"><div class="stat-num" id="stat-total-xp">0</div><div class="stat-label">XP כולל</div></div>
+  </div>
+
+  <div class="badges-section">
+    <h3>🎖️ תגים</h3>
+    <div class="badges-grid" id="badges-grid"></div>
+  </div>
+
+  <div class="xp-log">
+    <h3>📋 לוג XP אחרון</h3>
+    <div class="xp-log-list" id="xp-log-list"><div style="color:var(--muted);font-size:.84rem;padding:8px">עוד לא הרווחת XP — התחל ללמוד!</div></div>
+  </div>
+
+  <div style="text-align:center;margin-top:8px">
+    <button onclick="resetProgress()" style="background:none;border:1px solid var(--border);color:var(--muted2);padding:8px 18px;border-radius:8px;cursor:pointer;font-size:.78rem;font-family:inherit">🗑️ איפוס התקדמות</button>
+  </div>
+</section>
+
+</main>
+<script>
+
+// ===== LESSONS DATA =====
+const LESSONS = {
+'1.1':{id:'1.1',chap:1,title:'מה זה ביטוח בריאות?',body:`<h3>3 שכבות הביטוח בישראל</h3>
+<p>בישראל קיימות שלוש שכבות ביטוח בריאות שכל סוכן חייב להכיר לעומק. הבנת הפערים ביניהן היא הבסיס לכל שיחת מכירה מוצלחת.</p>
+<p><strong>שכבה 1 — שב"ן (שירותי בריאות נוספים):</strong> כל אחד מחברי ארבע קופות החולים (כללית, מכבי, מאוחדת, לאומית) זכאי לרכוש שב"ן בפרמיה סמלית של 80–120 ₪ לחודש. השב"ן מכסה ניתוחים פרטיים, תרופות מסוימות מחוץ לסל, ועוד — אך יש בו פרנשיזות גבוהות, רשימות המתנה, ומגבלות רבות. רוב הלקוחות חושבים שהשב"ן מכסה "הכל" — זהו המיתוס הגדול ביותר שאתה צריך לנפץ.</p>
+<p><strong>שכבה 2 — קולקטיב (ביטוח קבוצתי):</strong> ביטוח שנרכש דרך מעסיק עבור קבוצת עובדים. בגלל הכוח הקבוצתי, הפרמיה נמוכה משמעותית מביטוח פרטי, ולרוב אין הצהרת בריאות — כלומר גם מי שיש לו מחלה קיימת מתקבל ללא חיתום רפואי אינדיבידואלי. זהו המוצר העיקרי שאנחנו מוכרים.</p>
+<p><strong>שכבה 3 — ביטוח פרטי:</strong> כיסוי אישי שנרכש ישירות מחברת ביטוח. יש בו חיתום אישי, פרמיה גבוהה יותר, אך גמישות מרבית. מתאים ללקוחות ללא כיסוי קבוצתי.</p>
+<div class="lesson-tip">💡 <strong>טיפ מכירה:</strong> "יש לך שב"ן? מצוין — בוא ונראה מה הוא כולל ומה הוא לא כולל. אתה תופתע."</div>`},
+'1.2':{id:'1.2',chap:1,title:'מה מכסה קופת החולים',body:`<h3>הפערים הקריטיים בסל הבריאות</h3>
+<p>סל הבריאות הממלכתי מכסה את הבסיס — אבל הפערים הם מה שמוכר ביטוח. כסוכן, אתה צריך לדעת בדיוק מה לא מכוסה, כדי שתוכל להציג ללקוח את הפתרון שלך.</p>
+<p><strong>מה כן מכוסה בסל:</strong> ביקורים אצל רופא משפחה, אשפוז דחוף, ניתוחים דחופים, תרופות ברשימת הסל, טיפולי שיניים בסיסיים לילדים, ועוד.</p>
+<p><strong>מה לא מכוסה — כאן נכנס הביטוח:</strong></p>
+<p>1. <strong>ניתוחים אלקטיביים:</strong> תור ניתוח במערכת הציבורית יכול להגיע ל-6–18 חודש. ניתוח פרטי עולה 20,000–80,000 ₪.</p>
+<p>2. <strong>תרופות מחוץ לסל:</strong> תרופות חדשניות לסרטן, MS, ועוד — עשרות אלפי שקלים בחודש.</p>
+<p>3. <strong>השתלות:</strong> השתלת כליה, כבד, לב — עד 5 מיליון ₪ בחו"ל.</p>
+<p>4. <strong>מומחים פרטיים:</strong> רדיולוג, קרדיולוג, אונקולוג מחוץ לקופה — 400–1,200 ₪ לביקור.</p>
+<p>5. <strong>בדיקות מיוחדות:</strong> MRI פרטי 1,200–2,500 ₪, PET-CT 8,000–15,000 ₪.</p>
+<div class="lesson-tip">💡 <strong>טיפ מכירה:</strong> "עם ביטוח, הניתוח שלך יהיה בעוד שבועיים — לא בעוד שנה."</div>`},
+'1.3':{id:'1.3',chap:1,title:'שקל ראשון vs משלים שב"ן',body:`<h3>ההבדל שמשנה הכל — עם מספרים</h3>
+<p>זהו ההבדל החשוב ביותר שלקוח צריך להבין לפני שבוחר מסלול. שני המסלולים מכסים ניתוחים ותרופות — אך האופן שבו הם עובדים שונה לחלוטין.</p>
+<p><strong>משלים שב"ן (מסלול א' בנמל חיפה — 178 ₪):</strong> הביטוח משלם רק את מה שהשב"ן של הקופה לא כיסה. לדוגמה, אם ניתוח עולה 50,000 ₪ והשב"ן שילם 35,000 ₪ — הביטוח ישלם את ה-15,000 ₪ הנותרים. יתרון: פרמיה נמוכה יותר. חיסרון: תלוי בגובה הכיסוי של השב"ן.</p>
+<p><strong>שקל ראשון (מסלול ב' בנמל חיפה — 159 ₪, בקריית מוצקין — 179 ₪):</strong> הביטוח משלם מהשקל הראשון, ללא תלות בשב"ן. לדוגמה, אותו ניתוח ב-50,000 ₪ — הביטוח ישלם כולו. יתרון: כיסוי מקיף ובטוח. חיסרון: לרוב פרמיה גבוהה יותר (אם כי בנמל חיפה — שקל ראשון דווקא זול יותר!)</p>
+<p><strong>טריק: בנמל חיפה המסלול הזול הוא שקל ראשון (159 ₪).</strong> זה יתרון משמעותי — לקוח מקבל כיסוי טוב יותר בפחות כסף.</p>
+<div class="lesson-tip">💡 <strong>כלל אצבע:</strong> המלץ על שקל ראשון. כשלקוח מגיע לניתוח הוא לא רוצה לחשב — הוא רוצה שיכוסה.</div>`},
+'1.4':{id:'1.4',chap:1,title:'מחלות קשות — CI בסיסי',body:`<h3>מה זה, למה שונה מבריאות, מי צריך</h3>
+<p>ביטוח מחלות קשות (Critical Illness) הוא אחד המוצרים הפחות מובנים — ואחד הנמכרים ביותר כשמסבירים אותו נכון.</p>
+<p><strong>ההגדרה הפשוטה:</strong> אם תאובחן עם אחת מהמחלות הקשות המפורטות בפוליסה — הביטוח ישלם לך סכום חד-פעמי ישירות לחשבון הבנק שלך. לא לבית חולים. לא למרפאה. לחשבון שלך.</p>
+<p><strong>מחלות עיקריות שמכוסות:</strong> סרטן (כולל חלק מ-IN SITU), התקף לב, שבץ מוחי, ניתוח לב פתוח, אי ספיקת כליות, השתלת איברים, ועוד 30+ מחלות בחלק מהפוליסות.</p>
+<p><strong>למה זה שונה מביטוח בריאות?</strong> ביטוח בריאות משלם לבית חולים על הטיפול. CI נותן לך כסף מזומן — לשלם משכנתא, לכסות הוצאות מחיה, לממן טיפול בחו"ל, או לכל מטרה אחרת.</p>
+<p><strong>ימי שרידות:</strong> רוב הפוליסות דורשות שתשרוד 14–30 יום לאחר האבחנה כדי לקבל תשלום. חברות רבות ביטלו את זה — כדאי לבדוק.</p>
+<div class="lesson-tip">💡 <strong>טריגר מכירה:</strong> "אם תאובחן עם סרטן מחר — כמה כסף יש לך בבנק להמשיך לחיות? הביטוח הזה הוא הכסף הזה."</div>`},
+'1.5':{id:'1.5',chap:1,title:'אכ"ע, ריסק, סיעוד',body:`<h3>3 מוצרים קריטיים — מה ומתי</h3>
+<p>מעבר לביטוח בריאות ומחלות קשות, קיימים שלושה מוצרים שלכל אחד יש תפקיד ברור בסל הביטוחי של הלקוח.</p>
+<p><strong>אכ"ע — אובדן כושר עבודה:</strong> אם תחלה או תיפגע ולא תוכל לעבוד — הביטוח ישלם לך קצבה חודשית של 60–80% מהשכר שלך. ההבדל הקריטי: "עיסוק ספציפי" (משלמים גם אם יכול לעבוד בעיסוק אחר) vs "כל עיסוק" (רק אם לא יכול בשום עיסוק). תמיד לשאוף לעיסוק ספציפי. הפרמטרים הקריטיים: franchise (תקופת המתנה של 30–90 יום), ותקופת תשלום (עד גיל 67 vs 5 שנים בלבד — הבדל ענק!)</p>
+<p><strong>ריסק — ביטוח חיים:</strong> תשלום חד-פעמי לנהנים שמינית בפטירה. כמה? כלל אצבע: 70–100 כפול ההכנסה החודשית. מי צריך: בעלי תלויים, בעלי משכנתא. מי לא: רווק ללא תלויים ונכסים.</p>
+<p><strong>סיעוד:</strong> קצבה חודשית כשלא יכול לבצע 2–3 מתוך 6 פעולות בסיסיות (ADL) — אכילה, לבוש, רחצה ועוד. גם דמנציה ואלצהיימר מכוסים. מטפל ביתי עולה 7,000–12,000 ₪ לחודש — הביטוח ממן זאת.</p>
+<div class="lesson-tip">💡 <strong>סדר עדיפויות לרוב הלקוחות:</strong> 1. אכ"ע 2. CI 3. בריאות/קולקטיב 4. ריסק 5. סיעוד</div>`},
+'2.1':{id:'2.1',chap:2,title:'נמל חיפה — הראל',body:`<h3>הקולקטיב המרכזי שלנו — לעומק</h3>
+<p>קולקטיב נמל חיפה הוא אחד הקולקטיבים החשובים בתיק שלנו — כיסוי הראל לעובדי נמל חיפה ובני משפחתם.</p>
+<p><strong>פרטים בסיסיים:</strong> חברת ביטוח: הראל | תקופה: ספטמבר 2025 — אוגוסט 2030 | מדד בסיס: 15.08.2025</p>
+<p><strong>פרמיות חודשיות:</strong><br>עובד: מסלול א (משלים שב"ן) 178 ₪ | מסלול ב (שקל ראשון) 159 ₪<br>ילד עד 25: 61.6 ₪ / 51.9 ₪<br>פנסיונר: 329 ₪ / 290 ₪</p>
+<p><strong>נקודת מפתח:</strong> שקל ראשון (מסלול ב) זול מ-משלים שב"ן (מסלול א) — זה נדיר וחשוב! תמיד להמליץ על מסלול ב.</p>
+<p><strong>כיסויים עיקריים:</strong> השתלות לב/ריאה/כבד עד 5 מיליון ₪ | תרופות מחוץ לסל עד 3 מיליון ₪ | ניתוחים בחו"ל — 250% ממחיר ישראל | שירותים אמבולטוריים: 950 ₪ לביקור (3 ביקורים בשנה, 20% השתתפות עצמית)</p>
+<p><strong>תנאי הצטרפות:</strong> גיל עד 64 שנה ו-11 חודשים | אכשרה: 90 יום | ללא הצהרת בריאות | הצמדה למדד שנתית</p>
+<div class="lesson-tip">💡 <strong>טיפ שדה:</strong> 250% ממחיר ניתוח ישראלי לניתוח בחו"ל — זה יתרון עצום. לדוגמה, ניתוח לב ב-100,000 ₪ בישראל → 250,000 ₪ מכוסה בחו"ל.</div>`},
+'2.2':{id:'2.2',chap:2,title:'קריית מוצקין — פניקס',body:`<h3>מה לדעת על הקולקטיב הזה</h3>
+<p>קולקטיב קריית מוצקין הוא ביטוח בריאות קבוצתי לעובדי עיריית קריית מוצקין ומוסדותיה, דרך חברת פניקס.</p>
+<p><strong>פרטים בסיסיים:</strong> חברת ביטוח: פניקס | תקופה: דצמבר 2024 — נובמבר 2029</p>
+<p><strong>פרמיות חודשיות:</strong><br>עובד / בן-בת זוג / ילד עד 25: מסלול א 137 ₪ | מסלול ב 179 ₪<br>ילד מעל 25: מסלול א 38 ₪ | מסלול ב 44.5 ₪</p>
+<p><strong>⚠️ ההגבלה הקריטית:</strong> ניתוחים מכוסים ברשת בתי חולים של פניקס בלבד! לפני כל ניתוח, הלקוח חייב לוודא שבית החולים ברשת פניקס. זהו פרט שחשוב להסביר ללקוח מראש.</p>
+<p><strong>עצה:</strong> כאן מסלול ב (שקל ראשון, 179 ₪) עולה יותר ממסלול א (משלים שב"ן, 137 ₪) — הפוך מנמל חיפה. ייתכן שלחלק מהלקוחות עם שב"ן חזק, מסלול א יספיק.</p>
+<div class="lesson-tip">💡 <strong>שאלת מפתח ללקוח:</strong> "איזה בית חולים אתה מעדיף? תבדוק שהוא ברשת פניקס — כי הקולקטיב שלך כולל רשת ספציפית."</div>`},
+'2.3':{id:'2.3',chap:2,title:'דב"ס',body:`<h3>קולקטיב עובדי דב"ס</h3>
+<p>קולקטיב דב"ס הוא ביטוח בריאות קבוצתי לעובדי דב"ס (דואר, בזק, סלקום) ורשתות נלוות.</p>
+<p><strong>עקרונות כלליים לכל קולקטיב שלנו:</strong><br>כאשר פוגש עובד שאינו מכיר את הביטוח הקבוצתי שלו, חשוב להבהיר:</p>
+<p>1. <strong>ללא הצהרת בריאות</strong> — הקולקטיב מאפשר הצטרפות ללא חיתום אישי. זה יתרון עצום למי שיש לו מחלות קיימות.</p>
+<p>2. <strong>כוח הקבוצה</strong> — הפרמיה נמוכה בגלל שרוכשים ביחד מאות עובדים.</p>
+<p>3. <strong>שאלות שחייבים לברר לכל קולקטיב:</strong><br>• שקל ראשון או משלים שב"ן?<br>• מה כיסויי ההשתלות, ניתוחים, תרופות?<br>• מה גיל ההצטרפות המקסימלי?<br>• מה תקופת האכשרה?<br>• האם יש רשת מוגבלת של בתי חולים?</p>
+<p>4. <strong>תקופת אכשרה:</strong> לרוב 90 יום ממועד ההצטרפות — במהלכם אין כיסוי לאירועים שאינם חירום.</p>
+<div class="lesson-tip">💡 <strong>בשטח:</strong> תמיד עיין בחוזה הקולקטיב המעודכן לפני שיחת מכירה. פרטים משתנים בין תקופה לתקופה.</div>`},
+'2.4':{id:'2.4',chap:2,title:'רכבת ישראל',body:`<h3>קולקטיב עובדי הרכבת</h3>
+<p>קולקטיב רכבת ישראל הוא ביטוח בריאות קבוצתי לעובדי רכבת ישראל ובני משפחותיהם.</p>
+<p><strong>מאפיינים ייחודיים לעובדי רכבת:</strong></p>
+<p>עובדי הרכבת הם קבוצה מגוונת — נהגים, טכנאים, עובדי תחנות, מנהלים. לכל תת-קבוצה עשויים להיות צרכים שונים. נהג רכבת עם ותק רב (50–60 שנה) צריך לשמוע על סיעוד ומחלות קשות. עובד צעיר צריך לשמוע על אכ"ע וחיים.</p>
+<p><strong>עקרונות מכירה בקולקטיב זה:</strong><br>• ותק גבוה = לקוח יציב שמכיר את ערך ההטבות<br>• נוסעים ברכבת כל יום — הזמן בתחנה יכול להיות הזדמנות שיחה<br>• שאל על ילדים — הרחבה לילדים בכיסוי קולקטיב היא הרחבה טבעית</p>
+<p><strong>לברר בחוזה הקולקטיב:</strong> כיסויים מדויקים, פרמיות, גיל הצטרפות, תנאי פנסיונרים (רכבת ישראל יש לה המון פנסיונרים)</p>
+<div class="lesson-tip">💡 <strong>פתיחת שיחה:</strong> "ידעת שיש לכם ביטוח בריאות קבוצתי דרך הרכבת? בוא נבדוק מה אתה מקבל ומה אפשר להוסיף."</div>`},
+'2.5':{id:'2.5',chap:2,title:'תנובה',body:`<h3>קולקטיב עובדי תנובה</h3>
+<p>קולקטיב תנובה הוא ביטוח בריאות קבוצתי לעובדי תנובה ורשתות הפצה קשורות.</p>
+<p><strong>מי הם עובדי תנובה?</strong> תנובה היא חברת מזון גדולה עם מאות עובדים בייצור, לוגיסטיקה, מכירות ומנהלה. העובדים גיוונים — מהמפעל, דרך הנהגים, ועד המשרדים. חשוב להתאים את המסר לפרופיל.</p>
+<p><strong>הזדמנויות ייחודיות:</strong><br>• עובדי מפעל — עבודה פיזית = סיכון לפגיעה גופנית → אכ"ע רלוונטי מאוד<br>• נהגים — שעות ארוכות, סיכון תאונות → אכ"ע וריסק<br>• ותיקים (55+) — הגיל מגדיל את ערך הסיעוד<br>• משפחות — הרחבת כיסוי לבן/בת זוג וילדים</p>
+<p><strong>שאלות לבירור בחוזה הקולקטיב:</strong><br>מי חברת הביטוח המנהלת? | מהם המסלולים? | מה כיסוי ניתוחים ותרופות? | מה גיל ההצטרפות המקסימלי?</p>
+<div class="lesson-tip">💡 <strong>טריגר ייחודי:</strong> "עבודה פיזית כמו שלך — חשוב שתהיה מכוסה אם משהו יקרה. בוא נראה את הקולקטיב שלך."</div>`},
+'2.6':{id:'2.6',chap:2,title:'מספנות ישראל',body:`<h3>קולקטיב עובדי המספנות</h3>
+<p>קולקטיב מספנות ישראל הוא ביטוח בריאות קבוצתי לעובדי מספנות ישראל בחיפה.</p>
+<p><strong>מי הם?</strong> מספנות ישראל היא חברה לתיקון ובניית אוניות בנמל חיפה. עובדיה — מהנדסים, מ溶接ים (רתכים), מכונאים, פועלי ייצור. עבודה פיזית וטכנית, לרוב עם ותק גבוה.</p>
+<p><strong>פרופיל טיפוסי:</strong> גבר, 40–60, עובד ידני, ותק בינוני-גבוה, פחות מודע לעולם הביטוח. הצגת מידע פשוטה ובשפה ברורה — ללא ז'רגון מיותר.</p>
+<p><strong>אפשרויות מכירה:</strong><br>• קולקטיב בריאות — הצטרפות קלה ללא שאלות בריאות<br>• CI — עבודה פיזית = חשיפה למחלות (קרינה, כימיקלים בסביבת עבודה מסוימת)<br>• אכ"ע — אם לא יכול לעבוד, מה יהיה?<br>• סיעוד — לקוח 50+ צריך לחשוב על עתיד</p>
+<div class="lesson-tip">💡 <strong>פתיחה מומלצת:</strong> "אני עוסק בביטוח לעובדי נמל חיפה ומספנות — בוא נבדוק ביחד מה הכיסוי שלך."</div>`},
+'3.1':{id:'3.1',chap:3,title:'פרופיל הלקוח — 4 סוגים',body:`<h3>מה מניע כל לקוח ואיך מדברים אליו</h3>
+<p>כל לקוח מונע ממניע שונה. מכירה שמתאימה למניע — נסגרת. מכירה שמתעלמת ממנו — לא.</p>
+<p><strong>סוג 1 — "המגן" (נשוי עם ילדים):</strong> מוטיב: להגן על המשפחה. מה מפחיד אותו: "מה יהיה עליהם אם אני לא אהיה". מוצרים: ריסק ראשון, אחר כך CI ואכ"ע. שפה: "כדי שהמשפחה שלך תהיה בסדר גם בלעדיך."</p>
+<p><strong>סוג 2 — "חסכן החרד" (מודאג מעתידו הפיננסי):</strong> מוטיב: לא לאבד את מה שצבר. מה מפחיד: "מחלה תחסל לי את החסכונות". מוצרים: CI ראשון. שפה: "הכסף שחסכת — יישאר שלך."</p>
+<p><strong>סוג 3 — "הפרגמטי" (שואל ROI):</strong> מוטיב: הכסף ששווה. מה מבקש: מספרים, השוואות, עובדות. מוצרים: כל מוצר — אבל עם עובדות. שפה: "בוא נחשב ביחד."</p>
+<p><strong>סוג 4 — "הנטרל" (לא מוטרד):</strong> מוטיב: אין. צריך להעיר אותו. טכניקה: שאלת "מה-יהיה-אם" — "אם תחלה מחר, מה קורה לך?" שפה: "לא הצלחתי עד עכשיו לאף אחד לנחש נכון."</p>
+<div class="lesson-tip">💡 <strong>כלל זהב:</strong> זהה את הסוג תוך 2 דקות ראשונות. התאם את השפה — לא את המוצר.</div>`},
+'3.2':{id:'3.2',chap:3,title:'שאלות פתיחה שעובדות',body:`<h3>5 פתיחות שגורמות ללקוח לדבר</h3>
+<p>שיחת מכירה טובה מתחילה בשאלה טובה. לא בהצגת מוצר. שאלה טובה גורמת ללקוח לדבר — ואתה מאזין ומכין את ההצעה.</p>
+<p><strong>פתיחה 1 — "קופת החולים":</strong> "יש לך ביטוח בריאות נוסף מעבר לקופת החולים? ... כי רוב האנשים חושבים שהשב"ן מכסה הכל, אבל כשמגיע הרגע — מגלים שלא."</p>
+<p><strong>פתיחה 2 — "ניתוח":</strong> "אם היית צריך ניתוח דחוף — בכמה זמן היית מוכן לעשות אותו? ציבורי זה 6–12 חודשים. פרטי — שבועיים."</p>
+<p><strong>פתיחה 3 — "מחלה קשה":</strong> "אם חו"ח תאובחן עם מחלה קשה — כמה כסף יש לך בצד להמשיך לחיות נורמלי בזמן הטיפולים?"</p>
+<p><strong>פתיחה 4 — "הקולקטיב":</strong> "ידעת שיש לך ביטוח בריאות דרך המעסיק שלך? הוא כולל [כיסוי X]. בוא ניקח 10 דקות ונבין מה אתה מקבל."</p>
+<p><strong>פתיחה 5 — "המשפחה":</strong> "יש לך ילדים? ו... הם על איזה ביטוח? כי כיסוי ילד בקולקטיב שלנו עולה [X] ₪ בחודש — פחות מקפה ביום."</p>
+<div class="lesson-tip">💡 <strong>כלל:</strong> שאלה פתוחה → 80% ממנה, 20% מדבר. לא ההפך.</div>`},
+'3.3':{id:'3.3',chap:3,title:'התנגדויות ותשובות',body:`<h3>"יקר לי", "יש לי ביטוח", "אחשוב"</h3>
+<p>כל סוכן שמע את שלוש ההתנגדויות האלה אלף פעמים. הנה התשובות שעובדות.</p>
+<p><strong>"יקר לי" / "אין לי כסף":</strong><br>תשובה: "178 ₪ לחודש זה פחות מ-6 ₪ ביום — פחות מקפה. השאלה היא לא אם יקר. השאלה היא: כמה יעלה לך ניתוח פרטי ללא ביטוח? 30,000–80,000 ₪. בשביל זה חסכת כל החיים?"</p>
+<p><strong>"יש לי ביטוח" / "יש לי שב"ן":</strong><br>תשובה: "מצוין! בוא נראה בדיוק מה הביטוח שלך מכסה. [פתח רשימת כיסויים] — ניתוחים בחו"ל? מחלות קשות עם כסף מזומן? תרופות מעל לסל? כי השב"ן לרוב לא כולל את אלה."</p>
+<p><strong>"אחשוב על זה" / "אחזור אליך":</strong><br>תשובה: "כמובן. תן לי לשאול — מה מונע ממך להחליט עכשיו? [הקשב] ... אז הנושא הוא [X]. בוא נתייחס לזה ישירות."</p>
+<p><strong>"אני בריא, אני לא צריך":</strong><br>תשובה: "הביטוח לא לחולים — הביטוח לבריאים. כי חולה כבר לא מקבל ביטוח. אתה בריא עכשיו — זה הזמן הכי טוב להצטרף."</p>
+<div class="lesson-tip">💡 <strong>כלל זהב:</strong> לעולם לא להתווכח. להסכים, ואז להוביל.</div>`},
+'3.4':{id:'3.4',chap:3,title:'השוואה לשב"ן',body:`<h3>מה לומר ללקוח שחושב שיש לו הכל</h3>
+<p>"יש לי שב"ן — אני מכוסה" — זהו המשפט שאתה תשמע הכי הרבה. ואתה צריך להיות מסוגל לפרק אותו בנחת.</p>
+<p><strong>ההבדלים הגדולים בין שב"ן לקולקטיב:</strong></p>
+<p>1. <strong>ניתוחים בחו"ל:</strong> שב"ן רגיל — כמעט לא מכסה. קולקטיב נמל חיפה — 250% ממחיר ישראל.</p>
+<p>2. <strong>בחירת מנתח:</strong> שב"ן לרוב מגביל לרשת. קולקטיב טוב — חופשי לבחור.</p>
+<p>3. <strong>תרופות:** שב"ן: רק חלק מהתרופות. נמל חיפה: עד 3 מיליון ₪.</p>
+<p>4. <strong>שקל ראשון:</strong> שב"ן — תמיד יש השתתפות עצמית ופרנשיזות. קולקטיב שקל ראשון — מהרגע הראשון.</p>
+<p>5. <strong>ילדים:</strong> שב"ן — כיסוי בסיסי. קולקטיב — 51.9 ₪ לחודש לילד, כיסוי מלא.</p>
+<p><strong>הדמו המנצח:</strong> "הכנס לאתר הקופה שלך, לקה 'מושלם/מכבי שלי', ותראה כמה משלמים על ניתוח. אז נדבר."</p>
+<div class="lesson-tip">💡 <strong>לעולם אל תגיד "השב"ן שלך לא שווה"</strong> — תגיד "השב"ן טוב, אבל בוא נראה מה עוד אפשר להוסיף."</div>`},
+'3.5':{id:'3.5',chap:3,title:'סגירה — מתי ואיך',body:`<h3>איתותים, שאלות סגירה, וטכניקות</h3>
+<p>סגירה היא לא "לחץ" — היא זיהוי שהלקוח מוכן ועזרה לו להחליט.</p>
+<p><strong>איתותי סגירה — מה לחפש:</strong><br>• שאלות לוגיסטיות: "מתי זה נכנס לתוקף?" "האם הילד יכוסה מהיום הראשון?"<br>• מחשבת עתיד: "אז בדצמבר אוכל..."<br>• ביטול התנגדות: לקוח שדיבר על מחיר, ועכשיו שואל על כיסוי</p>
+<p><strong>שאלות סגירה שעובדות:</strong><br>• "נראה לי שהמסלול הזה מתאים לך — נתחיל ברישום?"<br>• "אתה מעדיף מסלול א או ב? [אחרי שהסברת]"<br>• "מתי נוח לך להשלים את הטפסים?"<br>• "מה אתה אומר — נצטרף גם לילדים?"</p>
+<p><strong>שתיקה:</strong> לאחר שאלת סגירה — תשתוק. הראשון שמדבר — מפסיד. תן ללקוח לחשוב.</p>
+<p><strong>סגירה חלקית:</strong> אם הלקוח לא מוכן לכל — הצע התחלה קטנה. "נצטרף רק לעובד עכשיו, ואחר כך נוסיף את הילדים." התחלה קטנה עדיפה על אפס.</p>
+<div class="lesson-tip">💡 <strong>משפט מנצח:</strong> "מתי נוח לך — עכשיו או בסוף השבוע?" — שתי אפשרויות, שתיהן כן.</div>`}
+};
+
+// ===== XP CONFIG =====
+const XP_CONFIG = {
+  lesson: 15, chapter: 50, quizCorrect: 5, quizComplete: 30, roleplay: 25, dailyLogin: 10
+};
+
+const LEVELS = [
+  {min:0,max:99,name:'מתחיל',icon:'🌱',num:1},
+  {min:100,max:299,name:'סוכן ג\'',icon:'⭐',num:2},
+  {min:300,max:599,name:'סוכן ב\'',icon:'⭐⭐',num:3},
+  {min:600,max:999,name:'סוכן בכיר',icon:'⭐⭐⭐',num:4},
+  {min:1000,max:Infinity,name:'מומחה',icon:'🏆',num:5}
+];
+
+const BADGES_CONFIG = [
+  {id:'foundations',icon:'🎓',name:'יסודות',desc:'סיים את פרק 1',check:s=>s.completedChapters.includes(1)},
+  {id:'namal_expert',icon:'🏥',name:'מומחה נמל חיפה',desc:'סיים שיעור נמל חיפה',check:s=>s.completedLessons.includes('2.1')},
+  {id:'field_ready',icon:'⭐',name:'מוכן לשטח',desc:'סיים את פרק 2',check:s=>s.completedChapters.includes(2)},
+  {id:'first_sale',icon:'🎯',name:'מכירה ראשונה',desc:'השלם סימולטור מכירה אחד',check:s=>s.completedRoleplays>0},
+  {id:'streak',icon:'🔥',name:'רצף',desc:'3 ימים ברצף',check:s=>s.streak>=3},
+  {id:'quiz_ace',icon:'🧠',name:'מוח של ביטוח',desc:'90%+ בחידון',check:s=>s.quizHighScore>=23},
+  {id:'master',icon:'🏆',name:'מאסטר',desc:'סיים את כל הפרקים',check:s=>s.completedChapters.length>=3}
+];
+
+
+// ===== QUIZ DATA — 25 QUESTIONS =====
+const QUIZ_DATA = [
+{q:'מה ההבדל העיקרי בין קולקטיב לביטוח בריאות פרטי?',opts:['פרמיה נמוכה בלבד','חיתום קבוצתי ללא הצהרת בריאות אישית','ללא תקופת אכשרה','כיסוי לכל מחלה'],ans:1,exp:'קולקטיב מספק חיתום קבוצתי — הקבוצה כולה נכנסת ללא שאלות בריאות אישיות. גם מי שיש לו מחלות קיימות מתקבל.'},
+{q:'מה ההבדל בין "שקל ראשון" ל"משלים שב"ן"?',opts:['שקל ראשון זול יותר תמיד','שקל ראשון משלם מהרגע הראשון; משלים שב"ן משלים את מה שהקופה לא כיסתה','משלים שב"ן טוב יותר תמיד','אין הבדל מעשי'],ans:1,exp:'שקל ראשון = משלם מהרגע הראשון ללא תלות בשב"ן. משלים שב"ן = משלם רק את ההפרש לאחר שהשב"ן שילם. בנמל חיפה, שקל ראשון דווקא זול יותר!'},
+{q:'מה פרמיית עובד בקולקטיב נמל חיפה, מסלול שקל ראשון?',opts:['178 ₪','159 ₪','137 ₪','290 ₪'],ans:1,exp:'מסלול ב (שקל ראשון) בנמל חיפה — 159 ₪. מסלול א (משלים שב"ן) — 178 ₪. שקל ראשון זול יותר — נקודה חשובה!'},
+{q:'מה ההגבלה החשובה ביותר בקולקטיב קריית מוצקין?',opts:['אין כיסוי לילדים','ניתוחים ברשת בתי חולים של פניקס בלבד','אין כיסוי לתרופות','אכשרה של שנה'],ans:1,exp:'בקולקטיב קריית מוצקין ניתוחים מכוסים ברשת פניקס בלבד. לפני ניתוח חייבים לוודא שבית החולים ברשת.'},
+{q:'מה CI — Critical Illness?',opts:['ביטוח בריאות מחמיר','ביטוח המשלם סכום חד-פעמי עם אבחנת מחלה קשה','ביטוח סיעוד','קצבה חודשית בנכות'],ans:1,exp:'CI = תשלום חד-פעמי ישיר לחשבון הלקוח עם אבחנת מחלה קשה (סרטן, לב, שבץ). שונה מביטוח בריאות שמשלם לבית חולים.'},
+{q:'מה ימי שרידות ב-CI?',opts:['ימי המתנה מיום ההצטרפות','מספר ימים שהמבוטח חייב לשרוד לאחר האבחנה לקבל תשלום','תקופת האכשרה','מספר ימי אשפוז מכוסים'],ans:1,exp:'ימי שרידות = מספר הימים שצריך לשרוד לאחר האבחנה (לרוב 14–30 יום) כדי לקבל את הפיצוי. חברות רבות ביטלו תנאי זה.'},
+{q:'מה IN SITU בהקשר של CI?',opts:['מחלת לב שאינה מכוסה','סרטן לפני פלישה לרקמות סביב — מכוסה בחלק מהפוליסות','ניתוח בחו"ל','מחלה אוטואימונית'],ans:1,exp:'IN SITU = סרטן "במקום" לפני פלישה. רוב הפוליסות מכסות זאת ב-10–25% מסכום הביטוח. חשוב לבדוק כי לא כולם מכסים זאת.'},
+{q:'מה ADL בהקשר ביטוח סיעוד?',opts:['מחלות אוטואימוניות','פעולות יומיות בסיסיות — אכילה, לבוש, רחצה, ניידות ועוד','סוג אכשרה','Attention Deficit Liability'],ans:1,exp:'ADL = Activities of Daily Living — פעולות יומיות בסיסיות. ביטוח סיעוד מופעל כשלא יכול לבצע 2–3 מתוך 6 ADL: אכילה, לבוש, רחצה, ניידות, שליטה בסוגרים, העברה ממיטה.'},
+{q:'מה הפרנשיזה (Franchise) בביטוח?',opts:['עמלת הסוכן','סכום או תקופת המתנה שלאחריה הביטוח מתחיל לשלם','סכום כולל מקסימלי','שיעור השתתפות עצמית'],ans:1,exp:'Franchise = ספי כניסה לכיסוי. דוגמה: franchise של 30 יום באכ"ע = רק אחרי 30 יום אי-כושר מקבלים קצבה. ב-CI זה לרוב ימי שרידות.'},
+{q:'מה Clawback?',opts:['עמלה לסוכן','תביעת החזר מהמבוטח אם חזר לעבוד לפני תקופה מסוימת','שחיקת הכיסוי עם הגיל','כפל ביטוח'],ans:1,exp:'Clawback = זכות חברת הביטוח לדרוש בחזרה חלק מהתשלום אם המבוטח חזר לעבוד תוך תקופה קצרה מדי. חשוב להסביר ללקוח.'},
+{q:'מה שחיקת גיל ב-CI?',opts:['עלייה בפרמיה עם הגיל','הקטנת סכום הביטוח המשולם לפי גיל האבחנה (לרוב מ-65 או 70)','תקופת אכשרה ארוכה יותר','ביטול כיסוי מסוימות'],ans:1,exp:'שחיקת גיל = כאשר מאובחנת מחלה בגיל 65–70+, חברת הביטוח משלמת אחוז נמוך יותר מסכום הביטוח. לדוגמה: בגיל 70 תקבל 60% מהסכום. חשוב לציין ללקוחות בוגרים.'},
+{q:'מה ההבדל בין "עיסוק ספציפי" ל"כל עיסוק" באכ"ע?',opts:['אין הבדל','עיסוק ספציפי = קצבה גם אם יכול לעבוד בעיסוק אחר; כל עיסוק = רק אם לא יכול בשום עיסוק','כל עיסוק עדיף תמיד','עיסוק ספציפי זול יותר'],ans:1,exp:'עיסוק ספציפי = אם לא יכול לבצע את עיסוקו הספציפי (רופא, מהנדס) — מקבל קצבה, גם אם יכול לעבוד כמוכר. כל עיסוק = רק אם לא יכול בשום עיסוק סביר. עיסוק ספציפי = עדיף!'},
+{q:'מה קבוצת סיכון?',opts:['קבוצת עובדים בסיכון גבוה','מיון מבוטחים לפי סיכון לצרכי תמחור — בקולקטיב כל העובדים מוגדרים קבוצה אחת','סוג ביטוח מיוחד','מסלול ביטוח גבוה'],ans:1,exp:'קבוצת סיכון = הסיכון הממוצע של קבוצת המבוטחים. בקולקטיב, כולם בקבוצה אחת, ולכן גם מי שמסוכן יותר רפואית מקבל את אותה פרמיה.'},
+{q:'מה תקופת אכשרה?',opts:['תקופת חסד בתשלום פרמיה','תקופת המתנה ממועד הצטרפות שבמהלכה אין כיסוי לאירועים מסוימים','תקופה ניסיון לסוכן','תקופת ביטוח מינימלית'],ans:1,exp:'אכשרה = תקופה ממועד ההצטרפות שבה אין כיסוי לחלק מהאירועים (לרוב 90 יום לניתוחים מתוכננים, אין אכשרה לחירום). חשוב להסביר ללקוח שנכנס.'},
+{q:'מה מדד בסיס בקולקטיב?',opts:['ממוצע גיל המבוטחים','מדד המחירים לצרכן בתאריך שממנו מחשבים הצמדה שנתית','ריבית בנק ישראל','מדד ביצועי חברת הביטוח'],ans:1,exp:'מדד בסיס = תאריך ה-CPI שממנו מחשבים הצמדת פרמיה שנתית. לדוגמה: נמל חיפה — מדד 15.08.2025. פעם בשנה הפרמיה מתעדכנת לפי שינוי המדד.'},
+{q:'לקוח נשוי עם 2 ילדים, "מפחד ממחלה קשה" — מה המוצר הראשי?',opts:['ריסק','אכ"ע','CI — מחלות קשות','סיעוד'],ans:2,exp:'כשהחשש הראשי הוא מחלה קשה (סרטן, לב) — CI הוא המוצר הנכון. הוא נותן כסף מזומן בעת אבחנה. ריסק מגן בפטירה, CI מגן בחיים עם מחלה.'},
+{q:'לקוח גמלאי — מה המוצר בסדר עדיפות ראשון?',opts:['ריסק','אכ"ע','CI','סיעוד'],ans:3,exp:'גמלאי — מחשש עיקרי לאיבוד עצמאות ויכולת שמירה עצמית. סיעוד הוא המוצר הראשי. CI שני (מחלות קשות עדיין רלוונטיות).'},
+{q:'לקוח רווק ללא תלויים — מה הכי חשוב לו?',opts:['ריסק חיים','אכ"ע — כי הוא מפרנס את עצמו','סיעוד','כולם שווים'],ans:1,exp:'רווק ללא תלויים — לא צריך ריסק (אין מי שיתפרנס ממנו). אבל אכ"ע הוא קריטי — הוא מפרנס את עצמו, ואם לא יוכל לעבוד — אין אף אחד שיפרנס אותו.'},
+{q:'מה הפרמיה לילד בקולקטיב נמל חיפה, מסלול שקל ראשון?',opts:['61.6 ₪','51.9 ₪','38 ₪','179 ₪'],ans:1,exp:'ילד עד גיל 25 בנמל חיפה: מסלול ב (שקל ראשון) = 51.9 ₪. מסלול א (משלים שב"ן) = 61.6 ₪. כאן שקל ראשון זול יותר.'},
+{q:'מה כיסוי השתלות בקולקטיב נמל חיפה?',opts:['עד 1 מיליון ₪','עד 3 מיליון ₪','עד 5 מיליון ₪','ללא הגבלה'],ans:2,exp:'קולקטיב נמל חיפה — השתלות לב, ריאה, כבד עד 5 מיליון ₪. תרופות מחוץ לסל — עד 3 מיליון ₪. ניתוחים בחו"ל — 250% ממחיר ישראל.'},
+{q:'מה המסר הנכון ב"יש לי שב"ן"?',opts:['אז לא צריך כלום נוסף','שב"ן מכסה הכל','מצוין — אבל בוא נראה מה הוא לא מכסה, כי יש פערים משמעותיים','השב"ן שלך לא שווה כלום'],ans:2,exp:'לעולם לא לשלול. לאשר שהשב"ן טוב, ואז להראות את הפערים: ניתוחים בחו"ל, CI, תרופות מחוץ לסל, שקל ראשון בלי פרנשיזה. זה הפתח לשיחה.'},
+{q:'כמה עולה פנסיונר בקולקטיב נמל חיפה, מסלול א?',opts:['178 ₪','290 ₪','329 ₪','159 ₪'],ans:2,exp:'פנסיונר נמל חיפה: מסלול א (משלים שב"ן) = 329 ₪. מסלול ב (שקל ראשון) = 290 ₪. שוב — שקל ראשון זול יותר.'},
+{q:'מה אכ"ע?',opts:['אחריות כספית עצמאית','אובדן כושר עבודה — קצבה חודשית אם לא יכול לעבוד בשל מחלה/תאונה','אגרת כניסה עצמאית','אמנת כיסוי עצמאית'],ans:1,exp:'אכ"ע = אובדן כושר עבודה. קצבה חודשית (60–80% מהשכר) אם המבוטח לא יכול לעבוד בשל מחלה או תאונה. הפרמטרים: franchise (תקופת המתנה) + תקופת תשלום + סוג עיסוק.'},
+{q:'מה תקופת הקולקטיב של קריית מוצקין?',opts:['ספטמבר 2025 — אוגוסט 2030','דצמבר 2024 — נובמבר 2029','ינואר 2025 — דצמבר 2029','מרץ 2024 — פברואר 2029'],ans:1,exp:'קולקטיב קריית מוצקין (פניקס): דצמבר 2024 — נובמבר 2029. קולקטיב נמל חיפה (הראל): ספטמבר 2025 — אוגוסט 2030.'},
+{q:'לקוח "לא רוצה להיות נטל על הילדים" — מה המוצר?',opts:['CI','ריסק','סיעוד','אכ"ע'],ans:2,exp:'מוטיבציה של "לא רוצה להיות נטל" = סיעוד. ביטוח סיעוד נותן קצבה חודשית לתשלום מטפל ביתי (7,000–12,000 ₪/חודש) ומאפשר עצמאות ללא הסתמכות על ילדים.'}
+];
+
+// ===== TERMS DATA =====
+const TERMS = [
+{id:'shaban',cat:'מוצרים',term:'שב"ן',short:'שירותי בריאות נוספים — ביטוח משלים של קופת החולים',full:'שב"ן = שירותי בריאות נוספים. כל אחת מ-4 קופות החולים מציעה שב"ן בפרמיה של 80–120 ₪ לחודש. השב"ן מכסה ניתוחים פרטיים ברשת הקופה, חלק מהתרופות מחוץ לסל, ייעוץ מומחים ועוד. המגבלות: פרנשיזות גבוהות, רשת מוגבלת, תלות בקופה. רוב הלקוחות מאמינים שהשב"ן מכסה "הכל" — זהו המיתוס שסוכן צריך לנפץ.',tip:'טיפ מכירה: "הראה לי את רשימת הכיסויים של השב"ן שלך — נראה ביחד מה כלול ומה לא."'},
+{id:'shekel1',cat:'מושגי ביטוח',term:'שקל ראשון',short:'הביטוח משלם מהרגע הראשון, ללא תלות בשב"ן',full:'שקל ראשון = כיסוי שמשלם את מלוא ההוצאה מהרגע הראשון, ללא קיזוז תשלום השב"ן. לדוגמה: ניתוח 50,000 ₪ — הביטוח משלם 50,000 ₪. ההפך הוא "משלים שב"ן" — שמשלם רק את ההפרש לאחר תשלום השב"ן. בנמל חיפה — שקל ראשון (מסלול ב, 159 ₪) זול ממשלים שב"ן (מסלול א, 178 ₪) — דבר נדיר וחשוב.',tip:'תמיד הסבר את ההבדל לפני שהלקוח בוחר מסלול.'},
+{id:'acashara',cat:'מושגי ביטוח',term:'תקופת אכשרה',short:'תקופת המתנה ממועד הצטרפות — ללא כיסוי לאירועים מתוכננים',full:'אכשרה = תקופה (לרוב 90 יום) ממועד ההצטרפות שבה אין כיסוי לאירועים שאינם חירום. לדוגמה: מי שמצטרף היום לנמל חיפה, ואחרי חודש מתגלה לו גידול — ייתכן שלא יהיה מכוסה לניתוח. חירום רפואי בד"כ מכוסה גם בתקופת האכשרה. חשוב להסביר ללקוח חדש.',tip:'ללקוח חדש: "כניסה לתוקף מיידית לחירומים. לניתוחים מתוכננים — 90 יום."'},
+{id:'franchise',cat:'מושגי ביטוח',term:'פרנשיזה',short:'ספי כניסה לכיסוי — סכום/תקופה לפני שהביטוח מתחיל לשלם',full:'Franchise = מנגנון שבו הביטוח מתחיל לשלם רק לאחר שהמבוטח "ספג" סכום מסוים. דוגמה באכ"ע: franchise של 30 יום = קצבה רק לאחר 30 יום אי-כושר. דוגמה בבריאות: השתתפות עצמית של 20% = אתה משלם 20% מהעלות. ב-CI: ימי שרידות = franchise.',tip:'שאל תמיד את לקוח האכ"ע: "מה ה-franchise? כמה חודשים אתה יכול להחזיק ללא קצבה?"'},
+{id:'clawback',cat:'מושגי ביטוח',term:'Clawback',short:'זכות החזר — חברת הביטוח מחזירה תשלום אם חזרת לעבוד מוקדם',full:'Clawback = זכות חברת הביטוח לדרוש בחזרה חלק מהתשלומים ששולמו אם המבוטח חזר לעבוד בתוך תקופה מסוימת. לדוגמה: קיבלת קצבת אכ"ע ל-3 חודשים, חזרת לעבוד — חברת הביטוח עשויה לדרוש חלק בחזרה. חשוב לבדוק בפוליסה.',tip:'הסבר ללקוח שחוזר לעבוד — יש להודיע לחברה ולבדוק תנאי clawback.'},
+{id:'insitu',cat:'מושגי ביטוח',term:'IN SITU',short:'סרטן "במקום" — לפני פלישה לרקמות — מכוסה חלקית ב-CI',full:'IN SITU = שלב סרטן ראשוני שבו התאים הממאירים עדיין לא פלשו לרקמות הסמוכות. לדוגמה: סרטן בלוטת חלב IN SITU. ברוב פוליסות CI מכוסה ב-10–25% מסכום הביטוח (לא מלא). חשוב לבדוק בכל פוליסה אם IN SITU כלול ובאיזה אחוז.',tip:'ללקוח בסיכון גבוה למחלה: "גם גילוי מוקדם — IN SITU — מכוסה, גם אם בחלק מהסכום."'},
+{id:'adl',cat:'מושגי ביטוח',term:'ADL',short:'פעולות יומיות בסיסיות — קריטריון להפעלת ביטוח סיעוד',full:'ADL = Activities of Daily Living. 6 הפעולות: אכילה עצמאית, לבישה/פשיטה, רחצה, ניידות (הלוך-שוב), שליטה בסוגרים, העברה מהמיטה לכיסא. ביטוח סיעוד מופעל כשלא יכול לבצע 2–3 מהן. גם דמנציה ואלצהיימר מופעלים ישירות.',tip:'להמחיש: "אם אמא שלך לא יכולה להתלבש לבד — הביטוח מתחיל לשלם."'},
+{id:'shakiya_gil',cat:'מושגי ביטוח',term:'שחיקת גיל',short:'הקטנת סכום CI עם עליית הגיל מ-65/70',full:'שחיקת גיל = מנגנון ב-CI שבו סכום הביטוח קטן לפי גיל האבחנה. לדוגמה: בגיל 65 מקבלים 80%, בגיל 70 מקבלים 60%, בגיל 75 מקבלים 40%. זה לא אומר שהביטוח לא שווה — אלא שצריך לתכנן סכום גבוה יותר מלכתחילה.',tip:'ללקוח 50+: "קנה עכשיו סכום גבוה יותר, כי בגיל 70 תקבל פחות ממנו."'},
+{id:'index_basis',cat:'מושגי ביטוח',term:'מדד בסיס',short:'תאריך מדד ממנו מחשבים הצמדת פרמיה שנתית',full:'מדד בסיס = תאריך מדד המחירים לצרכן שממנו מחשבים כל שנה את שינוי הפרמיה. לדוגמה: קולקטיב נמל חיפה — מדד בסיס 15.08.2025. מדי שנה בספטמבר הפרמיה מתעדכנת לפי שינוי ה-CPI מאז מדד הבסיס. לרוב עלייה של 2–5% בשנה.',tip:'להסביר ללקוח: "הפרמיה לא קבועה — היא עולה עם המדד כל שנה, אבל בכיסויים גם הסכומים עולים."'},
+{id:'risk_group',cat:'מושגי ביטוח',term:'קבוצת סיכון',short:'מיון מבוטחים לפי רמת סיכון לצרכי תמחור',full:'קבוצת סיכון = האופן שחברת ביטוח מסווגת מבוטחים לפי הסיכון הבריאותי שלהם. בביטוח פרטי — כל אחד בקבוצת סיכון אחרת לפי מצבו. בקולקטיב — כל העובדים בקבוצה אחת, ולכן הפרמיה מתאזנת. זה מאפשר גם לחולים לקבל פרמיה סבירה.',tip:'יתרון קולקטיב: "גם אם יש לך לחץ דם — תוכל להצטרף בפרמיה רגילה."'},
+{id:'collective_vs_private',cat:'מוצרים',term:'קולקטיב vs ביטוח פרטי',short:'ביטוח קבוצתי דרך מעסיק לעומת ביטוח אישי',full:'קולקטיב: נרכש דרך מעסיק, ללא חיתום אישי, פרמיה נמוכה, תלוי בהמשך העסקה. ביטוח פרטי: נרכש ישירות מחברה, חיתום אישי מלא (שאלות בריאות), פרמיה גבוהה יותר, אך עצמאי — לא תלוי במעסיק. לקוח שיש לו קולקטיב טוב — אין צורך בפרטי. לקוח בלי קולקטיב — צריך פרטי.',tip:'שאל תמיד: "מה יקרה לביטוח שלך אם תחליף מעסיק?"'},
+{id:'shredit',cat:'מוצרים',term:'ימי שרידות',short:'מספר הימים שצריך לשרוד אחרי אבחנה לקבלת פיצוי CI',full:'ימי שרידות = תנאי בחלק מפוליסות CI שדורש מהמבוטח לשרוד מספר ימים (לרוב 14–30) לאחר האבחנה כדי לקבל את הפיצוי. הרציונל: מניעת תביעות לאחר מוות מהיר. חברות רבות ביטלו תנאי זה לאחרונה — כדאי לבדוק.',tip:'ללקוח CI: "בדוק בפוליסה שלך — יש ימי שרידות? כמה?"'},
+{id:'ake',cat:'מוצרים',term:'אכ"ע',short:'אובדן כושר עבודה — קצבה חודשית אם לא יכול לעבוד',full:'אכ"ע = אובדן כושר עבודה. קצבה חודשית (לרוב 60–80% מהשכר) אם המבוטח אינו יכול לעבוד בשל מחלה או תאונה. פרמטרים קריטיים: (1) עיסוק ספציפי vs כל עיסוק, (2) franchise (תקופת המתנה 30–90 יום), (3) תקופת תשלום (עד 67 vs 5 שנים — הבדל ענק!). עצמאים — קריטי. שכירים ללא ביטוח מנהלים טוב — חשוב.',tip:'תמיד שאל: "כמה חודשים תוכל להחזיק ללא שכר?"'}
+];
+
+// ===== ROLEPLAY SCENARIOS =====
+const SCENARIOS = [
+{id:0,title:'הסקפטי 🤨',desc:'נמל חיפה | 40 | חוויה גרועה בעבר',icon:'🤨',
+profile:'דני אביגיל, 40, עובד ותיק בנמל חיפה 12 שנה. נשוי+3 ילדים. לפני 5 שנים קנה ביטוח ש"לא שילם כלום".',
+type:'סקפטי',
+intro:'דני מסתכל עליך בחשדנות: "אתה בטח רוצה למכור לי שוב ביטוח שלא שווה כלום."',
+steps:[
+{situation:'"שילמתי ביטוח 4 שנים ולא קיבלתי שקל. למה שאני יאמין לך?"',
+choices:[
+{txt:'"אתה צודק לחלוטין. בוא נסתכל ביחד על החוזה — אין הפתעות."',quality:'great',
+feedback:'מושלם! לא התגוננת — ישרת שיתוף פעולה. "בחוזה הנמל כתוב ספציפית: ניתוחים בחו\'\'ל 250%, מחלות קשות ישירות לחשבון. בוא תראה."'},
+{txt:'"לא כל הביטוחים זהים — שלנו שונה"',quality:'neutral',
+feedback:'נשמע כמו כל איש מכירות. עדיף: "מה היה הביטוח הקודם? בוא נבין מה קרה ונשווה."'},
+{txt:'"ביטוח זה חשוב — צריך לקחת"',quality:'bad',
+feedback:'דני מרגיש שאתה לא מקשיב. שתוק, הקשב, ואחר כך דבר.'}
+]},
+{situation:'דני: "בניתוח הוציאו לי 8,000 ₪ מהכיס"',
+choices:[
+{txt:'"נשמע כמו השתתפות עצמית גבוהה. בקולקטיב נמל — שקל ראשון, אפס השתתפות עצמית. בוא תראה הסעיף עצמו."',quality:'great',
+feedback:'הצגת הבדל קונקרטי בשחור על לבן. דני מאמין לנייר, לא לדברים.'},
+{txt:'"זה לא אמור לקרות — בטח הייתה טעות"',quality:'bad',
+feedback:'מזלזל בחוויה שלו. קודם תכיר: "זה ממש לא נעים. בוא נבין מה קרה."'},
+{txt:'"בקולקטיב שלנו זה לא קורה"',quality:'neutral',
+feedback:'הבטחה ריקה. הוכח: "בחוזה כתוב..." — הראה שחור על לבן.'}
+]},
+{situation:'דני: "כמה אני אשלם?"',
+choices:[
+{txt:'"עובד נמל, מסלול ב: 159 ₪. אשתך — 159. ילד — 51.9 לכל אחד."',quality:'great',
+feedback:'מדויק, ללא עיגולים. "אתה, אשתך ו-3 ילדים = 159+159+155.7 = 473 ₪ לחודש."'},
+{txt:'"כמה מאות שקלים"',quality:'bad',
+feedback:'דני שונא עמימות. תמיד מספר מדויק.'},
+{txt:'"תלוי במסלול — יש כמה אפשרויות"',quality:'neutral',
+feedback:'"מסלול ב הכי כדאי: 159 ₪ לחודש." תן מספר אחד ברור.'}
+]}
+]},
+{id:1,title:'האנליטי 📊',desc:'קריית מוצקין | מהנדס | רוצה טבלאות',icon:'📊',
+profile:'ד"ר אריאל כהן, 42, מהנדס בקריית מוצקין. לא קונה ללא השוואה מלאה.',
+type:'אנליטי',
+intro:'אריאל מוציא פנקס ועט: "אני מהנדס — אני צריך לראות את כל הנתונים לפני החלטה."',
+steps:[
+{situation:'אריאל: "תסביר לי הבדל מסלול א למסלול ב — עם מספרים"',
+choices:[
+{txt:'"מסלול א: 137 ₪, משלים שב\'\'ן. מסלול ב: 179 ₪, שקל ראשון — ניתוח 50K ₪, ביטוח משלם הכל."',quality:'great',
+feedback:'מושלם! "מעלה של 42 ₪ לחודש = 504 ₪ לשנה — בשביל ביטחון שהניתוח יכוסה במלואו."'},
+{txt:'"מסלול ב טוב יותר — אני ממליץ"',quality:'bad',
+feedback:'אריאל לא מקבל המלצות — הוא מקבל נתונים. תן לו להחליט.'},
+{txt:'"יש הבדלים קטנים — שניהם טובים"',quality:'bad',
+feedback:'מסתיר מידע. אריאל מזהה זאת מיד.'}
+]},
+{situation:'אריאל: "רשת בתי חולים פניקס — האם כל בית חולים מכוסה?"',
+choices:[
+{txt:'"לא — רשת פניקס בלבד לניתוחים מתוכננים. חירום = כל מקום. רשת פניקס כוללת: תל השומר, הדסה, שיבא, רמב\'\'ם, איכילוב ו-40+ נוספים."',quality:'great',
+feedback:'תשובה מדויקת, שקיפות מוחלטת. "ניתן לקבל רשימה מלאה עם החוזה."'},
+{txt:'"יש קצת הגבלות אבל לרוב בסדר"',quality:'bad',
+feedback:'אריאל יגלה את המגבלה ולא יאמין לך. שקיפות = אמינות.'},
+{txt:'"מכסה רוב בתי החולים"',quality:'neutral',
+feedback:'"רוב" לא מספיק. ציין מה כלול ומה לא.'}
+]},
+{situation:'אריאל: "אני רוצה לחשוב שבוע"',
+choices:[
+{txt:'"ודאי. שולח לך טבלת השוואה: קולקטיב VS שב\'\'ן VS ביטוח פרטי. ויש עוד משהו — הקולקטיב פתוח לתקופה מוגבלת."',quality:'great',
+feedback:'נתת כלים, לא לחצת. "תאריך סיום הצטרפות: [תאריך]."'},
+{txt:'"אין זמן — ההצטרפות נסגרת בקרוב"',quality:'neutral',
+feedback:'לחץ מלאכותי — אריאל מזהה. "הקולקטיב פתוח עד X — לא רוצה ללחוץ."'},
+{txt:'"בסדר, חשוב ותחזור"',quality:'bad',
+feedback:'אנליטי ללא מסמך = לא חוזר. שלח מסמך השוואה.'}
+]}
+]},
+{id:2,title:'הממהר ⚡',desc:'דב"ס | מנהל 45 | "שלח מייל" = מוות',icon:'⚡',
+profile:'אורי לוי, 45, מנהל דב"ס. תמיד רץ בין ישיבות.',
+type:'ממהר',
+intro:'אורי עומד. "יש לך 3 דקות. מה יש?"',
+steps:[
+{situation:'אורי: "אין לי זמן — שלח לי מייל"',
+choices:[
+{txt:'"מייל יאבד — 30 שניות: 159 ₪ לחודש, ניתוחים ותרופות, ללא שאלות בריאות. טופס אחד. מחר תהיה מבוטח."',quality:'great',
+feedback:'מעולה! לא נעלבת — נתת מספרים מיידיים. "אתה רוצה שאסדר אותך עכשיו ב-2 דקות?"'},
+{txt:'"אשלח מייל מפורט עם כל הפרטים"',quality:'bad',
+feedback:'המייל לא ייפתח. עם אורי — סגירה עכשיו או לא בכלל.'},
+{txt:'"מתי נוח לדבר?"',quality:'neutral',
+feedback:'אורי לא ייזמן פגישה. "5 דקות עכשיו יותר קל מפגישה חדשה."'}
+]},
+{situation:'אורי: "כמה עולה ומה מכוסה? 10 שניות."',
+choices:[
+{txt:'"159 ₪ — ניתוחים פרטיים, תרופות מחוץ לסל, מחלות קשות עם מזומן לחשבון."',quality:'great',
+feedback:'4 נקודות ב-10 שניות. "אשתך — 159 נוספים. ילדים — 52 כל אחד."'},
+{txt:'התחלת להסביר בפירוט על שקל ראשון',quality:'bad',
+feedback:'הפסדת. הוא ביקש 10 שניות.'},
+{txt:'"יש כמה מסלולים..."',quality:'bad',
+feedback:'הפסדת. אורי כבר בטלפון.'}
+]},
+{situation:'אורי: "מה צריך לחתום?"',
+choices:[
+{txt:'שלפת טופס. "שם, ת.ז., מסלול ב. 2 דקות."',quality:'great',
+feedback:'סגירה מושלמת! "תוך 24 שעות יש לך אישור."'},
+{txt:'"אשלח טופס למייל"',quality:'bad',
+feedback:'חוזר לשגיאה של המייל. הטופס ביד שלך — מלא עכשיו.'},
+{txt:'"יש כמה שאלות בטופס..."',quality:'neutral',
+feedback:'"שתי שאלות בלבד — שם ות.ז."'}
+]}
+]},
+{id:3,title:'המרוצה מהשב"ן 🏥',desc:'רכבת ישראל | "מכבי שלי מושלם"',icon:'🏥',
+profile:'ריבה שפירא, 52, ותיקה רכבת ישראל. מכבי זהב. "יש לי הכל."',
+type:'מרוצה-משב"ן',
+intro:'ריבה: "אני לא מבינה למה אני צריכה ביטוח נוסף — מכבי זהב הכי טוב שיש."',
+steps:[
+{situation:'ריבה: "מכבי זהב זה הכי טוב. מה עוד אפשר להוסיף?"',
+choices:[
+{txt:'"מכבי זהב מצוין! בואי נסתכל על 3 דברים שהוא לא מכסה: ניתוח לב בגרמניה, כסף מזומן אם תאובחני עם סרטן, קצבה אם לא תוכלי לעבוד."',quality:'great',
+feedback:'לא תקפת את מכבי — שיבחת ואז הוספת. "מכבי ישלם לבית החולים. CI ייתן לך 300,000 ₪ ישירות לחשבון."'},
+{txt:'"מכבי זהב לא מספיק — יש פערים גדולים"',quality:'bad',
+feedback:'ריבה תקבל גישה הגנתית. אל תתקוף — הצג נוסף.'},
+{txt:'"כן, מכבי זהב טוב — אבל..."',quality:'neutral',
+feedback:'הוסף דוגמה: "אם תאובחני עם סרטן — מכבי ישלם על הניתוח. אבל מי ישלם המשכנתא ב-6 חודשי טיפולים?"'}
+]},
+{situation:'ריבה: "120 ₪ אני כבר משלמת — לא רוצה יותר"',
+choices:[
+{txt:'"CI עולה עוד 80 ₪ — סה\'\'כ 200 ₪ לחודש. בתמורה: 300,000 ₪ ישירות לחשבון אם תאובחני עם מחלה קשה."',quality:'great',
+feedback:'"200 ₪ לחודש = 2,400 ₪ לשנה. ניתוח פרטי = 60,000 ₪. הסיכון שלא לקנות גדול יותר."'},
+{txt:'"זה לא הרבה — רק 100 ₪"',quality:'neutral',
+feedback:'"לא הרבה" סובייקטיבי. הוכח ערך.'},
+{txt:'"הביטוח נותן הרבה יותר"',quality:'bad',
+feedback:'לא ענית להתנגדות. ריבה אמרה שלא רוצה לשלם יותר — ענה על זה.'}
+]},
+{situation:'ריבה: "מה המוצר הכי חשוב לי?"',
+choices:[
+{txt:'"בגיל 52 — CI ראשון בלי ספק. 300K ₪ מזומן אם מאובחנת — ממשיכה לחיות, לשלם משכנתא."',quality:'great',
+feedback:'המלצה מדויקת לגיל. "ואחרי זה — אכ\'\'ע: אם לא תוכלי לעבוד ברכבת, מי ישלם שכר?"'},
+{txt:'"ריסק — אי אפשר בלעדיו"',quality:'bad',
+feedback:'לא מתאים — ילדים גדולים, 52 שנה. CI ואכ"ע רלוונטיים יותר.'},
+{txt:'"קשה לומר — תלוי בהרבה גורמים"',quality:'neutral',
+feedback:'מתחמק. תן המלצה ברורה ואחר כך הסבר.'}
+]}
+]},
+{id:4,title:'המתנגד במחיר 💰',desc:'תנובה | אמא לשניים | תקציב צמוד',icon:'💰',
+profile:'שרה מזרחי, 36, עובדת תנובה, אמא לשניים. משכנתא.',
+type:'תקציב-מוגבל',
+intro:'שרה: "תגיד לי ישר — כמה זה עולה? מעל 150 ₪ — לא יכולה."',
+steps:[
+{situation:'שרה: "אין לי כסף — לכל היותר 100 ₪ לחודש"',
+choices:[
+{txt:'"שרה, 100 ₪ — נסדר אותך. CI בסיסי: 80–100 ₪, כיסוי מחלות קשות. זה הכי קריטי. שאר נוסיף אחר כך."',quality:'great',
+feedback:'לא דחפת — הצעת פתרון תוך תקציב. "100 ₪ = 3 ₪ ביום. בסדר?"'},
+{txt:'"100 ₪ לא מספיק לביטוח אמיתי"',quality:'bad',
+feedback:'הפסדת. 100 ₪ קונים CI בסיסי. אל תגיד "לא מספיק".'},
+{txt:'"הביטוח עולה יותר — אבל הכרחי"',quality:'neutral',
+feedback:'תחושת לחץ. שרה אמרה מה יכולה — כבד זאת.'}
+]},
+{situation:'שרה: "מה עם הילדים?"',
+choices:[
+{txt:'"ילד: 51.9 ₪. 100+52+52 = 204 ₪ — לך ולשני ילדיך כיסוי מלא. 7 ₪ ביום לשלושתכם."',quality:'great',
+feedback:'"קפה ביום עולה יותר." המחשה = סגירה.'},
+{txt:'"ילדים לא חייבים — בדרך כלל בריאים"',quality:'bad',
+feedback:'שגוי. ילדים חולים גם.'},
+{txt:'"ילדים נפרד — נדון מאוחר יותר"',quality:'neutral',
+feedback:'חשוב לספר את כל העלות מראש.'}
+]},
+{situation:'שרה: "אסדר עם הבעל ונחזור. הוא מחליט על הכסף."',
+choices:[
+{txt:'"כמובן. שולח לכם ווצאפ: 3 שורות — מחיר מדויק, מה מכוסה, למה עכשיו. ככה תהיה לך המידע לשיחה."',quality:'great',
+feedback:'ווצאפ = ישיר. 3 שורות = בדיוק מה הבעל ירצה.'},
+{txt:'"בסדר, ממתין לשמוע"',quality:'bad',
+feedback:'שרה לא תחזור. "שלחי ווצאפ ואני שולח מידע."'},
+{txt:'"נסדר עכשיו — הבעל יאשר"',quality:'neutral',
+feedback:'לא כבדת התהליך. אבל תן כלים לשיחה.'}
+]}
+]},
+{id:5,title:'הזוג שצריך להתייעץ 👫',desc:'מספנות ישראל | צריך אישור אשתו',icon:'👫',
+profile:'רמי ברקוביץ, 44, עובד מספנות 8 שנים. "דנה האישה מנהלת הכסף."',
+type:'מחליט-זוגי',
+intro:'רמי: "נשמע טוב — אבל בלי שדנה יודעת, אני לא חותם."',
+steps:[
+{situation:'רמי: "לא רוצה להפתיע את דנה עם חיוב חדש"',
+choices:[
+{txt:'"רמי, צודק. בוא נעשה הכנה לשיחה עם דנה — 3 נקודות שהיא תרצה: מחיר, מה מכוסה, למה עכשיו."',quality:'great',
+feedback:'לא ניסית לדלג על דנה — עזרת לרמי לשכנע. "אני יכול לדבר עם שניכם ביחד אם עוזר."'},
+{txt:'"דנה תאשר — זה שמירה על המשפחה"',quality:'bad',
+feedback:'לא מכיר את דנה. עדיף: "מה לדעתך דנה תשאל?"'},
+{txt:'"חתום ותסביר לה אחר כך"',quality:'bad',
+feedback:'מסוכן. אם דנה לא מרוצה — ביטול. תמיד החלטה זוגית מוסכמת.'}
+]},
+{situation:'רמי: "מה הנקודות שאסביר? היא תשאל למה עכשיו"',
+choices:[
+{txt:'"1) ביטוח דרך עבודה = ללא שאלות בריאות — חלון שנסגר. 2) 318 ₪ לשניכם. 3) אם רמי לא יוכל לעבוד — מה קורה למשכנתא?"',quality:'great',
+feedback:'"בוא נתרגל: כאילו אני דנה — \'למה עכשיו?\' ואתה עונה."'},
+{txt:'"תגיד שזה חשוב לביטחון"',quality:'neutral',
+feedback:'כללי מדי. "עכשיו = חלון הצטרפות פתוח."'},
+{txt:'"תגיד שאני ממליץ"',quality:'bad',
+feedback:'דנה לא מכירה אותך. תן טיעונים שרמי יכול לעמוד מאחוריהם.'}
+]},
+{situation:'רמי: "דנה רוצה לדבר איתך ישירות"',
+choices:[
+{txt:'"מצוין! בוא נקבע פגישה קצרה לשלושתנו — 20 דקות. אפשר גם ווידאו-שיחה."',quality:'great',
+feedback:'פגישה משותפת = סגירה בהרבה יותר סיכוי.'},
+{txt:'"שתתקשר — תן לה הטלפון"',quality:'neutral',
+feedback:'עובד, אבל פגישה משותפת עדיפה.'},
+{txt:'"לא צריך — רמי יכול להחליט לבד"',quality:'bad',
+feedback:'מסוכן. כבד את דנה.'}
+]}
+]},
+{id:6,title:'הסוחר 🤝',desc:'נמל חיפה | ותיק 20 שנה | תמיד מבקש הנחה',icon:'🤝',
+profile:'יוסי מלכה, 55, ותיק נמל 20 שנה. "כל דבר ניתן להנחות."',
+type:'מתמקח',
+intro:'יוסי לוחץ ידיים. "יש לי 6 חברים שרוצים ביטוח. תן לי הנחה טובה."',
+steps:[
+{situation:'יוסי: "תן לי 20% הנחה ואני מביא 6 לקוחות"',
+choices:[
+{txt:'"קולקטיב נמל חיפה הוא מחיר קבוע בחוזה — אי אפשר לשנות. אבל לחברים שלך — מוכן לתאם פגישה קבוצתית. 6 בישיבה אחת."',quality:'great',
+feedback:'מקצועי: הסברת מדוע הנחה אינה אפשרית, והצעת ערך אמיתי.'},
+{txt:'"בסדר, 10% הנחה"',quality:'bad',
+feedback:'לא אפשרי. ואם תבטיח ולא תקיים — תאבד אמינות ו-6 לקוחות.'},
+{txt:'"אין הנחות — מחיר קבוע"',quality:'neutral',
+feedback:'נכון, קצת קשוח. הוסף ערך: "אבל מוכן לפגישה קבוצתית — 45 דקות, מסדר הכל."'}
+]},
+{situation:'יוסי: "תן לי פחות ממה שאחרים מקבלים"',
+choices:[
+{txt:'"יוסי — כל עובד נמל חיפה מקבל בדיוק אותו מחיר. 159 ₪. הנמל סיכם בחוזה מחיר קבוע לכולם — זה הוגן."',quality:'great',
+feedback:'"ותחשוב: אם יכולתי להוזיל לך, יכולתי גם להעלות לך. המחיר הקבוע מגן עליך."'},
+{txt:'"כל אחד מקבל אותו דבר"',quality:'neutral',
+feedback:'נכון, אבל הסבר מדוע זה טוב ליוסי.'},
+{txt:'"הוראות מלמעלה"',quality:'bad',
+feedback:'מחליש אותך. "זה מחיר חוזי — מגן על כולם."'}
+]},
+{situation:'יוסי: "מה אני מקבל שאחרים לא?"',
+choices:[
+{txt:'"מה שתמיד נותן לחברים: אני זמין תמיד. שאלות, תביעות, שינויים — ישר אלי, לא למוקד. 20 שנה בנמל — יודע הצרכים שלכם."',quality:'great',
+feedback:'הערך האמיתי הוא שירות אישי. "ואת 6 החברים שלך — מטפל אישית בכולם."'},
+{txt:'"כולם מקבלים אותו שירות"',quality:'bad',
+feedback:'מפסיד הזדמנות. יוסי מחפש יתרון — שירות אישי.'},
+{txt:'"תקבל 6 חברים עם ביטוח טוב"',quality:'neutral',
+feedback:'לא ענית. יוסי שאל מה הוא יקבל.'}
+]}
+]},
+{id:7,title:'המפחד מהחלטות 😰',desc:'נמל חיפה | חרד | פוחד לטעות',icon:'😰',
+profile:'מיכאל גרינברג, 38, עובד נמל 7 שנים. חרד להחלטות.',
+type:'מפחד-החלטות',
+intro:'מיכאל: "דיברתי עם 3 סוכנים ואני לא יודע מה לבחור. יש יותר מדי אפשרויות."',
+steps:[
+{situation:'מיכאל: "יש יותר מדי מסלולים — לא יודע מה לבחור"',
+choices:[
+{txt:'"בוא נפשט: לך, עובד נמל, יש שאלה אחת — מסלול א או ב? ולזה יש תשובה ברורה: מסלול ב. שקל ראשון. מחיר נמוך יותר, כיסוי טוב יותר."',quality:'great',
+feedback:'הפחתת לחץ. "רק שאלה אחת. ועניתי אותה. האם זה עוזר?"'},
+{txt:'"יש הרבה מסלולים — בוא נעבור אחד אחד"',quality:'bad',
+feedback:'עוד מסלולים = עוד חרדה. הפשט.'},
+{txt:'"כולם בחרו — אתה לא צריך לחשוב הרבה"',quality:'bad',
+feedback:'לחץ חברתי ישתק. "כמה אנשים בנמל בחרו אותו מסלול — לא יצא רע."'}
+]},
+{situation:'מיכאל: "מה אם אני לוקח ומצטער? אפשר לבטל?"',
+choices:[
+{txt:'"כן — אפשר לבטל בכל עת, ללא קנסות. הסיכון היחיד שלך הוא לא לקחת — לא לקחת."',quality:'great',
+feedback:'"אם חו\'\'ח משהו יקרה עד שתבטל — אתה מכוסה. ביטול חינם = שקט נפשי."'},
+{txt:'"ביטול מסובך — יש תקופת אכשרה"',quality:'bad',
+feedback:'מגביר חרדה. ביטול בקולקטיב פשוט.'},
+{txt:'"לא תצטרך לבטל — זה שווה"',quality:'neutral',
+feedback:'לא ענית. מיכאל שאל על ביטול.'}
+]},
+{situation:'מיכאל: "אני עדיין לא בטוח..."',
+choices:[
+{txt:'"בוא נעשה ככה: מלא היום את הטופס — יש לך שבועיים לחשוב. אם שינית דעתך — מבטל חינם. אם לא — יש לך כיסוי."',quality:'great',
+feedback:'גאוני! "חלון חשיבה של שבועיים." מסיר לחץ. מיכאל ימלא את הטופס.'},
+{txt:'"תקחי החלטה — אתה לא צריך יותר זמן"',quality:'bad',
+feedback:'מייצר לחץ שישתק.'},
+{txt:'"קח עוד שבוע לחשוב"',quality:'neutral',
+feedback:'"מלא הטופס עכשיו ויש לך שבועיים לחזור בך."'}
+]}
+]}
+];
+
+
+// ===== STATE MANAGEMENT =====
+const STATE_KEY = 'insurance_app_v4';
+let state = {
+  xp: 0, totalXp: 0, completedLessons: [], completedChapters: [],
+  quizHighScore: -1, quizState: null,
+  completedRoleplays: 0, rpState: null,
+  streak: 0, lastLogin: null, badges: [],
+  xpLog: [], treeAnswers: {},
+  srs: {items: {}}, quizHistory: [], roleplayHistory: [], fieldReadiness: 0
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem(STATE_KEY);
+    if (s) state = {...state, ...JSON.parse(s)};
+  } catch(e){}
+}
+
+function saveState() {
+  try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e){}
+}
+
+function resetProgress() {
+  if (!confirm('למחוק את כל ההתקדמות? פעולה זו אינה הפיכה.')) return;
+  state = {xp:0,totalXp:0,completedLessons:[],completedChapters:[],quizHighScore:-1,quizState:null,completedRoleplays:0,rpState:null,streak:0,lastLogin:null,badges:[],xpLog:[],treeAnswers:{}};
+  saveState();
+  updateAllUI();
+  alert('ההתקדמות אופסה.');
+}
+
+// ===== XP SYSTEM =====
+function addXP(amount, reason) {
+  state.xp += amount;
+  state.totalXp += amount;
+  const prevLevel = getLevel(state.xp - amount);
+  const newLevel = getLevel(state.xp);
+  state.xpLog.unshift({amount, reason, ts: Date.now()});
+  if (state.xpLog.length > 50) state.xpLog.pop();
+  saveState();
+  showXPToast(amount, reason);
+  updateAllUI();
+  if (newLevel.num > prevLevel.num) setTimeout(() => alert(`🎉 עלית רמה! ברוך הבא — ${newLevel.icon} ${newLevel.name}`), 400);
+  checkBadges();
+}
+
+function getLevel(xp) {
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (xp >= LEVELS[i].min) return LEVELS[i];
+  }
+  return LEVELS[0];
+}
+
+function showXPToast(amount, reason) {
+  const t = document.getElementById('xp-toast');
+  const m = document.getElementById('xp-toast-msg');
+  m.textContent = `+${amount} XP — ${reason}`;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function checkBadges() {
+  BADGES_CONFIG.forEach(b => {
+    if (!state.badges.includes(b.id) && b.check(state)) {
+      state.badges.push(b.id);
+      saveState();
+      setTimeout(() => alert(`🎖️ תג חדש: ${b.icon} ${b.name}\n${b.desc}`), 600);
+    }
+  });
+}
+
+// ===== DAILY LOGIN =====
+function checkDailyLogin() {
+  const today = new Date().toDateString();
+  if (state.lastLogin === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  state.streak = (state.lastLogin === yesterday) ? state.streak + 1 : 1;
+  state.lastLogin = today;
+  addXP(XP_CONFIG.dailyLogin, 'כניסה יומית');
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById('tab-' + name);
+  if (pane) pane.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ===== LEARNING PATH =====
+function toggleChapter(num) {
+  const card = document.getElementById('chap-' + num);
+  if (!card) return;
+  card.classList.toggle('open');
+  const ch = card.querySelector('.chapter-chevron');
+  if (ch) ch.textContent = card.classList.contains('open') ? '▲' : '▼';
+}
+
+function openLesson(id) {
+  const lesson = LESSONS[id];
+  if (!lesson) return;
+  const viewer = document.getElementById('lesson-viewer-container');
+  viewer.innerHTML = `
+    <div class="lesson-viewer">
+      <button class="lesson-back-btn" onclick="closeLesson()">← חזרה למסלול</button>
+      <div class="lesson-chapter-badge">פרק ${lesson.chap}</div>
+      <h2 class="lesson-viewer-title">${lesson.title}</h2>
+      <div class="lesson-viewer-body">${lesson.body}</div>
+      ${state.completedLessons.includes(id) ?
+        '<div class="lesson-done-msg">✅ שיעור זה הושלם — +15 XP הרווחת</div>' :
+        `<button class="lesson-complete-btn" onclick="completeLesson('${id}')">✅ סיימתי שיעור זה — קבל 15 XP</button>`
+      }
+    </div>`;
+  viewer.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function closeLesson() {
+  document.getElementById('lesson-viewer-container').innerHTML = '';
+}
+
+function completeLesson(id) {
+  if (state.completedLessons.includes(id)) return;
+  const lesson = LESSONS[id];
+  state.completedLessons.push(id);
+  saveState();
+  addXP(XP_CONFIG.lesson, `שיעור: ${lesson.title}`);
+  // Mark lesson item done
+  const li = document.getElementById('li-' + id.replace('.', '-'));
+  if (li) li.classList.add('done');
+  // Check chapter completion
+  checkChapterCompletion(lesson.chap);
+  // Update lesson viewer
+  const btn = document.querySelector('.lesson-complete-btn');
+  if (btn) btn.outerHTML = '<div class="lesson-done-msg">✅ שיעור זה הושלם — +15 XP הרווחת</div>';
+  updateChapterProgress();
+}
+
+function checkChapterCompletion(chapNum) {
+  const chapLessons = Object.values(LESSONS).filter(l => l.chap === chapNum);
+  const done = chapLessons.every(l => state.completedLessons.includes(l.id));
+  if (done && !state.completedChapters.includes(chapNum)) {
+    state.completedChapters.push(chapNum);
+    saveState();
+    addXP(XP_CONFIG.chapter, `פרק ${chapNum} הושלם!`);
+  }
+}
+
+function updateChapterProgress() {
+  [1,2,3].forEach(chap => {
+    const chapLessons = Object.values(LESSONS).filter(l => l.chap === chap);
+    const doneCount = chapLessons.filter(l => state.completedLessons.includes(l.id)).length;
+    const total = chapLessons.length;
+    const pct = total ? (doneCount / total) * 100 : 0;
+    const fill = document.getElementById('prog-fill-' + chap);
+    const txt = document.getElementById('prog-txt-' + chap);
+    if (fill) fill.style.width = pct + '%';
+    if (txt) txt.textContent = `${doneCount}/${total} שיעורים`;
+  });
+  // Mark completed lesson items
+  state.completedLessons.forEach(id => {
+    const el = document.getElementById('li-' + id.replace('.', '-'));
+    if (el) el.classList.add('done');
+  });
+}
+
+// ===== PRODUCT CARDS =====
+function toggleCard(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  card.classList.toggle('open');
+  const ch = card.querySelector('.pc-chevron');
+  if (ch) ch.textContent = card.classList.contains('open') ? '▲' : '▼';
+}
+
+// ===== COLLECTIVES =====
+function showColl(id) {
+  document.querySelectorAll('.coll-panel').forEach(p => { p.style.display = 'none'; p.classList.remove('open'); });
+  const panel = document.getElementById('coll-' + id);
+  if (panel) { panel.style.display = 'block'; panel.classList.add('open'); panel.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+}
+
+function toggleCond(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('open');
+  const ch = el.querySelector('.coll-cond-chevron');
+  if (ch) ch.textContent = el.classList.contains('open') ? '▲' : '▼';
+}
+
+// ===== DECISION TREE =====
+let treeState = { step: 1, answers: {}, steps: 3 };
+
+function treeSelect(step, val) {
+  treeState.answers[step] = val;
+  document.querySelectorAll(`#tstep-${step} .opt-btn`).forEach(b => b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+
+  // Determine next step
+  if (step === 1) {
+    if (val === 'retiree') {
+      showTreeResult();
+      return;
+    }
+    treeState.steps = 3;
+    moveToStep(2);
+  } else if (step === 2) {
+    if (val === 'none' || val === 'basic') {
+      moveToStep(3);
+    } else {
+      moveToStep(3);
+    }
+  } else if (step === 3) {
+    // Show employer question for collective upsell
+    treeState.steps = 5;
+    showPd(4); showPd(5);
+    moveToStep(4);
+  } else if (step === 4) {
+    moveToStep(5);
+  } else if (step === 5) {
+    showTreeResult();
+  }
+}
+
+function moveToStep(n) {
+  document.querySelectorAll('.tree-step').forEach(s => s.classList.remove('active'));
+  const step = document.getElementById('tstep-' + n);
+  if (step) { step.classList.add('active'); step.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+  // Update progress dots
+  for (let i = 1; i <= 5; i++) {
+    const pd = document.getElementById('pd' + i);
+    if (!pd) continue;
+    if (i < n) pd.className = 'prog-dot done';
+    else if (i === n) pd.className = 'prog-dot cur';
+    else pd.className = 'prog-dot todo';
+  }
+}
+
+function showPd(n) {
+  const pd = document.getElementById('pd' + n);
+  if (pd) pd.style.display = 'block';
+}
+
+function showTreeResult() {
+  const a = treeState.answers;
+  document.querySelectorAll('.tree-step').forEach(s => s.classList.remove('active'));
+  const res = document.getElementById('tree-result');
+  const rec = getRec(a);
+  const collHTML = getCollHTML(a[4]);
+  const joinNote = getJoinNote(a[5]);
+  res.style.display = 'block';
+  res.innerHTML = `
+    <div class="rec-result-card">
+      <div class="rec-header">🎯 המלצה אישית עבור לקוח זה</div>
+      <div class="rec-profile">פרופיל: ${getProfileDesc(a)}</div>
+      <div class="rec-cards">
+        <div class="rec-card primary"><div class="rec-rank">מוצר ראשי</div><div class="rec-product">${rec.primary}</div></div>
+        <div class="rec-card secondary"><div class="rec-rank">מוצר משני</div><div class="rec-product">${rec.secondary}</div></div>
+        <div class="rec-card upsell"><div class="rec-rank">הרחבה</div><div class="rec-product">${rec.upsell}</div></div>
+      </div>
+      ${collHTML}
+      ${joinNote}
+      <div class="rec-opener"><div class="rec-opener-title">💬 משפטי פתיחה מומלצים:</div>
+        ${rec.openers.map(o => `<div class="rec-opener-line">"${o}"</div>`).join('')}
+      </div>
+      <button onclick="resetTree()" class="tree-reset-btn">🔄 התחל שיחה חדשה</button>
+    </div>`;
+  res.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function getRec(a) {
+  const family = a[1], coverage = a[2], concern = a[3];
+  let primary, secondary, upsell, openers = [];
+  if (family === 'retiree') {
+    primary = '🤲 ביטוח סיעוד'; secondary = '💊 מחלות קשות (CI)'; upsell = '🏥 קולקטיב בריאות';
+    openers = ['אני מתעסק בביטוח לגמלאים — יש מוצר אחד שכל גמלאי צריך לדעת עליו.','כמה זמן הייתם רוצים להיות עצמאיים? הביטוח הזה מממן מטפל ביתי כשצריך.'];
+  } else if (family === 'married_kids' && concern === 'family') {
+    primary = '❤️ ריסק (ביטוח חיים)'; secondary = '⚡ אכ"ע'; upsell = '💊 מחלות קשות (CI)';
+    openers = ['אם משהו יקרה לך מחר — מה יהיה עם האישה והילדים?','הריסק לא בשבילך — הוא בשביל האנשים שתשאיר אחריך.'];
+  } else if (family === 'married_kids' && (concern === 'illness' || concern === 'savings')) {
+    primary = '💊 מחלות קשות (CI)'; secondary = '⚡ אכ"ע'; upsell = '❤️ ריסק';
+    openers = ['אם תאובחן עם סרטן מחר — האם הביטוח שלך נותן כסף מזומן?','הכסף שחסכת — יישאר שלך עם CI.'];
+  } else if (family === 'married_kids' && concern === 'burden') {
+    primary = '⚡ אכ"ע'; secondary = '💊 מחלות קשות (CI)'; upsell = '🤲 סיעוד';
+    openers = ['אם תעצור לעבוד מחר — מה קורה למשכנתא?','אכ"ע הוא הביטוח שמחליף את השכר שלך.'];
+  } else if (family === 'married' && concern === 'illness') {
+    primary = '💊 מחלות קשות (CI)'; secondary = '⚡ אכ"ע'; upsell = '🏥 קולקטיב';
+    openers = ['עם CI — האבחנה מפעילה תשלום ישיר לחשבונך.'];
+  } else if (family === 'single') {
+    primary = '⚡ אכ"ע'; secondary = '💊 מחלות קשות (CI)'; upsell = '🏥 קולקטיב';
+    openers = ['אתה מפרנס את עצמך — אם תחלה, מי ישלם?','רווק = ביטוח שלך לעצמך. אכ"ע הוא הקריטי ביותר.'];
+  } else {
+    primary = '⚡ אכ"ע'; secondary = '💊 מחלות קשות (CI)'; upsell = '🏥 קולקטיב';
+    openers = ['בוא נבנה ביחד את הסל הביטוחי שלך.'];
+  }
+  return {primary, secondary, upsell, openers};
+}
+
+function getProfileDesc(a) {
+  const fm = {single:'רווק/ה',married:'נשוי/ה',married_kids:'נשוי/ה + ילדים',retiree:'גמלאי/ת'};
+  const cv = {none:'ללא כיסוי',basic:'שב"ן בלבד',collective:'קולקטיב',collective_private:'קולקטיב + פרטי'};
+  const cn = {illness:'פחד ממחלה',family:'דאגה למשפחה',burden:'לא להיות נטל',savings:'לא לאבד חסכונות'};
+  return [fm[a[1]]||'', cv[a[2]]||'', cn[a[3]]||''].filter(Boolean).join(' | ');
+}
+
+function getCollHTML(employer) {
+  if (!employer || employer === 'other') return '';
+  const names = {namal:'🏗️ נמל חיפה (הראל)',kiryat:'🔥 קריית מוצקין (פניקס)',dvs:'📡 דב"ס',rakevet:'🚂 רכבת ישראל',tnuva:'🥛 תנובה',mispanot:'⚓ מספנות ישראל'};
+  const rates = {namal:'מסלול ב: 159 ₪/עובד | 51.9 ₪/ילד',kiryat:'מסלול א: 137 ₪ | מסלול ב: 179 ₪',dvs:'לפי חוזה קולקטיב',rakevet:'לפי חוזה קולקטיב',tnuva:'לפי חוזה קולקטיב',mispanot:'לפי חוזה קולקטיב'};
+  return `<div class="rec-coll-box"><div class="rec-coll-title">🤝 קולקטיב מומלץ: ${names[employer]||''}</div><div class="rec-coll-rate">${rates[employer]||''}</div></div>`;
+}
+
+function getJoinNote(joinDate) {
+  if (!joinDate) return '';
+  if (joinDate === 'new') return '<div class="rec-join-note">⚠️ עובד חדש — תקופת אכשרה 90 יום לאירועים מתוכננים</div>';
+  if (joinDate === 'mid') return '<div class="rec-join-note">📅 בשנה הראשונה — ייתכן אכשרה חלקית</div>';
+  return '<div class="rec-join-note">✅ ותיק — זכאות מלאה לכל הכיסויים</div>';
+}
+
+function resetTree() {
+  treeState = {step:1,answers:{},steps:3};
+  document.querySelectorAll('.tree-step').forEach((s,i) => { s.classList.remove('active'); if(i===0) s.classList.add('active'); });
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('tree-result').style.display = 'none';
+  ['pd4','pd5'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
+  for(let i=1;i<=5;i++) { const pd=document.getElementById('pd'+i); if(pd) pd.className= i===1?'prog-dot cur':'prog-dot todo'; }
+}
+
+// ===== ENCYCLOPEDIA =====
+function renderTerms(filter) {
+  const list = document.getElementById('terms-list');
+  if (!list) return;
+  const terms = filter ? TERMS.filter(t => t.term.includes(filter) || t.short.includes(filter) || t.full.includes(filter)) : TERMS;
+  // Group by category
+  const cats = {};
+  terms.forEach(t => { if (!cats[t.cat]) cats[t.cat] = []; cats[t.cat].push(t); });
+  list.innerHTML = Object.entries(cats).map(([cat, ts]) => `
+    <div class="terms-cat-label">${cat}</div>
+    ${ts.map(t => `
+      <div class="term-card" id="tc-${t.id}">
+        <div class="term-header" onclick="toggleTerm('${t.id}')">
+          <div class="term-name">${t.term}</div>
+          <div class="term-short">${t.short}</div>
+          <span class="term-chevron">▼</span>
+        </div>
+        <div class="term-body" id="tb-${t.id}">
+          <div class="term-inner">
+            <p>${t.full}</p>
+            ${t.tip ? `<div class="term-tip">💡 ${t.tip}</div>` : ''}
+          </div>
+        </div>
+      </div>`).join('')}
+  `).join('');
+}
+
+function toggleTerm(id) {
+  const card = document.getElementById('tc-' + id);
+  if (!card) return;
+  card.classList.toggle('open');
+  const ch = card.querySelector('.term-chevron');
+  if (ch) ch.textContent = card.classList.contains('open') ? '▲' : '▼';
+}
+
+function filterTerms(val) { renderTerms(val.trim()); }
+
+// ===== SM-2 SPACED REPETITION ENGINE =====
+const SRS = {
+  getDue() {
+    const st = this.getState();
+    const now = Date.now();
+    return Object.entries(st.items)
+      .filter(([id, item]) => item.nextReview <= now)
+      .map(([id, item]) => ({id, ...item}))
+      .sort((a,b) => a.nextReview - b.nextReview);
+  },
+  update(itemId, quality) {
+    const st = this.getState();
+    let item = st.items[itemId] || {interval:1, repetitions:0, easeFactor:2.5, nextReview:Date.now()};
+    if (quality >= 3) {
+      if (item.repetitions === 0) item.interval = 1;
+      else if (item.repetitions === 1) item.interval = 6;
+      else item.interval = Math.round(item.interval * item.easeFactor);
+      item.repetitions++;
+      item.easeFactor = Math.max(1.3, item.easeFactor + 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+    } else {
+      item.repetitions = 0;
+      item.interval = 1;
+    }
+    item.nextReview = Date.now() + item.interval * 24 * 60 * 60 * 1000;
+    item.lastQuality = quality;
+    item.totalAnswers = (item.totalAnswers || 0) + 1;
+    item.wrongAnswers = (item.wrongAnswers || 0) + (quality < 3 ? 1 : 0);
+    st.items[itemId] = item;
+    this.saveState(st);
+    if (typeof state !== 'undefined') state.srs = st;
+    return item;
+  },
+  getWeakTopics() {
+    const st = this.getState();
+    const topicStats = {};
+    Object.entries(st.items).forEach(([id, item]) => {
+      const topic = id.split('_')[0];
+      if (!topicStats[topic]) topicStats[topic] = {wrong:0, total:0};
+      topicStats[topic].wrong += item.wrongAnswers || 0;
+      topicStats[topic].total += item.totalAnswers || 0;
+    });
+    return Object.entries(topicStats)
+      .filter(([t, s]) => s.total > 0)
+      .map(([topic, s]) => ({topic, errorRate: s.wrong / s.total, total: s.total}))
+      .sort((a, b) => b.errorRate - a.errorRate);
+  },
+  getState() {
+    try { return JSON.parse(localStorage.getItem('srs_state') || '{"items":{}}'); }
+    catch(e) { return {items:{}}; }
+  },
+  saveState(st) {
+    localStorage.setItem('srs_state', JSON.stringify(st));
+  }
+};
+
+const QUIZ_TOPICS = {
+  0:'collective', 1:'shekel', 2:'namal', 3:'kiryat', 4:'ci',
+  5:'ci', 6:'ci', 7:'siud', 8:'franchise', 9:'clawback',
+  10:'ci', 11:'ake', 12:'collective', 13:'collective', 14:'index',
+  15:'sales', 16:'sales', 17:'sales', 18:'namal', 19:'namal',
+  20:'sales', 21:'namal', 22:'ake', 23:'kiryat', 24:'sales'
+};
+const TOPIC_NAMES = {
+  collective:'קולקטיב', shekel:'שקל ראשון', namal:'נמל חיפה',
+  kiryat:'קריית מוצקין', ci:'מחלות קשות', siud:'סיעוד',
+  franchise:'פרנשיז', clawback:'ניכוי גיל', ake:'אכ"ע', index:'מדד', sales:'מכירה'
+};
+
+const SALES_INSIGHTS = [
+  {id:0, icon:'🎯', title:'זהה את המניע האמיתי',
+   summary:'אנשים קונים מרגש, מצדיקים בהיגיון',
+   detail:'שאל: "מה הדבר הכי חשוב לך בביטוח?" — ולא "מה אתה מחפש?" הראשון מוציא ערכים, השני מוציא תכונות. הקשב ל-"ילדים שלי", "אשתי", "לא רוצה לתלות".',
+   tip:'💡 טיפ: רשום ביד מה המניע. לפני הסגירה — חזור אליו: "אמרת שהכי חשוב לך הילדים..."'},
+  {id:1, icon:'🔢', title:'מספרים קונקרטיים > עקרונות',
+   summary:'300,000 ₪ > "כיסוי נדיב"',
+   detail:'לא "ניתוח יקר" — "ניתוח לב פרטי = 80,000 ₪". לא "קצבה חודשית" — "11,500 ₪ לחודש". המוח נצמד למספרים, לא לתיאורים.',
+   tip:'💡 טיפ: תרגל ציטוט 5 מספרים מהזיכרון: 300K, 80K, 159₪, 50K, 11,500₪.'},
+  {id:2, icon:'⏰', title:'דחיפות אמיתית — לא מלאכותית',
+   summary:'חלון ההצטרפות הוא עובדה, לא טקטיקה',
+   detail:'"קולקטיב פתוח לתקופה מוגבלת" = דחיפות אמיתית. "יש לי רק 2 מקומות" = מניפולציה. האחד בונה אמון, השני הורס.',
+   tip:'💡 טיפ: "תאריך סיום הצטרפות X. זו עובדה, לא לחץ — אתה תחליט."'},
+  {id:3, icon:'🪞', title:'טכניקת השיקוף',
+   summary:'חזור על המילה האחרונה בשאלה',
+   detail:'לקוח: "זה יקר לי." — שיקוף: "יקר?" — לקוח: "כן, 160 ₪ זה הרבה בחודש." עכשיו יש לך מה להתמודד איתו. ללא שיקוף — היית מתחיל להסביר ולא לשמוע.',
+   tip:'💡 טיפ: אחרי שיקוף — שתיקה. הדיבור הבא של הלקוח = המידע האמיתי.'},
+  {id:4, icon:'🚶', title:'קמפ שלב אחד קדימה',
+   summary:'הצע פחות ממה שחשבת, קדם בשלב',
+   detail:'במקום "קח את כל החבילה" — "קח רק CI עכשיו, נוסיף אחרי 3 חודשים." ירידה בהתנגדות + בניית אמון + נקודת כניסה נמוכה = סגירה גבוהה יותר.',
+   tip:'💡 טיפ: מיפוי: מה המינימום שעוזר ללקוח? זו נקודת הכניסה.'},
+  {id:5, icon:'❓', title:'שאלת "מה יהיה אם"',
+   summary:'הדמיה עוצמתית יותר מהסבר',
+   detail:'"מה יהיה אם מחר תאובחן עם סרטן? מה יקרה למשפחה? למשכנתא?" — הלקוח חי את התרחיש. הסבר לעולם לא יהיה חזק כמו ההרגשה שלו.',
+   tip:'💡 טיפ: שאל בנחת, בלי דרמה. תן זמן לעיכול. אל תענה — הלקוח יגיד לעצמו.'},
+  {id:6, icon:'🛡️', title:'ביטול התנגדות מראש',
+   summary:'העלה את ההתנגדות לפני הלקוח',
+   detail:'"אני יודע שהרבה אנשים חושבים \'יש לי שב\'\'ן, מה צריך ביטוח?\'" — כשאתה אומר את זה, אתה לא תוקף, אתה מגדיר את השטח. הלקוח מרגיש שהבנת אותו.',
+   tip:'💡 טיפ: רשום 3 התנגדויות שחוזרות. תרגל להעלות אותן ראשון.'}
+];
+
+// ===== QUIZ ENGINE =====
+let quizIdx = 0, quizScore = 0, quizAnswered = false, quizActive = false;
+let quizMode = 'normal'; // 'normal' | 'srs'
+let quizQueue = []; // array of QUIZ_DATA indices in play order
+
+function setQuizMode(mode, btn) {
+  quizMode = mode;
+  document.querySelectorAll('.quiz-mode-sel-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  initQuiz();
+}
+
+function updateDueBadge() {
+  const due = SRS.getDue();
+  const badge = document.getElementById('srs-due-count');
+  if (badge) {
+    badge.textContent = due.length;
+    badge.style.display = due.length > 0 ? 'inline-flex' : 'none';
+  }
+}
+
+function buildQuizQueue() {
+  if (quizMode === 'srs') {
+    const due = SRS.getDue();
+    const dueIndices = due.map(item => {
+      const parts = item.id.split('_q');
+      return parseInt(parts[1], 10);
+    }).filter(i => !isNaN(i) && i < QUIZ_DATA.length);
+    const weakTopics = SRS.getWeakTopics().slice(0,3).map(w => w.topic);
+    const weakIndices = [];
+    Object.entries(QUIZ_TOPICS).forEach(([idx, topic]) => {
+      if (weakTopics.includes(topic) && !dueIndices.includes(parseInt(idx)))
+        weakIndices.push(parseInt(idx));
+    });
+    const allUsed = new Set([...dueIndices, ...weakIndices]);
+    const remaining = QUIZ_DATA.map((_,i) => i).filter(i => !allUsed.has(i));
+    return [...dueIndices, ...weakIndices, ...remaining].slice(0, QUIZ_DATA.length);
+  }
+  return QUIZ_DATA.map((_, i) => i);
+}
+
+function initQuiz() {
+  quizIdx = 0; quizScore = 0; quizAnswered = false; quizActive = true;
+  quizQueue = buildQuizQueue();
+  updateDueBadge();
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const el = document.getElementById('quiz-inner');
+  if (!el) return;
+  if (quizIdx >= quizQueue.length) { showQuizResults(); return; }
+  const realIdx = quizQueue[quizIdx];
+  const q = QUIZ_DATA[realIdx];
+  quizAnswered = false;
+  const topic = QUIZ_TOPICS[realIdx];
+  const topicName = topic ? (TOPIC_NAMES[topic] || topic) : '';
+  const srsItem = SRS.getState().items[topic + '_q' + realIdx];
+  const isDue = srsItem && srsItem.nextReview <= Date.now();
+  const srsIndicator = isDue
+    ? `<span class="srs-review-indicator">🔁 חזרה</span>`
+    : (srsItem ? `<span class="srs-indicator">📌 ${topicName}</span>` : `<span class="srs-indicator">🆕 ${topicName}</span>`);
+  el.innerHTML = `
+    <div class="q-progress-line">
+      <span>שאלה ${quizIdx+1} מתוך ${quizQueue.length}</span>
+      <span>⭐ ${quizScore} נקודות</span>
+    </div>
+    <div class="q-prog-bar"><div class="q-prog-fill" style="width:${((quizIdx)/quizQueue.length*100).toFixed(0)}%"></div></div>
+    ${topicName ? `<div style="text-align:center;margin-bottom:6px">${srsIndicator}</div>` : ''}
+    <div class="q-text">${q.q}</div>
+    <div class="q-opts">
+      ${q.opts.map((o,i) => `<button class="q-opt" onclick="answerQ(${i})">${o}</button>`).join('')}
+    </div>
+    <div class="q-fb" id="q-fb" style="display:none"></div>`;
+}
+
+function answerQ(idx) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const realIdx = quizQueue[quizIdx];
+  const q = QUIZ_DATA[realIdx];
+  const correct = idx === q.ans;
+  const quality = correct ? 5 : 1;
+  const topic = QUIZ_TOPICS[realIdx];
+  if (topic) {
+    const itemId = topic + '_q' + realIdx;
+    SRS.update(itemId, quality);
+  }
+  if (correct) { quizScore++; addXP(XP_CONFIG.quizCorrect, 'תשובה נכונה בחידון'); }
+  state.quizHistory = state.quizHistory || [];
+  state.quizHistory.push({qIdx: realIdx, correct, ts: Date.now(), topic: topic||''});
+  if (state.quizHistory.length > 200) state.quizHistory = state.quizHistory.slice(-200);
+  const opts = document.querySelectorAll('.q-opt');
+  opts.forEach((o, i) => {
+    o.disabled = true;
+    if (i === q.ans) o.classList.add('correct');
+    else if (i === idx && !correct) o.classList.add('wrong');
+    else o.classList.add('locked');
+  });
+  const fb = document.getElementById('q-fb');
+  fb.style.display = 'block';
+  fb.className = 'q-fb ' + (correct ? 'correct' : 'wrong');
+  fb.innerHTML = `<strong>${correct ? '✅ נכון!' : '❌ לא נכון'}</strong> ${q.exp}`;
+  const next = document.createElement('button');
+  next.className = 'q-next-btn';
+  next.textContent = quizIdx + 1 < quizQueue.length ? 'שאלה הבאה ▶' : 'סיום החידון 🏆';
+  next.onclick = () => { quizIdx++; renderQuestion(); };
+  fb.appendChild(next);
+}
+
+function showQuizResults() {
+  const pct = Math.round((quizScore / quizQueue.length) * 100);
+  const isNew = quizScore > (state.quizHighScore || 0);
+  if (isNew) { state.quizHighScore = quizScore; }
+  saveState();
+  addXP(XP_CONFIG.quizComplete, `חידון הושלם — ${quizScore}/${quizQueue.length}`);
+  updateDueBadge();
+  const el = document.getElementById('quiz-inner');
+  const dueLeft = SRS.getDue().length;
+  el.innerHTML = `
+    <div class="quiz-results">
+      <div class="results-emoji">${pct>=80?'🏆':pct>=60?'⭐':'📚'}</div>
+      <h2>סיימת את החידון!</h2>
+      <div class="results-score">${quizScore}/${quizQueue.length} — ${pct}%</div>
+      ${isNew?'<div class="results-new-record">🆕 שיא אישי חדש!</div>':''}
+      <div class="results-msg">${pct>=80?'מצוין! אתה בדרך להיות מומחה.':pct>=60?'טוב! חזור על הנושאים שפספסת.':'המשך ללמוד — אתה מתקדם.'}</div>
+      ${dueLeft>0?`<div style="margin:8px 0;font-size:0.9rem;color:var(--accent)">🔁 עוד ${dueLeft} פריטים לחזרה</div>`:''}
+      <button onclick="initQuiz()" class="quiz-restart-btn">🔄 חידון חדש</button>
+    </div>`;
+  quizActive = false;
+  updateProgressTab();
+}
+
+// ===== GAME MODE SWITCH =====
+function switchGame(mode, btn) {
+  document.querySelectorAll('.game-mode-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.game-pane').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('game-' + mode).classList.add('active');
+  if (mode === 'quiz' && !quizActive) initQuiz();
+  if (mode === 'roleplay') renderScenarioSelect();
+}
+
+// ===== ROLEPLAY ENGINE =====
+let rpCurrent = null, rpStep = 0, rpScore = 0;
+const qualityScore = {great:3, neutral:1, bad:0};
+const qualityLabel = {great:'✅ מעולה!', neutral:'👍 בסדר', bad:'❌ לא אידיאלי'};
+
+function renderScenarioSelect() {
+  const el = document.getElementById('scenario-cards');
+  if (!el) return;
+  el.innerHTML = SCENARIOS.map(s => {
+    const hist = (state.roleplayHistory||[]).filter(h => h.scenarioId === s.id);
+    const bestPct = hist.length ? Math.max(...hist.map(h => h.pct)) : null;
+    const badge = bestPct !== null
+      ? `<span class="intel-badge ${bestPct>=80?'badge-strong':bestPct>=50?'':'badge-weak'}">${bestPct}%</span>` : '';
+    return `
+    <div class="persona-card" onclick="startScenario(${s.id})">
+      <div class="persona-emoji">${s.icon}</div>
+      <div class="persona-name">${s.title}</div>
+      <div class="persona-type-badge">${s.type||''}</div>
+      <div class="sc-desc">${s.desc}</div>
+      ${badge}
+      <div class="sc-start-btn">התחל סימולציה ▶</div>
+    </div>`;
+  }).join('');
+}
+
+function startScenario(id) {
+  rpCurrent = SCENARIOS[id]; rpStep = 0; rpScore = 0;
+  document.getElementById('rp-select-view').style.display = 'none';
+  const av = document.getElementById('rp-active-view');
+  av.style.display = 'block';
+  renderRpStep();
+}
+
+function renderRpStep() {
+  const av = document.getElementById('rp-active-view');
+  const step = rpCurrent.steps[rpStep];
+  if (!step) { showRpResults(); return; }
+  const profileHtml = rpStep === 0 && rpCurrent.profile ? `
+    <div class="rp-persona-profile">
+      <div class="rp-persona-emoji-big">${rpCurrent.icon}</div>
+      <div class="rp-persona-info">
+        <div class="rp-persona-title">${rpCurrent.title}</div>
+        <div class="rp-persona-type">${rpCurrent.type||''}</div>
+        <div class="rp-persona-bg">${rpCurrent.profile}</div>
+      </div>
+    </div>` : '';
+  av.innerHTML = `
+    <div class="rp-header">
+      <button class="rp-back-btn" onclick="endRp()">← חזרה לתרחישים</button>
+      <div class="rp-title">${rpCurrent.icon} ${rpCurrent.title}</div>
+      <div class="rp-prog">שלב ${rpStep+1} מתוך ${rpCurrent.steps.length}</div>
+    </div>
+    ${profileHtml}
+    <div class="rp-intro">${rpStep===0?`<div class="rp-context">${rpCurrent.intro}</div>`:''}</div>
+    <div class="rp-situation">${step.situation}</div>
+    <div class="rp-choices">
+      ${step.choices.map((c,i) => `
+        <button class="rp-choice" onclick="selectRpChoice(${i})">
+          <span class="rp-choice-text">${c.txt}</span>
+        </button>`).join('')}
+    </div>
+    <div id="rp-fb" style="display:none"></div>`;
+}
+
+function selectRpChoice(idx) {
+  const step = rpCurrent.steps[rpStep];
+  const choice = step.choices[idx];
+  const score = qualityScore[choice.quality] || 0;
+  rpScore += score;
+  document.querySelectorAll('.rp-choice').forEach((b, i) => {
+    b.disabled = true;
+    if (i === idx) b.classList.add('rp-selected-' + choice.quality);
+  });
+  const fb = document.getElementById('rp-fb');
+  fb.style.display = 'block';
+  fb.innerHTML = `
+    <div class="rp-fb-inner ${choice.quality}">
+      <div class="rp-fb-label">${qualityLabel[choice.quality]}</div>
+      <div class="rp-fb-text">${choice.feedback}</div>
+      <button onclick="nextRpStep()" class="rp-next-btn">${rpStep+1<rpCurrent.steps.length?'שלב הבא ▶':'סיום סימולציה 🏆'}</button>
+    </div>`;
+}
+
+function nextRpStep() { rpStep++; renderRpStep(); }
+
+function showRpResults() {
+  state.completedRoleplays++;
+  const maxScore = rpCurrent.steps.length * 3;
+  const pct = Math.round((rpScore / maxScore) * 100);
+  addXP(XP_CONFIG.roleplay, `סימולציה: ${rpCurrent.title}`);
+  state.roleplayHistory = state.roleplayHistory || [];
+  state.roleplayHistory.push({
+    scenarioId: rpCurrent.id,
+    title: rpCurrent.title,
+    score: rpScore,
+    maxScore,
+    pct,
+    ts: Date.now()
+  });
+  if (state.roleplayHistory.length > 100) state.roleplayHistory = state.roleplayHistory.slice(-100);
+  saveState();
+  document.getElementById('rp-active-view').innerHTML = `
+    <div class="rp-score-card">
+      <div class="rp-score-icon">${pct>=80?'🏆':pct>=50?'⭐':'📚'}</div>
+      <h2>סיום סימולציה!</h2>
+      <div class="rp-score-num">${rpScore}/${maxScore} — ${pct}%</div>
+      <div class="rp-score-msg">${pct>=80?'מכירה מבריקה! כך עושים זאת.':pct>=50?'טוב — יש עוד מה לשפר.':'חזור על הסימולציה — תשתפר!'}</div>
+      <button onclick="endRp()" class="rp-end-btn">← חזרה לתרחישים</button>
+    </div>`;
+}
+
+function endRp() {
+  rpCurrent = null;
+  document.getElementById('rp-active-view').style.display = 'none';
+  document.getElementById('rp-select-view').style.display = 'block';
+  renderScenarioSelect();
+}
+
+// ===== TODAY PANEL =====
+function renderTodayPanel() {
+  const el = document.getElementById('today-panel-container');
+  if (!el) return;
+  const due = SRS.getDue();
+  const weak = SRS.getWeakTopics();
+  const weakestName = weak.length ? (TOPIC_NAMES[weak[0].topic] || weak[0].topic) : null;
+  const tips = [
+    'זכור: לקוח קונה מרגש — מספרים קונקרטיים יותר משכנעים מתיאורים.',
+    'תרגל שיקוף: חזור על המילה האחרונה של הלקוח — ותשתוק.',
+    'שאלת "מה יהיה אם" — הדמיה חזקה מכל הסבר.',
+    'קמפ שלב אחד קדימה — הצע פחות, קדם בשלב.',
+    'בנמל חיפה: מסלול ב, 159 ₪, שקל ראשון. שלושה מספרים — שלושה ניצחונות.',
+    'CI = 300,000 ₪ ישירות לחשבון. לא לבית חולים — ללקוח.',
+    'הביטול פשוט — אמור זאת. זה מוריד התנגדויות.'
+  ];
+  const tip = tips[new Date().getDay() % tips.length];
+  const dueHtml = due.length > 0
+    ? `<div class="today-item">🔁 <strong>${due.length} פריטים לחזרה</strong> — מוכן לחידון חכם?</div>`
+    : `<div class="today-item">✅ <strong>אין פריטים לחזרה</strong> — המשך לחדש!</div>`;
+  const weakHtml = weakestName
+    ? `<div class="today-item">⚠️ <strong>נושא חלש:</strong> ${weakestName} — שים לב לשאלות בנושא</div>` : '';
+  el.innerHTML = `
+    <div class="today-panel">
+      <div class="today-title">🔥 מה ללמוד היום</div>
+      ${dueHtml}
+      ${weakHtml}
+      <div class="today-item">💡 <em>${tip}</em></div>
+      <div class="today-cta">
+        <button class="today-btn" onclick="switchGame('quiz',null);setQuizMode('srs',null)">🔁 חזרה חכמה</button>
+        <button class="today-btn" onclick="switchGame('quiz',null);setQuizMode('normal',null)">📝 חידון רגיל</button>
+      </div>
+    </div>`;
+}
+
+// ===== WEAKNESS PANEL =====
+function renderWeaknessPanel() {
+  const el = document.getElementById('weakness-panel-container');
+  if (!el) return;
+  const weak = SRS.getWeakTopics();
+  if (!weak.length) {
+    el.innerHTML = '<div class="weakness-section"><div style="text-align:center;padding:12px;opacity:0.6">עדיין אין נתוני חזרה — פתח חידון כדי להתחיל!</div></div>';
+    return;
+  }
+  const rows = weak.slice(0,6).map(w => {
+    const name = TOPIC_NAMES[w.topic] || w.topic;
+    const pct = Math.round(w.errorRate * 100);
+    const cls = pct >= 60 ? 'weakness-bar-fill high' : pct >= 30 ? 'weakness-bar-fill mid' : 'weakness-bar-fill low';
+    return `<div class="weakness-row">
+      <span class="weakness-label">${name}</span>
+      <div class="weakness-bar-wrap"><div class="${cls}" style="width:${pct}%"></div></div>
+      <span class="weakness-pct">${pct}%</span>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="weakness-section"><div class="weakness-title">📊 נקודות חולשה</div>${rows}</div>`;
+}
+
+// ===== SALES INSIGHTS =====
+function renderSalesInsights() {
+  const el = document.getElementById('sales-insights-panel');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="insights-panel">
+      <div class="insights-title">💡 תובנות מכירה</div>
+      ${SALES_INSIGHTS.map(ins => `
+        <div class="insight-card" id="insight-card-${ins.id}">
+          <div class="insight-header" onclick="toggleInsight(${ins.id})">
+            <span class="insight-icon">${ins.icon}</span>
+            <span class="insight-title-text">${ins.title}</span>
+            <span class="insight-summary">${ins.summary}</span>
+            <span class="insight-toggle">▼</span>
+          </div>
+          <div class="insight-body" id="insight-body-${ins.id}" style="display:none">
+            <div class="insight-detail">${ins.detail}</div>
+            <div class="insight-tip">${ins.tip}</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function toggleInsight(id) {
+  const body = document.getElementById('insight-body-' + id);
+  const card = document.getElementById('insight-card-' + id);
+  if (!body) return;
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  if (card) card.classList.toggle('open', !open);
+}
+
+// ===== TERMS MODE SWITCH =====
+function switchTermsMode(mode, btn) {
+  document.querySelectorAll('.terms-mode-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const dict = document.getElementById('terms-dictionary-panel');
+  const ins = document.getElementById('sales-insights-panel');
+  if (mode === 'dictionary') {
+    if (dict) dict.classList.remove('hidden');
+    if (ins) ins.classList.add('hidden');
+  } else {
+    if (dict) dict.classList.add('hidden');
+    if (ins) ins.classList.remove('hidden');
+    renderSalesInsights();
+  }
+}
+
+// ===== FIELD READINESS =====
+function calcFieldReadiness() {
+  const totalLessons = state.completedLessons ? Object.keys(state.completedLessons).length : 0;
+  const maxLessons = 8;
+  const lessonScore = Math.min(1, totalLessons / maxLessons) * 40;
+
+  const quizHistLen = (state.quizHistory||[]).length;
+  const recentQuiz = (state.quizHistory||[]).slice(-10);
+  const quizAcc = recentQuiz.length ? recentQuiz.filter(q => q.correct).length / recentQuiz.length : 0;
+  const quizScore = Math.min(1, (quizHistLen / 25) * 0.5 + quizAcc * 0.5) * 30;
+
+  const rpCount = state.completedRoleplays || 0;
+  const rpHistory = (state.roleplayHistory||[]);
+  const rpAvg = rpHistory.length ? rpHistory.slice(-5).reduce((s,h) => s + h.pct, 0) / Math.min(5, rpHistory.length) / 100 : 0;
+  const rpScore = Math.min(1, (rpCount / 8) * 0.5 + rpAvg * 0.5) * 20;
+
+  const srsState = SRS.getState();
+  const srsCount = Object.keys(srsState.items).length;
+  const srsReps = Object.values(srsState.items).filter(i => i.repetitions >= 2).length;
+  const srsScore = Math.min(1, srsCount > 0 ? srsReps / Math.max(srsCount, 1) : 0) * 10;
+
+  return Math.round(lessonScore + quizScore + rpScore + srsScore);
+}
+
+// ===== PROGRESS INTELLIGENCE =====
+function renderProgressIntelligence() {
+  const el = document.getElementById('progress-intelligence');
+  if (!el) return;
+
+  const readiness = calcFieldReadiness();
+  const barColor = readiness >= 75 ? 'var(--success)' : readiness >= 45 ? 'var(--accent)' : 'var(--danger)';
+  const readinessLabel = readiness >= 75 ? 'מוכן לשטח 🟢' : readiness >= 45 ? 'בהתקדמות 🟡' : 'מתחיל 🔴';
+
+  const weak = SRS.getWeakTopics();
+  const weakNames = weak.slice(0,3).map(w => TOPIC_NAMES[w.topic]||w.topic);
+  const due = SRS.getDue();
+
+  const srsState = SRS.getState();
+  const srsItems = Object.values(srsState.items);
+  const strongTopics = Object.entries(
+    srsItems.reduce((acc, item, i) => {
+      const key = Object.keys(srsState.items)[i];
+      const topic = key ? key.split('_')[0] : '';
+      if (!topic) return acc;
+      acc[topic] = acc[topic] || {right:0, total:0};
+      acc[topic].right += (item.totalAnswers||0) - (item.wrongAnswers||0);
+      acc[topic].total += item.totalAnswers || 0;
+      return acc;
+    }, {})
+  ).filter(([t,s]) => s.total >= 2 && (s.right/s.total) >= 0.75)
+   .map(([t]) => TOPIC_NAMES[t]||t)
+   .slice(0,3);
+
+  const recentRP = (state.roleplayHistory||[]).slice(-3);
+  const nextActions = [];
+  if (due.length > 0) nextActions.push(`🔁 ${due.length} פריטים לחזרה — פתח חידון חכם`);
+  if (weakNames.length) nextActions.push(`📖 חזור על: ${weakNames[0]}`);
+  const rpCount = state.completedRoleplays || 0;
+  if (rpCount < 3) nextActions.push(`🎭 תרגל סימולציה עם ${SCENARIOS[rpCount%SCENARIOS.length].title}`);
+  if (nextActions.length < 3) nextActions.push('📚 המשך ללמוד שיעורים חדשים');
+
+  el.innerHTML = `
+    <div class="intel-card">
+      <div class="intel-card-title">🎯 מוכנות לשטח</div>
+      <div class="readiness-panel">
+        <div class="readiness-num" style="color:${barColor}">${readiness}%</div>
+        <div class="readiness-bar-outer">
+          <div class="readiness-bar-inner" style="width:${readiness}%;background:${barColor}"></div>
+        </div>
+        <div style="text-align:center;font-size:0.85rem;opacity:0.8">${readinessLabel}</div>
+      </div>
+    </div>
+
+    <div class="intel-card">
+      <div class="intel-card-title">💪 חוזקות</div>
+      ${strongTopics.length
+        ? strongTopics.map(t => `<span class="intel-badge badge-strong">${t}</span>`).join(' ')
+        : '<div style="opacity:0.6;font-size:0.85rem">ענה נכון על שאלות כדי לגלות חוזקות</div>'}
+    </div>
+
+    <div class="intel-card">
+      <div class="intel-card-title">⚠️ לשיפור</div>
+      ${weakNames.length
+        ? weakNames.map(t => `<span class="intel-badge badge-weak">${t}</span>`).join(' ')
+        : '<div style="opacity:0.6;font-size:0.85rem">אין חולשות ידועות — ענה על חידון!</div>'}
+    </div>
+
+    <div class="intel-card">
+      <div class="intel-card-title">🔁 SRS — חזרות מתוכננות</div>
+      <div class="intel-row">
+        <span>פריטים לחזרה היום:</span>
+        <span class="intel-badge badge-review">${due.length}</span>
+      </div>
+      <div class="intel-row">
+        <span>פריטים במעקב:</span>
+        <span>${Object.keys(srsState.items).length}</span>
+      </div>
+      <div class="intel-row">
+        <span>שלטים בשכיחות גבוהה (≥2 חזרות):</span>
+        <span>${srsItems.filter(i => i.repetitions >= 2).length}</span>
+      </div>
+    </div>
+
+    <div class="intel-card">
+      <div class="intel-card-title">🚀 הצעדים הבאים</div>
+      ${nextActions.map(a => `<div class="intel-row">→ ${a}</div>`).join('')}
+    </div>`;
+}
+
+// ===== PROGRESS TAB =====
+function updateProgressTab() {
+  const level = getLevel(state.xp);
+  const nextLevel = LEVELS.find(l => l.num === level.num + 1);
+  const currMin = level.min;
+  const nextMin = nextLevel ? nextLevel.min : level.min + 1;
+  const progress = nextLevel ? ((state.xp - currMin) / (nextMin - currMin)) * 100 : 100;
+  // Level info
+  const icon = document.getElementById('level-icon');
+  const name = document.getElementById('level-name');
+  const sub = document.getElementById('level-sub');
+  const xpDisp = document.getElementById('xp-display');
+  const bar = document.getElementById('xp-bar');
+  const currLbl = document.getElementById('xp-curr-level');
+  const nextLbl = document.getElementById('xp-next-level');
+  if(icon) icon.textContent = level.icon;
+  if(name) name.textContent = level.name;
+  if(sub) sub.textContent = `רמה ${level.num}`;
+  if(xpDisp) xpDisp.textContent = `${state.xp} XP`;
+  if(bar) bar.style.width = Math.min(100, progress).toFixed(0) + '%';
+  if(currLbl) currLbl.textContent = `${state.xp} XP`;
+  if(nextLbl) nextLbl.textContent = nextLevel ? `${nextMin} XP לרמה הבאה` : '✅ רמה מקסימלית!';
+  // Stats
+  const sl = document.getElementById('stat-lessons');
+  const sc = document.getElementById('stat-chapters');
+  const sq = document.getElementById('stat-quiz');
+  const sr = document.getElementById('stat-roleplays');
+  const ss = document.getElementById('stat-streak');
+  const st = document.getElementById('stat-total-xp');
+  if(sl) sl.textContent = `${state.completedLessons.length}/16`;
+  if(sc) sc.textContent = `${state.completedChapters.length}/3`;
+  if(sq) sq.textContent = state.quizHighScore >= 0 ? `${state.quizHighScore}/25` : '—';
+  if(sr) sr.textContent = state.completedRoleplays;
+  if(ss) ss.textContent = `🔥 ${state.streak}`;
+  if(st) st.textContent = state.totalXp;
+  // Badges
+  const bg = document.getElementById('badges-grid');
+  if(bg) bg.innerHTML = BADGES_CONFIG.map(b => {
+    const earned = state.badges.includes(b.id);
+    return `<div class="badge-item ${earned?'earned':'locked'}">
+      <div class="badge-icon">${earned?b.icon:'🔒'}</div>
+      <div class="badge-name">${b.name}</div>
+      <div class="badge-desc">${b.desc}</div>
+    </div>`;
+  }).join('');
+  // XP Log
+  const log = document.getElementById('xp-log-list');
+  if(log) {
+    if (!state.xpLog.length) { log.innerHTML = '<div style="color:var(--muted);font-size:.84rem;padding:8px">עוד לא הרווחת XP</div>'; }
+    else { log.innerHTML = state.xpLog.slice(0,20).map(e => `
+      <div class="xp-log-row">
+        <span class="xp-log-reason">${e.reason}</span>
+        <span class="xp-log-amount">+${e.amount} XP</span>
+      </div>`).join(''); }
+  }
+  // Hero XP display
+  const hd = document.getElementById('hero-xp-display');
+  if(hd) hd.textContent = `⭐ ${state.xp} XP | ${level.name} ${level.icon}`;
+}
+
+function updateAllUI() {
+  updateProgressTab();
+  updateChapterProgress();
+  renderProgressIntelligence();
+  renderTodayPanel();
+  renderWeaknessPanel();
+  updateDueBadge();
+}
+
+// ===== PWA INSTALL =====
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  document.getElementById('pwa-toast').classList.remove('hidden');
+});
+
+document.getElementById('pwa-install-btn') && document.getElementById('pwa-install-btn').addEventListener('click', () => {
+  if (deferredInstallPrompt) { deferredInstallPrompt.prompt(); deferredInstallPrompt.userChoice.then(() => closePwaToast()); }
+});
+
+function closePwaToast() { document.getElementById('pwa-toast').classList.add('hidden'); }
+
+// ===== SERVICE WORKER =====
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE='ins-pro-v4';
+    const ASSETS=['/'];
+    self.addEventListener('install',e=>{ e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))); self.skipWaiting(); });
+    self.addEventListener('activate',e=>{ e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k))))); });
+    self.addEventListener('fetch',e=>{ e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('/')))); });
+  `;
+  const swBlob = new Blob([swCode], {type:'application/javascript'});
+  const swUrl = URL.createObjectURL(swBlob);
+  navigator.serviceWorker.register(swUrl).catch(()=>{});
+}
+
+// ===== MANIFEST =====
+const manifest = {name:'ביטוח Pro',short_name:'ביטוח',start_url:'.',display:'standalone',background_color:'#0a0a0f',theme_color:'#3b82f6',description:'מערכת לימוד לסוכן ביטוח',icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='48' fill='%233b82f6'/%3E%3Ctext x='96' y='130' text-anchor='middle' font-size='100'%3E🛡️%3C/text%3E%3C/svg%3E",sizes:'192x192',type:'image/svg+xml'}]};
+const mfBlob = new Blob([JSON.stringify(manifest)],{type:'application/json'});
+const mfUrl = URL.createObjectURL(mfBlob);
+const mfLink = document.createElement('link');
+mfLink.rel='manifest'; mfLink.href=mfUrl; document.head.appendChild(mfLink);
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  checkDailyLogin();
+  renderTerms('');
+  initQuiz();
+  renderScenarioSelect();
+  renderSalesInsights();
+  updateAllUI();
+  // Open first chapter by default
+  toggleChapter(1);
+});
+</script>
+<style>
+.lesson-viewer h3{color:var(--blue);font-size:1rem;margin-bottom:12px}
+.lesson-viewer p{font-size:.88rem;color:#ccc;line-height:1.7;margin-bottom:10px}
+.lesson-viewer strong{color:#fff}
+.lesson-viewer ul{padding-right:18px;margin-bottom:10px}
+.lesson-viewer ul li{font-size:.86rem;color:#ccc;margin-bottom:4px}
+.lesson-back-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:.82rem;font-family:inherit;margin-bottom:16px;display:inline-block;transition:all .2s}
+.lesson-back-btn:hover{background:var(--border);color:var(--text)}
+.lesson-chapter-badge{display:inline-block;background:var(--blue-dim);border:1px solid var(--blue-ring);color:var(--blue);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+.lesson-viewer-body{font-size:.88rem;color:#ccc;line-height:1.75;margin-bottom:18px}
+.lesson-viewer-body h3{color:var(--blue);font-size:1rem;margin-bottom:10px}
+.lesson-viewer-body p{margin-bottom:10px}
+.lesson-viewer-body strong{color:#fff}
+.lesson-viewer-body ul{padding-right:18px;margin-bottom:10px}
+.lesson-viewer-body ul li{margin-bottom:4px}
+.lesson-tip{background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:8px;padding:11px 14px;font-size:.83rem;color:#e0c860;margin-top:14px}
+.lesson-done-msg{background:var(--green-dim);border:1px solid var(--green-ring);color:#7cf07c;border-radius:8px;padding:11px 16px;font-size:.87rem;font-weight:600}
+.lesson-complete-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;border:none;border-radius:10px;font-size:.93rem;font-weight:700;font-family:inherit;cursor:pointer;transition:all .2s;margin-top:10px}
+.lesson-complete-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.lesson-item.done .lesson-number{background:var(--green);color:#fff}
+.lesson-item.done{background:var(--green-dim);border-color:var(--green-ring)}
+.opt-btn.selected{background:var(--blue-dim)!important;border-color:var(--blue)!important;color:var(--blue)!important}
+.rec-result-card{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:22px;animation:fadeUp .3s ease}
+.rec-header{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:8px}
+.rec-profile{font-size:.78rem;color:var(--muted);margin-bottom:16px;background:rgba(255,255,255,.04);border-radius:6px;padding:6px 10px;display:inline-block}
+.rec-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:16px}
+@media(max-width:560px){.rec-cards{grid-template-columns:1fr}}
+.rec-card{border-radius:10px;padding:13px;text-align:center}
+.rec-card.primary{background:var(--blue-dim);border:1px solid var(--blue-ring)}
+.rec-card.secondary{background:rgba(255,255,255,.04);border:1px solid var(--border)}
+.rec-card.upsell{background:var(--gold-dim);border:1px solid var(--gold-ring)}
+.rec-rank{font-size:.65rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:5px}
+.rec-card.primary .rec-rank{color:var(--blue)}
+.rec-card.upsell .rec-rank{color:var(--gold)}
+.rec-product{font-size:.87rem;font-weight:700;color:#fff}
+.rec-coll-box{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px 15px;margin-bottom:12px}
+.rec-coll-title{font-size:.9rem;font-weight:700;color:var(--blue);margin-bottom:4px}
+.rec-coll-rate{font-size:.8rem;color:var(--muted)}
+.rec-join-note{background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:8px;padding:10px 14px;font-size:.83rem;color:#e0c860;margin-bottom:12px}
+.rec-opener{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.rec-opener-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;font-weight:700}
+.rec-opener-line{font-size:.87rem;color:#ccc;font-style:italic;margin-bottom:5px;border-right:3px solid var(--gold);padding-right:8px}
+.tree-reset-btn{width:100%;padding:12px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:10px;cursor:pointer;font-size:.87rem;font-family:inherit;transition:all .2s}
+.tree-reset-btn:hover{background:var(--border);color:var(--text)}
+.terms-cat-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin:16px 0 6px}
+.term-card{background:var(--card);border:1px solid var(--border);border-radius:11px;margin-bottom:8px;overflow:hidden}
+.term-header{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;user-select:none;gap:10px}
+.term-name{font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0}
+.term-short{font-size:.78rem;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.term-chevron{color:var(--muted);font-size:.8rem;transition:transform .3s;flex-shrink:0}
+.term-card.open .term-chevron{transform:rotate(180deg)}
+.term-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.term-card.open .term-body{max-height:600px}
+.term-inner{border-top:1px solid var(--border);padding:14px 16px}
+.term-inner p{font-size:.87rem;color:#ccc;line-height:1.7;margin-bottom:8px}
+.term-tip{background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:7px;padding:9px 12px;font-size:.82rem;color:#e0c860;margin-top:8px}
+.game-mode-bar{display:flex;gap:8px;margin-bottom:16px;background:var(--card);border-radius:10px;padding:5px;border:1px solid var(--border)}
+.game-mode-btn{flex:1;padding:10px;background:none;border:none;border-radius:8px;color:var(--muted);cursor:pointer;font-size:.87rem;font-weight:600;font-family:inherit;transition:all .2s}
+.game-mode-btn.active{background:var(--blue);color:#fff}
+.game-pane{display:none}
+.game-pane.active{display:block;animation:fadeUp .2s ease}
+.q-progress-line{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:6px}
+.q-prog-bar{background:var(--border);border-radius:4px;height:3px;margin-bottom:16px}
+.q-prog-fill{height:100%;background:var(--blue);border-radius:4px;transition:width .4s}
+.q-text{font-size:.97rem;font-weight:700;color:#fff;line-height:1.5;margin-bottom:16px}
+.q-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.q-opt{width:100%;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;color:#ccc;font-size:.87rem;font-family:inherit;cursor:pointer;text-align:right;transition:all .2s;line-height:1.4}
+.q-opt:hover:not(:disabled){background:var(--blue-dim);border-color:var(--blue-ring);color:#fff}
+.q-opt.correct{background:var(--green-dim)!important;border-color:var(--green-ring)!important;color:var(--green)!important;font-weight:700}
+.q-opt.wrong{background:var(--red-dim)!important;border-color:var(--red-ring)!important;color:var(--red)!important}
+.q-opt.locked{opacity:.45;cursor:not-allowed}
+.q-fb{border-radius:9px;padding:13px 15px;font-size:.85rem;line-height:1.6;margin-top:10px}
+.q-fb.correct{background:var(--green-dim);border:1px solid var(--green-ring);color:#a0f0b0}
+.q-fb.wrong{background:var(--red-dim);border:1px solid var(--red-ring);color:#f0a0a0}
+.q-fb strong{display:block;font-size:.9rem;margin-bottom:5px}
+.q-next-btn{margin-top:10px;padding:9px 18px;background:var(--blue);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:.83rem;font-weight:700;font-family:inherit;display:block;transition:all .2s}
+.q-next-btn:hover{filter:brightness(1.1)}
+.quiz-results{text-align:center;padding:24px 16px}
+.results-emoji{font-size:3.5rem;margin-bottom:10px}
+.quiz-results h2{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:8px}
+.results-score{font-size:1.5rem;font-weight:800;color:var(--gold);margin-bottom:8px}
+.results-new-record{background:var(--gold-dim);border:1px solid var(--gold-ring);color:var(--gold);border-radius:8px;padding:6px 14px;font-size:.82rem;font-weight:700;display:inline-block;margin-bottom:10px}
+.results-msg{color:var(--muted);font-size:.88rem;margin-bottom:18px}
+.quiz-restart-btn{padding:12px 28px;background:var(--blue);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:.9rem;font-weight:700;font-family:inherit;transition:all .2s}
+.quiz-restart-btn:hover{filter:brightness(1.1)}
+.roleplay-wrap{padding:4px 0}
+.scenario-select-label{font-size:.78rem;color:var(--muted);font-weight:600;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.scenario-cards-grid,.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.scenario-cards-grid,.persona-grid{grid-template-columns:1fr}}
+.scenario-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all .2s;text-align:center}
+.scenario-card:hover{border-color:var(--blue-ring);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.sc-icon{font-size:2rem;margin-bottom:8px}
+.sc-title{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+.sc-desc{font-size:.73rem;color:var(--muted);margin-bottom:10px}
+.sc-start-btn{font-size:.75rem;font-weight:700;color:var(--blue);background:var(--blue-dim);border:1px solid var(--blue-ring);border-radius:20px;padding:4px 12px;display:inline-block}
+.rp-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.rp-back-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .2s;flex-shrink:0}
+.rp-back-btn:hover{background:var(--border);color:var(--text)}
+.rp-title{font-size:.92rem;font-weight:700;color:#fff;flex:1}
+.rp-prog{font-size:.73rem;color:var(--muted);flex-shrink:0}
+.rp-context{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:13px;font-size:.84rem;color:#bbb;line-height:1.65;margin-bottom:12px;font-style:italic}
+.rp-situation{background:var(--card2);border-right:3px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 16px;font-size:.9rem;color:#ccc;font-weight:600;line-height:1.5;margin-bottom:12px}
+.rp-choices{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.rp-choice{width:100%;padding:13px 16px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;color:#ccc;font-size:.87rem;font-family:inherit;cursor:pointer;text-align:right;transition:all .2s;line-height:1.4}
+.rp-choice:hover:not(:disabled){background:var(--blue-dim);border-color:var(--blue-ring);color:#fff}
+.rp-selected-great{background:var(--green-dim)!important;border-color:var(--green-ring)!important;color:var(--green)!important;font-weight:700}
+.rp-selected-neutral{background:var(--gold-dim)!important;border-color:var(--gold-ring)!important;color:var(--gold)!important}
+.rp-selected-bad{background:var(--red-dim)!important;border-color:var(--red-ring)!important;color:var(--red)!important}
+.rp-fb{display:none}
+.rp-fb-inner{border-radius:10px;padding:14px;margin-top:2px}
+.rp-fb-inner.great{background:var(--green-dim);border:1px solid var(--green-ring)}
+.rp-fb-inner.neutral{background:var(--gold-dim);border:1px solid var(--gold-ring)}
+.rp-fb-inner.bad{background:var(--red-dim);border:1px solid var(--red-ring)}
+.rp-fb-label{font-size:.88rem;font-weight:800;color:#fff;margin-bottom:6px}
+.rp-fb-text{font-size:.84rem;color:#ccc;line-height:1.6;margin-bottom:10px}
+.rp-next-btn{padding:9px 18px;background:var(--blue);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:.83rem;font-weight:700;font-family:inherit;transition:all .2s}
+.rp-next-btn:hover{filter:brightness(1.1)}
+.rp-score-card{text-align:center;padding:28px 16px}
+.rp-score-icon{font-size:3.5rem;margin-bottom:10px}
+.rp-score-card h2{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:8px}
+.rp-score-num{font-size:1.4rem;font-weight:800;color:var(--gold);margin-bottom:8px}
+.rp-score-msg{color:var(--muted);font-size:.88rem;margin-bottom:18px}
+.rp-end-btn{padding:11px 24px;background:none;border:1px solid var(--border);color:var(--muted);border-radius:10px;cursor:pointer;font-size:.87rem;font-family:inherit;transition:all .2s}
+.rp-end-btn:hover{background:var(--border);color:var(--text)}
+.progress-header-card{background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(168,85,247,.08));border:1px solid rgba(59,130,246,.25);border-radius:16px;padding:22px;margin-bottom:16px;text-align:center}
+.level-badge-big{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px}
+.level-icon-big{font-size:2.8rem}
+.level-info h2{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:2px;text-align:right}
+.level-info p{font-size:.78rem;color:var(--muted);text-align:right}
+.xp-bar-wrap{background:rgba(255,255,255,.1);border-radius:8px;height:8px;overflow:hidden;margin-bottom:6px}
+.xp-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:8px;transition:width .8s ease}
+.xp-bar-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}
+@media(max-width:420px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;text-align:center}
+.stat-box.gold{border-color:var(--gold-ring);background:var(--gold-dim)}
+.stat-box.green{border-color:var(--green-ring);background:var(--green-dim)}
+.stat-box.purple{border-color:var(--purple-ring);background:var(--purple-dim)}
+.stat-box.red{border-color:var(--red-ring);background:var(--red-dim)}
+.stat-box.teal{border-color:var(--teal-ring);background:var(--teal-dim)}
+.stat-num{font-size:1.35rem;font-weight:800;color:#fff;line-height:1}
+.stat-label{font-size:.68rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.4px}
+.badges-section{margin-bottom:16px}
+.badges-section h3{font-size:.97rem;font-weight:700;color:#fff;margin-bottom:10px}
+.badges-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:460px){.badges-grid{grid-template-columns:repeat(3,1fr)}}
+.badge-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center}
+.badge-item.earned{border-color:var(--gold-ring);background:var(--gold-dim)}
+.badge-item.locked{opacity:.45}
+.badge-icon{font-size:1.6rem;margin-bottom:4px}
+.badge-name{font-size:.68rem;font-weight:700;color:#fff}
+.badge-desc{font-size:.6rem;color:var(--muted);margin-top:2px;line-height:1.3}
+.xp-log{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.xp-log h3{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:10px}
+.xp-log-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:.83rem}
+.xp-log-row:last-child{border-bottom:none}
+.xp-log-reason{color:#ccc}
+.xp-log-amount{color:var(--gold);font-weight:700;flex-shrink:0;margin-right:10px}
+.xp-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:rgba(15,15,25,.95);border:1px solid var(--gold-ring);color:var(--gold);font-size:.9rem;font-weight:700;padding:9px 20px;border-radius:20px;z-index:500;opacity:0;transition:all .35s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(245,158,11,.3)}
+.xp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#pwa-toast{position:fixed;bottom:calc(var(--nav-h) + var(--safe-bottom) + 10px);left:12px;right:12px;background:rgba(10,12,25,.97);border:1px solid var(--blue-ring);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;z-index:400;box-shadow:0 8px 30px rgba(0,0,0,.5);backdrop-filter:blur(14px)}
+#pwa-toast.hidden{display:none!important}
+.toast-icon{font-size:1.5rem;flex-shrink:0}
+.toast-text{flex:1;font-size:.82rem;color:#ccc;line-height:1.4}
+.toast-text strong{color:#fff;display:block}
+#pwa-install-btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0}
+.toast-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:0 4px;flex-shrink:0}
+</style>
+
+</body>
+</html>
+

@@ -363,19 +363,6 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
   <p>ארגז הכלים של הסוכן הישראלי — ידע, כלים, אנציקלופדיה וסימולטור</p>
 </div>
 
-<!-- ===== COLLECTIVE SELECTOR BAR ===== -->
-<div class="coll-select-bar">
-  <label>🏢 קולקטיב:</label>
-  <select id="active-collective" onchange="setCollective(this.value)">
-    <option value="all">כל הקולקטיבים</option>
-    <option value="namal">נמל חיפה — הראל</option>
-    <option value="kiryat">קריית מוצקין — פניקס/קידמה</option>
-    <option value="dvs">דב"ס</option>
-    <option value="rakevet">רכבת ישראל</option>
-    <option value="tnuva">תנובה</option>
-    <option value="mispanot">מספנות ישראל</option>
-  </select>
-</div>
 
 <nav class="tab-bar" role="tablist">
   <button class="tab-btn active" data-tab="toolbox">🗂️ ארגז הכלים</button>
@@ -455,8 +442,8 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
         <!-- ===== COLLECTIVE PANELS ===== -->
         <div class="collective-panel active" id="coll-panel-all">
           <div class="ib" style="background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.2)">
-            <h4 style="color:var(--blue)">📋 בחר קולקטיב בסרגל למעלה לפרטים מלאים</h4>
-            <p>בחר קולקטיב לצפייה בפרמיות, כיסויים ותנאי הצטרפות ספציפיים לכל מקום עבודה.</p>
+            <h4 style="color:var(--blue)">📋 השתמש בעץ החלטות לבחירת הקולקטיב</h4>
+            <p>השתמש בעץ החלטות (Tab 🌳) לבחירת מעסיק — תתקבל המלצת קולקטיב עם פרטי פרמיות וכיסויים.</p>
           </div>
         </div>
 
@@ -512,7 +499,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
         <div class="collective-panel" id="coll-panel-kiryat">
           <div class="coll-header">
             <div class="coll-badge">🔥 פניקס</div>
-            <div class="coll-name">קולקטיב קריית מוצקין — קבוצת קידמה</div>
+            <div class="coll-name">קולקטיב קריית מוצקין</div>
             <div class="coll-meta">תקופה: דצמבר 2024 — נובמבר 2029</div>
           </div>
           <table class="premium-table">
@@ -959,7 +946,7 @@ main{max-width:960px;margin:0 auto;padding:24px 16px 60px}
       <div class="step-sub">הקולקטיב נקבע לפי מקום העבודה</div>
       <div class="opts-grid">
         <button class="opt-btn" onclick="treeSelect(4,'namal')"><span class="opt-em">🏗️</span><span class="opt-lbl">נמל חיפה</span><span class="opt-desc">קולקטיב הראל</span></button>
-        <button class="opt-btn" onclick="treeSelect(4,'kiryat')"><span class="opt-em">🔥</span><span class="opt-lbl">קריית מוצקין / קידמה</span><span class="opt-desc">קולקטיב פניקס</span></button>
+        <button class="opt-btn" onclick="treeSelect(4,'kiryat')"><span class="opt-em">🔥</span><span class="opt-lbl">קריית מוצקין</span><span class="opt-desc">ביטוח קבוצתי דרך פניקס</span></button>
         <button class="opt-btn" onclick="treeSelect(4,'dvs')"><span class="opt-em">📡</span><span class="opt-lbl">דב"ס</span><span class="opt-desc">קולקטיב דב"ס</span></button>
         <button class="opt-btn" onclick="treeSelect(4,'rakevet')"><span class="opt-em">🚂</span><span class="opt-lbl">רכבת ישראל</span><span class="opt-desc">קולקטיב רכבת</span></button>
         <button class="opt-btn" onclick="treeSelect(4,'tnuva')"><span class="opt-em">🥛</span><span class="opt-lbl">תנובה</span><span class="opt-desc">קולקטיב תנובה</span></button>
@@ -1343,6 +1330,8 @@ function showTreeResult(){
   `;
 
   el.style.display='block';
+  // Auto-activate matching collective panel in toolbox
+  if(tS.employer && tS.employer!=='other'){ setCollective(tS.employer); }
 }
 
 function treeReset(){

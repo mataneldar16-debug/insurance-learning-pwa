@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -415,6 +415,43 @@ main{max-width:960px;margin:0 auto;padding:20px 14px calc(var(--nav-h) + var(--s
 .toast-close{background:none;border:none;color:#555;cursor:pointer;font-size:1.3rem;padding:2px;line-height:1;flex-shrink:0}
 .toast-close:hover{color:#ccc}
 
+/* ===== TRACK SELECTOR ===== */
+.track-selector{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.track-btn{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;text-align:right;font-family:inherit;color:var(--muted);font-size:.88rem;font-weight:700;transition:all .2s;position:relative}
+.track-btn:hover{border-color:var(--border2);color:var(--text)}
+.track-btn.active[data-track="sales"]{background:var(--blue-dim);border-color:var(--blue-ring);color:var(--blue)}
+.track-btn.active[data-track="licensing"]{background:var(--purple-dim);border-color:var(--purple-ring);color:var(--purple)}
+.track-badge{display:inline-block;font-size:.62rem;padding:2px 7px;border-radius:10px;font-weight:700;margin-right:6px;background:rgba(255,255,255,.1);color:#fff}
+.track-badge.secondary{background:var(--purple-dim);color:var(--purple)}
+.track-week-header{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:8px 14px;margin-bottom:8px;margin-top:14px;font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.track-week-header.blue{color:var(--blue);border-color:var(--blue-ring);background:var(--blue-dim)}
+.track-week-header.purple{color:var(--purple);border-color:var(--purple-ring);background:var(--purple-dim)}
+.lesson-item[data-track="licensing"]{border-right:3px solid var(--purple)}
+.lesson-item[data-track="licensing"].active-lesson{border-right-color:var(--blue)}
+.license-exam-badge{display:inline-block;font-size:.6rem;background:var(--purple-dim);color:var(--purple);padding:1px 6px;border-radius:8px;font-weight:700;margin-right:4px}
+
+/* ===== EXAM COUNTDOWN ===== */
+.exam-countdown-card{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(59,130,246,.06));border:1px solid rgba(168,85,247,.25);border-radius:14px;padding:18px;margin-top:16px}
+.exam-countdown-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.7px;color:var(--purple);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.exam-row{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.exam-row:last-child{border-bottom:none}
+.exam-icon{font-size:1.1rem;flex-shrink:0;width:22px;text-align:center;margin-top:2px}
+.exam-info{flex:1}
+.exam-name{font-weight:700;color:#fff;margin-bottom:2px}
+.exam-meta{font-size:.76rem;color:var(--muted);margin-bottom:4px}
+.exam-days{display:inline-block;padding:2px 8px;border-radius:8px;font-size:.7rem;font-weight:800}
+.exam-days.urgent{background:var(--red-dim);color:var(--red);border:1px solid var(--red-ring)}
+.exam-days.soon{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-ring)}
+.exam-days.ok{background:var(--green-dim);color:var(--green);border:1px solid var(--green-ring)}
+.exam-reg-link{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;color:var(--blue);padding:3px 8px;border-radius:6px;border:1px solid var(--blue-ring);background:var(--blue-dim);margin-top:5px;text-decoration:none;font-weight:700}
+.exam-reg-link:hover{background:rgba(59,130,246,.2)}
+
+/* ===== QUIZ TRACK FILTER ===== */
+.quiz-track-filter{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.qtf-btn{padding:7px 13px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;transition:all .2s;color:var(--muted);background:var(--card2)}
+.qtf-btn.active{border-color:var(--blue-ring);background:var(--blue-dim);color:var(--blue)}
+.qtf-btn[data-filter="licensing"].active{border-color:var(--purple-ring);background:var(--purple-dim);color:var(--purple)}
+
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--bg)}
@@ -586,8 +623,22 @@ main{max-width:960px;margin:0 auto;padding:20px 14px calc(var(--nav-h) + var(--s
     <p>3 פרקים · 16 שיעורים · השלם בסדר כדי לפתוח את הבא</p>
   </div>
 
+  <!-- Track Selector -->
+  <div class="track-selector">
+    <button class="track-btn active" data-track="sales" onclick="switchTrack('sales',this)">
+      🎯 מסלול מכירה — 6 שבועות
+      <span class="track-badge">אקטיבי</span>
+    </button>
+    <button class="track-btn" data-track="licensing" onclick="switchTrack('licensing',this)">
+      📋 מסלול רישוי — דצמבר 2026
+      <span class="track-badge secondary">3 מבחנים</span>
+    </button>
+  </div>
+
   <div id="lesson-viewer-container"></div>
 
+  <!-- Sales Track Chapters (shown by default) -->
+  <div id="track-sales-content">
   <!-- Chapter 1 -->
   <div class="chapter-card" id="chap-1">
     <div class="chapter-header" onclick="toggleChapter(1)">
@@ -775,6 +826,165 @@ main{max-width:960px;margin:0 auto;padding:20px 14px calc(var(--nav-h) + var(--s
       </div>
     </div>
   </div>
+  </div><!-- end #track-sales-content -->
+
+  <!-- Licensing Track Content (hidden by default) -->
+  <div id="track-licensing-content" style="display:none">
+
+    <!-- Exam: יסודות הביטוח -->
+    <div class="chapter-card" id="chap-y" style="border-color:rgba(168,85,247,.3)">
+      <div class="chapter-header" onclick="toggleChapter('y')">
+        <div class="chapter-icon" style="background:var(--purple-dim);color:var(--purple)">📜</div>
+        <div class="chapter-info">
+          <div class="chapter-title">יסודות הביטוח <span class="license-exam-badge">מבחן 9.12.26</span></div>
+          <div class="chapter-meta">8 שיעורים · חוק, עקרונות, מיסוי, מינוח</div>
+          <div class="chapter-progress-wrap">
+            <div class="chapter-prog-bar"><div class="chapter-prog-fill" id="prog-fill-y" style="background:var(--purple);width:0%"></div></div>
+            <div class="chapter-prog-txt" id="prog-txt-y">0/8 שיעורים</div>
+          </div>
+        </div>
+        <span class="chapter-chevron">▼</span>
+      </div>
+      <div class="chapter-body">
+        <div class="lesson-list" id="lessons-chap-y">
+          <div class="lesson-item" data-track="licensing" id="li-y-1" onclick="openLesson('y.1')">
+            <div class="lesson-number" style="background:var(--purple-dim);color:var(--purple)">1</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">חוק חוזה הביטוח — תום לב מוחלט</div>
+              <div class="lesson-desc">Utmost Good Faith — גילוי נאות של שני הצדדים</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-y-2" onclick="openLesson('y.2')">
+            <div class="lesson-number" style="background:var(--purple-dim);color:var(--purple)">2</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">זיקת ביטוח — Insurable Interest</div>
+              <div class="lesson-desc">מי יכול לבטח מה ולמה</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-y-3" onclick="openLesson('y.3')">
+            <div class="lesson-number" style="background:var(--purple-dim);color:var(--purple)">3</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">עקרון השיפוי — Indemnity</div>
+              <div class="lesson-desc">ביטוח לא יביא לרווח — רק לפיצוי על הנזק</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-y-4" onclick="openLesson('y.4')">
+            <div class="lesson-number" style="background:var(--purple-dim);color:var(--purple)">4</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">תחלוף — Subrogation</div>
+              <div class="lesson-desc">זכות חברת הביטוח לתבוע מהאחראי לנזק</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-y-5" onclick="openLesson('y.5')">
+            <div class="lesson-number" style="background:var(--purple-dim);color:var(--purple)">5</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">ביטוח לאומי — מה המדינה מכסה ומה לא</div>
+              <div class="lesson-desc">הגאפים שמוכרים ביטוח פרטי</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-y-6" onclick="openLesson('y.6')">
+            <div class="lesson-number" style="background:var(--purple-dim);color:var(--purple)">6</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">מעמד הסוכן — חובות ואחריות</div>
+              <div class="lesson-desc">שלוח, גילוי ניגוד עניינים, תיעוד</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-y-7" onclick="openLesson('y.7')">
+            <div class="lesson-number" style="background:var(--purple-dim);color:var(--purple)">7</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">מיסוי ביטוח — סעיפים 45א ו-47</div>
+              <div class="lesson-desc">ניכויים לשכיר ועצמאי, הוצאה מוכרת</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-y-8" onclick="openLesson('y.8')">
+            <div class="lesson-number" style="background:var(--purple-dim);color:var(--purple)">8</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">סוגי ביטוח — מינוח לבחינה</div>
+              <div class="lesson-desc">ריסק, מעורב, אכ"ע, סיעוד, תאונות — הגדרות מדויקות</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+        <div class="lesson-item" data-track="licensing" id="li-y-9" onclick="openLesson('y.9')">
+            <div class="lesson-number" style="background:var(--red-dim);color:var(--red)">9</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">אתיקה מקצועית ודיני ניירות ערך — מבחן ISA</div>
+              <div class="lesson-desc">ניגוד עניינים, חובות גילוי, מניפולציות שוק, הלבנת הון</div>
+            </div>
+            <div class="lesson-xp">+25 XP</div>
+          </div>
+    <!-- Exam: גמר פנסיוני -->
+    <div class="chapter-card" id="chap-g" style="border-color:rgba(20,184,166,.3)">
+      <div class="chapter-header" onclick="toggleChapter('g')">
+        <div class="chapter-icon" style="background:var(--teal-dim);color:var(--teal)">🏦</div>
+        <div class="chapter-info">
+          <div class="chapter-title">גמר פנסיוני <span class="license-exam-badge" style="background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-ring)">מבחן 9.12.26</span></div>
+          <div class="chapter-meta">5 שיעורים · פנסיה, אכ"ע, גמל, מיסוי</div>
+          <div class="chapter-progress-wrap">
+            <div class="chapter-prog-bar"><div class="chapter-prog-fill" id="prog-fill-g" style="background:var(--teal);width:0%"></div></div>
+            <div class="chapter-prog-txt" id="prog-txt-g">0/5 שיעורים</div>
+          </div>
+        </div>
+        <span class="chapter-chevron">▼</span>
+      </div>
+      <div class="chapter-body">
+        <div class="lesson-list" id="lessons-chap-g">
+          <div class="lesson-item" data-track="licensing" id="li-g-1" onclick="openLesson('g.1')">
+            <div class="lesson-number" style="background:var(--teal-dim);color:var(--teal)">1</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">קרנות פנסיה — יסודות</div>
+              <div class="lesson-desc">מקיפה חדשה vs בסיסית vs תקציבית, הגאפ לקולקטיב</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-g-2" onclick="openLesson('g.2')">
+            <div class="lesson-number" style="background:var(--teal-dim);color:var(--teal)">2</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">ביטוח מנהלים — פוליסות 2004 ו-2013</div>
+              <div class="lesson-desc">תשואה מובטחת בוטלה, לוחות תמותה עדכניים</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-g-3" onclick="openLesson('g.3')">
+            <div class="lesson-number" style="background:var(--teal-dim);color:var(--teal)">3</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">אכ"ע — עמוק יותר</div>
+              <div class="lesson-desc">עיסוק ספציפי, Elimination Period, תקרת כיסוי</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-g-4" onclick="openLesson('g.4')">
+            <div class="lesson-number" style="background:var(--teal-dim);color:var(--teal)">4</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">חוק ייעוץ פנסיוני</div>
+              <div class="lesson-desc">יועץ vs סוכן vs משווק — מי רשאי לייעץ</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+          <div class="lesson-item" data-track="licensing" id="li-g-5" onclick="openLesson('g.5')">
+            <div class="lesson-number" style="background:var(--teal-dim);color:var(--teal)">5</div>
+            <div class="lesson-info">
+              <div class="lesson-title-text">קופות גמל — סוגים ומיסוי</div>
+              <div class="lesson-desc">גמל להשקעה, פיצויים, קרן השתלמות, IRA</div>
+            </div>
+            <div class="lesson-xp">+20 XP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end #track-licensing-content -->
 </section>
 
 <!-- ===================== TAB 2: TOOLS ===================== -->
@@ -965,7 +1175,156 @@ main{max-width:960px;margin:0 auto;padding:20px 14px calc(var(--nav-h) + var(--s
       <div class="trigger-box"><h4>🎯 טריגר מכירה</h4><p>"אמא שלי הייתה בסיעוד שלוש שנים — עלתה לנו 10,000 ₪ בחודש. ביטוח סיעוד הוא לא עבורך — הוא עבור הילדים שלך."</p></div>
     </div></div>
   </div>
-  <div class="weakness-section"><h3>📊 נקודות חולשה</h3><div id="weakness-content"><div class="weakness-empty">ענה על כמה שאלות כדי לגלות את נקודות החולשה שלך</div></div></div>
+    <!-- OBJECTION LIBRARY -->
+  <div class="product-card" style="border:1px solid rgba(168,85,247,.4);background:linear-gradient(135deg,rgba(168,85,247,.07),rgba(10,10,15,1))" id="pc-objections">
+    <div class="pc-header" onclick="toggleCard('pc-objections')">
+      <div class="pc-left"><div class="pc-icon">📚</div>
+        <div><div class="pc-title">ספר ההתנגדויות — 12 תשובות מנצחות</div><div class="pc-price" style="color:#a78bfa">שלוט בהתנגדויות ← סגור כל עסקה</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+        <span style="background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:#a78bfa;font-size:.7rem;padding:3px 9px;border-radius:20px;font-weight:700">12 התנגדויות</span>
+        <span style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#60a5fa;font-size:.7rem;padding:3px 9px;border-radius:20px">פורמולת 3 שלבים: הכר — הזדהה — הפנה</span>
+      </div>
+      <div id="obj-list">
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">1</span><span class="obj-q">יש לי שב"ן מהקופה — אני כבר מכוסה</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-common">הנפוצה ביותר</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"שב"ן נותן ניתוחים ברשת הקופה — אבל לא: ניתוחים בחו"ל (250% ממחיר ישראל), לא CI (כסף מזומן עם אבחנת סרטן), לא תרופות מחוץ לסל. <strong>שב"ן משלם לבית החולים. הקולקטיב משלם לך.</strong>"</p></div>
+            <div class="obj-tip">💡 שאל: "מה כתוב בכיסוי ניתוחים בחו"ל של השב"ן שלך?" — לרוב לא ידע. זה הפתח.</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">2</span><span class="obj-q">יקר לי / אין לי כסף</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-price">מחיר</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"129 ₪ = <strong>4.30 ₪ ביום</strong> — פחות מכוס קפה. ניתוח פרטי = 80,000 ₪. תרופה לסרטן = 15,000 ₪/חודש. <strong>אתה לא יכול להרשות לעצמך לא לקנות.</strong> אם תקציב בעיה — נתחיל במסלול א (110 ₪), נרחיב עוד שנה."</p></div>
+            <div class="obj-tip">💡 הפוך: "4 שנות ביטוח = 6,200 ₪. ניתוח = 80,000 ₪. מה יקר יותר?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">3</span><span class="obj-q">אני בריא — לא צריך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"זו בדיוק הסיבה לקנות עכשיו! ביטוח קונים כשבריאים — כי כשחולים לא מקבלים. בקולקטיב נכנסים ללא שאלות בריאות. <strong>1 מ-3 אנשים יאובחן בסרטן. אף אחד לא חשב שיהיה ה-1.</strong>"</p></div>
+            <div class="obj-tip">💡 שאל: "ההורים שלך — בריאים תמיד היו?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">4</span><span class="obj-q">אחשוב על זה / צריך לדון עם אשתי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-delay">דחייה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"בהחלט — זו החלטה משפחתית חשובה. נקבע שיחה קצרה גם עם אשתך — 10 דקות. <strong>כל חודש שעובר = חודש ביטוח שלא היה לך.</strong> מה מתאים לך — יום ב' בבוקר או ד' אחה"צ?"</p></div>
+            <div class="obj-tip">💡 שלח WhatsApp סיכום עם הנתונים לבן/בת הזוג — סוגר ספקות.</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">5</span><span class="obj-q">יש לי ביטוח דרך המעסיק / קרן פנסיה</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-employer">כפל ביטוח</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"פנסיה נותנת אכ"ע חלקי — אבל: (1) כיסוי 'כל עיסוק', לא 'עיסוק ספציפי'. (2) קולקטיב = ניתוחים + CI — שונה לחלוטין. (3) <strong>ביטוח מעסיק = של המעסיק, לא שלך</strong>. יום שתחליף עמדה — הכיסוי נעלם."</p></div>
+            <div class="obj-tip">💡 "האם תוכל לקחת את הביטוח אם תעזוב?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">6</span><span class="obj-q">כבר ניסיתי ביטוח — לא קיבלתי כסף</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-trust">אמון</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"מתסכל — ואני מבין. האם הייתה אכשרה? מחלה קודמת לרכישה? הקולקטיב שאני מציע: <strong>ללא הצהרת בריאות, ללא בדיקות</strong>. לחברה אין זכות לדחות בגלל מצב קודם. קולקטיב = מגן."</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">7</span><span class="obj-q">מחלות קשות — זה לא יקרה לי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"1 מ-3 מאובחן בסרטן. 1 מ-5 — אירוע לב. <strong>לא קונים CI כי זה בהכרח יקרה — קונים כי אם יקרה, לא יחרב הבית.</strong> המשכנתא תמשיך. הילדים ימשיכו ללמוד. אתה תתמקד בלהחלים."</p></div>
+            <div class="obj-tip">💡 "מישהו בסביבתך חלה בסרטן?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">8</span><span class="obj-q">הביטוח לא ישלם בעת הצורך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-trust">אמון</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"ולכן אני עובד עם הראל ופניקס — חברות ציבוריות מפוקחות. קולקטיב = <strong>לחברה אין זכות לדחות בגלל מצב רפואי קודם</strong>. ואני — הסוכן — עובד בשבילך בעת תביעה."</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">9</span><span class="obj-q">אני גר ליד בית חולים טוב</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"גישה לבי"ח טוב לא = יכולת לשלם עליו. ניתוח פרטי: 40,000–120,000 ₪. תרופה לסרטן: 15,000 ₪/חודש. <strong>הביטוח לא מביא אותך לבי"ח — הוא מכסה את עלות הטיפול שם.</strong>"</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">10</span><span class="obj-q">אני כבר מבוגר — מאוחר מדי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-age">גיל</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"נמל חיפה מקבל עד <strong>גיל 64+11 חודשים</strong> — עדיין יש זמן. פרמיית גמלאי: 220–258 ₪/חודש. <strong>עדיף לשלם עכשיו מאשר לגלות אחרי האבחנה שאי-אפשר להיכנס.</strong>"</p></div>
+            <div class="obj-tip">💡 "היום: 258 ₪/חודש. טיפול ללא ביטוח: 500,000 ₪."</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">11</span><span class="obj-q">תביא הצעה בכתב ואחזור אליך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-delay">דחייה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"אשלח — ואני רוצה לבקש: <strong>נקבע תאריך ספציפי לשיחת המשך</strong>. מה מתאים לך — יום ב' בבוקר או ד' אחה"צ?" [לא "מתי נוח?"]</p></div>
+            <div class="obj-tip">💡 "הצעה + תאריך = הסכמה עקרונית."</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">12</span><span class="obj-q">יש לי כבר הרבה ביטוחים</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-overlap">כפל</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"הרבה ביטוחים לא = כיסוי מלא. האם יש לך בריאות קולקטיב שקל ראשון? CI נפרד? <strong>הצע: ביקורת ביטוח חינם — 20 דקות, ונוודא שאין חורים.</strong>"</p></div>
+            <div class="obj-tip">💡 "ביקורת ביטוח" = כלי מכירה. פותח שיחה, מייצר אמון.</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- SALES SCRIPT -->
+  <div class="product-card" style="border:1px solid rgba(59,130,246,.35);background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(10,10,15,1))" id="pc-script">
+    <div class="pc-header" onclick="toggleCard('pc-script')">
+      <div class="pc-left"><div class="pc-icon">🎬</div>
+        <div><div class="pc-title">סקריפט מכירה — 5 שלבים מנצחים</div><div class="pc-price" style="color:#60a5fa">מהפתיחה עד הסגירה</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div class="script-steps">
+        <div class="script-step"><div class="script-step-num">1</div><div class="script-step-content">
+          <div class="script-step-title">🤝 פתיחה — אמון בשתי שורות</div><div class="script-step-time">2–3 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"שלום [שם], אני מתן מסוכנות קידמה — אני עובד עם עובדי נמל חיפה בנושא הקולקטיב של החברה."</div>
+            <div class="script-line">"יש לך 5 דקות? רציתי לוודא שאתה יודע מה <strong>מגיע לך</strong> כעובד."</div>
+          </div>
+          <div class="script-tip">💡 "מה מגיע לך" — לא "מה אני מוכר לך". פוזיציה של שירות, לא מכירה.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">2</div><div class="script-step-content">
+          <div class="script-step-title">🔍 איתור צרכים — 70% האזנה</div><div class="script-step-time">5–8 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"ספר לי קצת: נשוי? ילדים?" [הקשב — לא לדבר]</div>
+            <div class="script-line">"יש לך ביטוח בריאות מעבר לשב"ן של הקופה?"</div>
+            <div class="script-line">"מה הדאגה הבריאותית הכי גדולה שלך?"</div>
+          </div>
+          <div class="script-tip">💡 כלל הזהב: מי ששואל — שולט בשיחה.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">3</div><div class="script-step-content">
+          <div class="script-step-title">💡 הצגת הפתרון</div><div class="script-step-time">5–7 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"כעובד נמל חיפה, יש לך גישה לקולקטיב הראל — ביטוח שהחברה הוציאה לכל עובדיה."</div>
+            <div class="script-line">"היתרון: נכנסים ללא שאלות בריאות — גם מי שיש לו בעיות רפואיות."</div>
+            <div class="script-line">"מסלול שקל ראשון: 129 ₪/חודש. ילד: 39.5 ₪. ילד שלישי: <strong>חינם לגמרי</strong>."</div>
+          </div>
+          <div class="script-tip">💡 התאם: "מפחד ממחלה קשה" → הדגש CI. "ילדים" → ילד שלישי חינם.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">4</div><div class="script-step-content">
+          <div class="script-step-title">🛡️ טיפול בהתנגדויות</div><div class="script-step-time">3–5 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"יש לי שב"ן" → "שב"ן משלם לבי"ח. הקולקטיב משלים + שקל ראשון ישיר."</div>
+            <div class="script-line">"יקר" → "4.30 ₪/יום. ניתוח = 80K ₪. מה יקר יותר?"</div>
+            <div class="script-line">"אחשוב" → "נקבע תאריך — יום ב' או ד'?"</div>
+          </div>
+          <div class="script-tip">💡 ראה ספר ההתנגדויות ↑ לתשובות מלאות.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">5</div><div class="script-step-content">
+          <div class="script-step-title">✅ סגירה</div><div class="script-step-time">2–3 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"אז עם [שם] + בן/בת זוג + [X] ילדים — [חשב] ₪/חודש. זה הגיוני?"</div>
+            <div class="script-line">"מה עוד צריך כדי להתקדם?" [שתיקה — הקשב!]</div>
+            <div class="script-line">"מצוין — שולח לך טופס הצטרפות ל-WhatsApp עכשיו."</div>
+          </div>
+          <div class="script-tip">💡 אל תשאל "האם אתה רוצה?" — שאל "מה עוד צריך?". הנחת מחויבות.</div>
+        </div></div>
+      </div>
+    </div></div>
+  </div>
+
+<div class="weakness-section"><h3>📊 נקודות חולשה</h3><div id="weakness-content"><div class="weakness-empty">ענה על כמה שאלות כדי לגלות את נקודות החולשה שלך</div></div></div>
+
+  <!-- Exam Countdown -->
+  <div class="exam-countdown-card">
+    <div class="exam-countdown-title">📅 לוח מבחנים — דצמבר 2026</div>
+    <div id="exam-countdown-list"></div>
+  </div>
 </section>
 
 <!-- ===================== TAB 3: DECISION TREE ===================== -->
@@ -1064,10 +1423,16 @@ main{max-width:960px;margin:0 auto;padding:20px 14px calc(var(--nav-h) + var(--s
 <section id="tab-game" class="tab-pane">
   <div class="section-head"><h2>🎮 סימולטור</h2><p>חידון ידע + סימולטור מכירה אינטראקטיבי</p></div>
   <div class="game-mode-bar">
-    <button class="game-mode-btn active" onclick="switchGame('quiz',this)">🧠 חידון — 25 שאלות</button>
+    <button class="game-mode-btn active" onclick="switchGame('quiz',this)">🧠 חידון — 53 שאלות</button>
     <button class="game-mode-btn" onclick="switchGame('roleplay',this)">🎭 סימולטור מכירה</button>
   </div>
   <div class="game-pane active" id="game-quiz">
+    <div class="quiz-track-filter">
+      <span style="font-size:.77rem;color:var(--muted);font-weight:700;align-self:center">📚 סינון:</span>
+      <button class="qtf-btn active" data-filter="all" onclick="setQuizFilter('all',this)">כל השאלות</button>
+      <button class="qtf-btn" data-filter="sales" onclick="setQuizFilter('sales',this)">🎯 מסלול מכירה</button>
+      <button class="qtf-btn" data-filter="licensing" onclick="setQuizFilter('licensing',this)">📋 מסלול רישוי</button>
+    </div>
     <div class="quiz-mode-selector">
       <button class="quiz-mode-sel-btn active" id="qmode-normal" onclick="setQuizMode('normal',this)">📝 רגיל</button>
       <button class="quiz-mode-sel-btn" id="qmode-srs" onclick="setQuizMode('srs',this)"><span class="due-badge" id="srs-due-count">0</span> 🔁 חזרה חכמה</button>
@@ -1249,7 +1614,114 @@ const LESSONS = {
 <p><strong>שאלות סגירה שעובדות:</strong><br>• "נראה לי שהמסלול הזה מתאים לך — נתחיל ברישום?"<br>• "אתה מעדיף מסלול א או ב? [אחרי שהסברת]"<br>• "מתי נוח לך להשלים את הטפסים?"<br>• "מה אתה אומר — נצטרף גם לילדים?"</p>
 <p><strong>שתיקה:</strong> לאחר שאלת סגירה — תשתוק. הראשון שמדבר — מפסיד. תן ללקוח לחשוב.</p>
 <p><strong>סגירה חלקית:</strong> אם הלקוח לא מוכן לכל — הצע התחלה קטנה. "נצטרף רק לעובד עכשיו, ואחר כך נוסיף את הילדים." התחלה קטנה עדיפה על אפס.</p>
-<div class="lesson-tip">💡 <strong>משפט מנצח:</strong> "מתי נוח לך — עכשיו או בסוף השבוע?" — שתי אפשרויות, שתיהן כן.</div>`}
+<div class="lesson-tip">💡 <strong>משפט מנצח:</strong> "מתי נוח לך — עכשיו או בסוף השבוע?" — שתי אפשרויות, שתיהן כן.</div>`},
+
+// ===== LICENSING TRACK — יסודות הביטוח =====
+'y.1':{id:'y.1',chap:'y',track:'licensing',title:'חוק חוזה הביטוח — תום לב מוחלט',body:`<h3>Utmost Good Faith — עיקרון הגילוי המלא</h3>
+<p>עקרון תום הלב המוחלט (Utmost Good Faith) הוא אחד מאבני היסוד בדיני הביטוח. בשאלות הבחינה הוא מופיע לעתים קרובות.</p>
+<p><strong>מה הוא אומר?</strong> גם המבוטח וגם חברת הביטוח חייבים לגלות כל עובדה מהותית, גם אם לא נשאלו עליה במפורש. אם לקוח הסתיר מחלה קודמת — חברת הביטוח יכולה לבטל את הפוליסה. אם הסוכן הסתיר פרטים חשובים — הוא נושא באחריות אישית.</p>
+<p><strong>מה נחשב "עובדה מהותית"?</strong> כל דבר שהיה משנה את החלטת חברת הביטוח לבטח, או את תנאי הפוליסה. לדוגמה: מחלה קודמת, עיסוק מסוכן, הרגלי עישון.</p>
+<p><strong>חשיבות לסוכן:</strong> כסוכן, אתה חייב להסביר ללקוח את חובת הגילוי. אם ייעצת ללקוח לא לגלות מידע — אחריות מקצועית.</p>
+<div class="lesson-tip">💡 <strong>שאלת בחינה טיפוסית:</strong> "מי חייב לגלות עובדות מהותיות בחוזה ביטוח?" — תשובה: שני הצדדים.</div>`},
+
+'y.2':{id:'y.2',chap:'y',track:'licensing',title:'זיקת ביטוח — Insurable Interest',body:`<h3>אי אפשר לבטח מה שאין לך אינטרס בו</h3>
+<p><strong>ההגדרה:</strong> זיקת ביטוח = אינטרס כלכלי בקיומו של הנכס או האדם המבוטח. לא ניתן לבטח דבר שאין לך זיקה כלכלית אליו.</p>
+<p><strong>מי יכול לבטח מה?</strong><br>• אדם יכול לבטח את עצמו<br>• אדם יכול לבטח בן/בת זוג וילדים<br>• אדם יכול לבטח נכסים שבבעלותו<br>• בעל עסק יכול לבטח שותף עסקי<br>• לא ניתן לבטח את חייו של זר ולהיות נהנה</p>
+<p><strong>מתי נבחנת הזיקה?</strong> בביטוח רכוש — ביום ההפסד (לא בעת ההצטרפות). בביטוח חיים — בעת עריכת הפוליסה.</p>
+<div class="lesson-tip">💡 <strong>לזכור:</strong> ביטוח חיים ללא זיקת ביטוח = הימור. ועל הימורים אין אכיפה חוקית בישראל.</div>`},
+
+'y.3':{id:'y.3',chap:'y',track:'licensing',title:'עקרון השיפוי — Indemnity',body:`<h3>ביטוח מפצה — לא מרוויח</h3>
+<p><strong>העקרון:</strong> ביטוח נועד לפצות על נזק — לא להרוויח ממנו. הפיצוי לא יעלה על גובה הנזק האמיתי.</p>
+<p><strong>איפה חל העקרון?</strong> בביטוח רכוש — כן. בביטוח בריאות וחיים — לא חל! כי לא ניתן "לשים מחיר" על חיים או בריאות.</p>
+<p><strong>ביטוח כפל:</strong> כאשר יש כיסוי ממספר חברות לאותו נזק — ניתן לתבוע מכולן, אך הסכום הכולל לא יעלה על הנזק. כל חברה משלמת לפי חלקה היחסי.</p>
+<p><strong>השלכה מעשית:</strong> לקוח עם ביטוח בריאות מ-2 חברות יכול לתבוע שתיהן, אך בביטוח חיים זה לא מגביל — מקבל מכל פוליסה את מלוא הסכום.</p>
+<div class="lesson-tip">💡 <strong>בחינה:</strong> "עקרון השיפוי חל בביטוח חיים?" — תשובה: לא. חל בביטוח רכוש, לא בחיים/בריאות.</div>`},
+
+'y.4':{id:'y.4',chap:'y',track:'licensing',title:'תחלוף — Subrogation',body:`<h3>חברת הביטוח "מתחלפת" לנעלי המבוטח</h3>
+<p><strong>ההגדרה:</strong> אחרי שחברת הביטוח פיצתה את המבוטח, היא יכולה לתבוע את הגורם שגרם לנזק — "בנעלי" המבוטח.</p>
+<p><strong>דוגמה קלאסית:</strong> נהג פגע ברכב שלך. חברת הביטוח שלך שילמה. עכשיו חברת הביטוח שלך תובעת את הנהג הפוגע (או חברת הביטוח שלו).</p>
+<p><strong>למה זה חשוב?</strong> עקרון התחלוף מגן על מנגנון השיפוי — מונע ממבוטח לקבל פיצוי מהביטוח ואז לתבוע גם את האחראי לנזק ולהרוויח פעמיים.</p>
+<p><strong>מתי לא חל?</strong> בביטוח חיים — מכיוון שאין עקרון שיפוי, אין תחלוף. בנוסף, אם הנזק נגרם על ידי קרוב משפחה של המבוטח — לעתים קרובות חברת הביטוח מוותרת על זכות התחלוף.</p>
+<div class="lesson-tip">💡 <strong>לבחינה:</strong> תחלוף = Subrogation. חברה ששילמה → "נכנסת בנעלי" המבוטח → תובעת את הגורם לנזק.</div>`},
+
+'y.5':{id:'y.5',chap:'y',track:'licensing',title:'ביטוח לאומי — מה המדינה מכסה ומה לא',body:`<h3>הגאפים שמוכרים ביטוח פרטי</h3>
+<p>כסוכן, אתה חייב לדעת בדיוק מה ביטוח לאומי נותן — כדי להסביר ללקוח מה חסר.</p>
+<p><strong>נפגעי עבודה:</strong> קצבה חודשית עד 75% משכר → גאפ: 25% מהשכר + עיסוק ספציפי → כאן אכ"ע פרטי.</p>
+<p><strong>זקנה:</strong> קצבת זקנה ממוצעת ~₪1,800-2,500/חודש → לא מספיק לחיות בכבוד → כאן נכנסת הפנסיה הפרטית.</p>
+<p><strong>שאירים:</strong> קצבה לאשה/ילדים של מבוטח שנפטר → גאפ: ריסק פרטי מכסה הרבה יותר ונותן סכום חד-פעמי גדול.</p>
+<p><strong>מחלה כללית:</strong> ביטוח לאומי לא משלם על מחלה רגילה שלא נגרמה מעבודה → גאפ גדול → CI ואכ"ע פרטי.</p>
+<p><strong>טיעון המכירה:</strong> "מה ביטוח לאומי נותן לך?" → הצג את המספרים → "כמה חסר לחיות בכבוד?" → כאן האפליקציה הפרטית נכנסת.</p>
+<div class="lesson-tip">💡 <strong>עיקרון:</strong> ביטוח לאומי = רשת ביטחון בסיסית. ביטוח פרטי = מכסה את הגאפים לחיים בכבוד.</div>`},
+
+'y.6':{id:'y.6',chap:'y',track:'licensing',title:'מעמד הסוכן — חובות ואחריות',body:`<h3>הסוכן הוא שלוח של הלקוח</h3>
+<p><strong>מעמד משפטי:</strong> הסוכן הוא "שלוח" של הלקוח מול חברת הביטוח. לא שלוח של חברת הביטוח (שזהו ה"משווק").</p>
+<p><strong>חובות הסוכן:</strong><br>• לפעול לטובת הלקוח — לא לטובת העמלה שלו<br>• לגלות ניגוד עניינים (אם יש לו עמלה גבוהה יותר ממוצר מסוים)<br>• לא לקבל עמלות מוסתרות מחברות ביטוח שלא גולו ללקוח<br>• לשמור על סודיות מידע הלקוח<br>• לוודא שהמוצר מתאים לצורכי הלקוח (KYC)</p>
+<p><strong>אחריות מקצועית:</strong> אם ייעצת ללקוח ולקוח נפגע מהייעוץ — אתה עלול להיות אחראי. לכן: תמיד תעד המלצות בכתב, הסבר סיכונים, קבל חתימה על הצעות.</p>
+<p><strong>חשיבות בבחינה:</strong> שאלות רבות עוסקות בהבדל בין "חובת גילוי" הסוכן לחובת גילוי הלקוח.</p>
+<div class="lesson-tip">💡 <strong>כלל:</strong> ספק ספק → גלה. תמיד עדיף לגלות יותר מדי מאשר פחות מדי.</div>`},
+
+'y.7':{id:'y.7',chap:'y',track:'licensing',title:'מיסוי ביטוח — סעיפים 45א ו-47',body:`<h3>ניכויי מס לעמיתים ולמעסיקים</h3>
+<p><strong>סעיף 47 — עמית שכיר:</strong> עמית שכיר יכול לנכות עד 5% מהשכר לביטוח חיים/פנסיה (עד תקרה קבועה). זה מקטין את הכנסתו החייבת במס.</p>
+<p><strong>סעיף 45א — עמית עצמאי:</strong> עמית עצמאי יכול לנכות עד 7% מהכנסתו (בתנאים מסוימים) ועוד 11% פטורים ממס (על חלק מהסכום). סך הכל — הטבה משמעותית מאוד לעצמאים.</p>
+<p><strong>מעסיק:</strong> תשלום מעסיק עבור ביטוח בריאות קבוצתי = הוצאה מוכרת לצרכי מס. זה אחד הטיעונים לגיוס קולקטיבים חדשים: "המעסיק ינכה זאת כהוצאה."</p>
+<p><strong>ביטוח בריאות קבוצתי — עובד:</strong> הפרמיה שהמעסיק משלם עבור העובד = הכנסה חייבת בידי העובד (שווי טובת הנאה), אך העובד מקבל כיסוי בריאותי בלי להוציא כסף מכיסו.</p>
+<div class="lesson-tip">💡 <strong>שאלה נפוצה:</strong> "47 לשכיר, 45א לעצמאי." — תזכורת לשינון.</div>`},
+
+'y.8':{id:'y.8',chap:'y',track:'licensing',title:'סוגי ביטוח — מינוח לבחינה',body:`<h3>הגדרות מדויקות לפי קטגוריה</h3>
+<p><strong>ביטוח חיים:</strong><br>• ריסק (Term): כיסוי לתקופה מוגדרת. מת בתקופה — משלמים. שרד — לא מקבל. הזול ביותר.<br>• מעורב (Endowment): משלמים גם בפטירה וגם בסיום תקופה (חסכון + ביטוח). יקר יותר.<br>• ריסק משתנה: כיסוי שמשתנה עם הזמן (יורד/עולה) לפי צרכים.</p>
+<p><strong>ביטוח בריאות:</strong> אשפוז, ניתוחים, מחלות קשות (CI), שיניים, תרופות, נסיעות לחו"ל.</p>
+<p><strong>ביטוח אכ"ע:</strong><br>• עיסוק ספציפי: לא יכול לעבוד בעיסוקו המסוים → מקבל קצבה<br>• כל עיסוק סביר: לא יכול לעבוד בשום דבר → הרבה יותר קשה לאשר</p>
+<p><strong>ביטוח סיעוד:</strong> ADL tests (6 פעולות), תקופת המתנה (waiting period), שיעור תגמול חודשי.</p>
+<p><strong>ביטוח תאונות אישיות:</strong> כיסוי 24/7, גם מחוץ לעבודה, לרוב ללא חיתום, מכסה מוות ונכות מתאונה.</p>
+<div class="lesson-tip">💡 <strong>לבחינה:</strong> ריסק = לתקופה. מעורב = לתקופה + חסכון. הבדל בעלות: מעורב יקר פי 3–5 מריסק.</div>`},
+
+'y.9':{id:'y.9',chap:'y',track:'licensing',title:'אתיקה מקצועית ודיני ניירות ערך',body:`<h3>מבחן ISA — אתיקה (5.11.2026)</h3>
+<p><strong>⚠️ אין פטור! חובה לגשת לבחינה זו.</strong> רישום עד 06.10.2026 — טופס פ001 ב-govforms.gov.il</p>
+<p><strong>ניגוד עניינים (Conflict of Interest):</strong><br>חובה לגלות ניגוד עניינים ללקוח לפני מתן שירות. לדוגמה: ייעוץ למניה שיש ליועץ אחזקה בה — חייב גילוי מיידי. הסתרה = עבירה.</p>
+<p><strong>חובות גילוי של יועץ השקעות:</strong><br>• גילוי עמלות ודמי ניהול<br>• גילוי ניגוד עניינים<br>• גילוי מידע מהותי שישפיע על הלקוח<br>• חוק ייעוץ השקעות מחייב: "גילוי נאות" = כל מידע שלקוח סביר היה רוצה לדעת.</p>
+<p><strong>ייעוץ השקעות ללא רישיון — עבירה פלילית:</strong><br>עד 5 שנות מאסר. גם "המלצה לחבר" בהיקף מסחרי = ייעוץ ללא רישיון. הרישיון ניתן על ידי ISA (רשות ניירות ערך).</p>
+<p><strong>מניפולציות שוק:</strong><br>• עסקאות מדומות: קנייה ומכירה לאותו גורם ליצירת מחזור מזויף<br>• הפצת מידע כוזב<br>• תיאום מחירים<br>כל אלה = עבירה פלילית לפי חוק ניירות ערך.</p>
+<p><strong>חוק איסור הלבנת הון:</strong><br>סוכן פיננסי חייב לדווח על עסקאות חשודות לרשות (FIU). עסקת מזומן מעל 50,000 ₪ = חובת דיווח. הסתרת כספים בלתי חוקיים = הלבנת הון — עד 10 שנות מאסר.</p>
+<p><strong>כללי האתיקה המקצועית של ISA:</strong><br>• נאמנות ללקוח (Fiduciary Duty)<br>• טובת הלקוח מעל טובת הסוכן<br>• ללא מתנות מעל 100 ₪ ממנפיקים<br>• חובת סודיות על מידע הלקוח<br>• רישום ותיעוד של כל עסקה</p>`,
+tip:'רישום לבחינה: govforms.gov.il טופס פ001. הפטור (3 מבחנים אחרים) דרך טופס פ008 — רק לאחר קבלת תואר (ינואר 2027)!'},
+// ===== LICENSING TRACK — גמר פנסיוני =====
+'g.1':{id:'g.1',chap:'g',track:'licensing',title:'קרנות פנסיה — יסודות',body:`<h3>פנסיה מקיפה, בסיסית ותקציבית</h3>
+<p><strong>פנסיה מקיפה חדשה (מ-1995):</strong> הסוג הנפוץ כיום. מבוסס על צבירה אישית + ערבות הדדית בין העמיתים.<br>• הפקדות: 6% עובד + 6.5% מעסיק (תגמולים) + 6% מעסיק (פיצויים) = 18.5% מהשכר<br>• כוללת: פנסיה לגיל פרישה + כיסוי נכות + כיסוי שאירים (אוטומטי)</p>
+<p><strong>פנסיה בסיסית (ותיקה, עד 1995):</strong> קרנות שנסגרו להצטרפות חדשה. מבוססות על הבטחת תשואה ממדינה. פחות רלוונטיות לסוכנים חדשים.</p>
+<p><strong>פנסיה תקציבית:</strong> לעובדי מדינה ותיקים. המדינה מממנת ישירות את הפנסיה, ללא צבירה. יקרה מאוד לממשלה — הוקפאה לעובדים חדשים.</p>
+<p><strong>מה הגאפ?</strong> קרן פנסיה לא מכסה: ניתוח פרטי, תרופות מחוץ לסל, טיפולים אמבולטוריים. → כאן הקולקטיב/ביטוח בריאות נכנס.</p>
+<div class="lesson-tip">💡 <strong>טיעון מכירה:</strong> "יש לך פנסיה — מצוין. אבל אם תצטרך ניתוח מחר — הפנסיה לא תכסה. הקולקטיב כן."</div>`},
+
+'g.2':{id:'g.2',chap:'g',track:'licensing',title:'ביטוח מנהלים — פוליסות 2004 ו-2013',body:`<h3>שינויים מרכזיים לאורך השנים</h3>
+<p><strong>עד 2004 — פוליסות ישנות:</strong> תשואה מובטחת של 4–5.5% + מקדם קצבה מובטח. הלקוח ידע בדיוק כמה יקבל בפרישה.</p>
+<p><strong>2004 ואילך — פוליסות חדשות:</strong> תשואה מובטחת בוטלה. מעבר לתשואת שוק (קופת גמל). אין ידיעה מראש מה תהיה הקצבה.</p>
+<p><strong>2013 — לוחות תמותה עדכניים:</strong> חישוב קצבה לפי לוחות תמותה עדכניים (אנשים חיים יותר). כלומר — קצבה חודשית נמוכה יותר לאותה צבירה, כי מחלקים אותה ליותר שנים.</p>
+<p><strong>השלכה מעשית:</strong> לקוח עם פוליסה ישנה (לפני 2004) = פריבילגיה שאסור לוותר עליה. לקוח עם פוליסה חדשה = תשואת שוק, פחות ודאות.</p>
+<p><strong>טיעון:</strong> "כמה תקבל בפרישה? האם זה מספיק?" → פתח לשיחה על ביטוחים משלימים.</p>
+<div class="lesson-tip">💡 <strong>לבחינה:</strong> 2004 = ביטול תשואה מובטחת. 2013 = לוחות תמותה עדכניים = קצבה נמוכה יותר.</div>`},
+
+'g.3':{id:'g.3',chap:'g',track:'licensing',title:'אכ"ע — עמוק יותר לבחינה',body:`<h3>עיסוק ספציפי, Elimination Period, תקרות</h3>
+<p><strong>עיסוק ספציפי vs כל עיסוק סביר:</strong><br>• עיסוק ספציפי: לא יכול לעבוד בעיסוקו הספציפי → מקבל פיצוי, גם אם יכול לעבוד בעיסוק אחר. יקר יותר, אבל עדיף.<br>• כל עיסוק סביר: רק אם לא יכול לעבוד בשום דבר → הרבה יותר קשה לאשר.</p>
+<p><strong>Elimination Period (ימי שרידות/המתנה):</strong> 30, 60, 90, 180 ימים. ככל שהתקופה ארוכה יותר, הפרמיה זולה יותר. שאלה: "כמה חודשים הלקוח יכול לשרוד ללא הכנסה?" → הגדר את ה-EP בהתאם.</p>
+<p><strong>תקרת כיסוי:</strong> בדרך כלל עד 75% מהשכר הקודם. המגבלה: לא לתמרץ "להישאר חולה". הפרש של 25% מעודד חזרה לעבודה.</p>
+<p><strong>בקולקטיב:</strong> בדוק בכל פוליסה כמה ימי שרידות יש — זה קריטי. קולקטיב עם EP של 90 ימים = לקוח צריך לעמוד 3 חודשים ללא הכנסה לפני שמתחיל לקבל.</p>
+<div class="lesson-tip">💡 <strong>לבחינה:</strong> EP = Elimination Period = ימי המתנה. ארוך יותר = זול יותר = פחות הגנה.</div>`},
+
+'g.4':{id:'g.4',chap:'g',track:'licensing',title:'חוק ייעוץ פנסיוני — מי רשאי לייעץ',body:`<h3>יועץ, סוכן ומשווק — ההבדלים</h3>
+<p><strong>יועץ פנסיוני:</strong> בעל רישיון מיוחד. עובד בשכר (לא עמלה). ניטרלי — יכול להמליץ על מוצרים מכל החברות. חייב לפעול לטובת הלקוח בלבד.</p>
+<p><strong>סוכן ביטוח פנסיוני:</strong> בעל רישיון. עובד בעמלה. יכול לייצג מוצרים של חברות שונות. חייב לגלות ניגוד עניינים (למשל אם עמלה גבוהה יותר ממוצר מסוים).</p>
+<p><strong>משווק פנסיוני:</strong> מייצג חברה אחת בלבד (כמו סוכן פנימי של מגדל/כלל). לא יכול להמליץ על מוצרים של חברות אחרות. חייב לגלות שהוא מייצג חברה ספציפית.</p>
+<p><strong>מה אסור:</strong> לייעץ ייעוץ פנסיוני ללא רישיון. לייצג חברות מתחרות בו-זמנית ללא גילוי.</p>
+<p><strong>חשיבות בבחינה:</strong> יש שאלות רבות על "מי רשאי לייעץ" ועל הבדל בין סוכן למשווק. הבדל מרכזי: סוכן = מוצרים של מספר חברות. משווק = חברה אחת.</p>
+<div class="lesson-tip">💡 <strong>לשינון:</strong> יועץ = ניטרלי + שכר. סוכן = עמלה + מספר חברות. משווק = עמלה + חברה אחת.</div>`},
+
+'g.5':{id:'g.5',chap:'g',track:'licensing',title:'קופות גמל — סוגים ומיסוי',body:`<h3>גמל להשקעה, פיצויים, קרן השתלמות, IRA</h3>
+<p><strong>קופת גמל להשקעה:</strong> נזיל — ניתן למשיכה בכל עת. תשלום מס רווח הון (25%) בפדיון לפני גיל הפרישה. בגיל פרישה — קצבה פטורה ממס.</p>
+<p><strong>קופת גמל לפיצויים:</strong> כסף שהמעסיק צובר לפיצויי פיטורין (8.33% מהשכר). בפיטורין — ניתן למשיכה (עם מס). בפרישה — ניתן להמיר לקצבה.</p>
+<p><strong>קרן השתלמות:</strong> 2.5% עובד + עד 7.5% מעסיק (עד תקרה). פטורה ממס לאחר 6 שנים. לפני 6 שנים — ניתן למשוך לצורך השתלמות (3 שנים מינימום). מכשיר חיסכון מעולה.</p>
+<p><strong>IRA:</strong> קרן פנסיה עצמית לניהול עצמי — בעיקר לעצמאים. מאפשר שליטה על ההשקעות.</p>
+<p><strong>הגאפ ללקוח:</strong> "חסכת בקרן השתלמות? מה קורה אם תחלה ותצטרך כסף לניתוח לפני 6 שנים?" → כאן ביטוח הבריאות חיוני.</p>
+<div class="lesson-tip">💡 <strong>לבחינה:</strong> קרן השתלמות → פטור ממס לאחר 6 שנים. גמל להשקעה → נזיל תמיד, מס רווח הון. IRA → ניהול עצמי.</div>`}
 };
 
 // ===== XP CONFIG =====
@@ -1276,7 +1748,7 @@ const BADGES_CONFIG = [
 ];
 
 
-// ===== QUIZ DATA — 25 QUESTIONS =====
+// ===== QUIZ DATA — 53 QUESTIONS =====
 const QUIZ_DATA = [
 {q:'מה ההבדל העיקרי בין קולקטיב לביטוח בריאות פרטי?',opts:['פרמיה נמוכה בלבד','חיתום קבוצתי ללא הצהרת בריאות אישית','ללא תקופת אכשרה','כיסוי לכל מחלה'],ans:1,exp:'קולקטיב מספק חיתום קבוצתי — הקבוצה כולה נכנסת ללא שאלות בריאות אישיות. גם מי שיש לו מחלות קיימות מתקבל.'},
 {q:'מה ההבדל בין "שקל ראשון" ל"משלים שב"ן"?',opts:['שקל ראשון זול יותר תמיד','שקל ראשון משלם מהרגע הראשון; משלים שב"ן משלים את מה שהקופה לא כיסתה','משלים שב"ן טוב יותר תמיד','אין הבדל מעשי'],ans:1,exp:'שקל ראשון = משלם מהרגע הראשון ללא תלות בשב"ן. משלים שב"ן = משלם רק את ההפרש לאחר שהשב"ן שילם. בנמל חיפה, מסלול א (שב"ן, 110₪) זול יותר משקל ראשון (129₪), אך שקל ראשון נותן כיסוי ישיר שאינו תלוי בשב"ן!'},
@@ -1302,7 +1774,38 @@ const QUIZ_DATA = [
 {q:'כמה עולה פנסיונר בקולקטיב נמל חיפה, מסלול א?',opts:['220 ₪','258 ₪','329 ₪','290 ₪'],ans:0,exp:'גמלאי נמל חיפה: מסלול א (משלים שב"ן) = 220 ₪. מסלול ב (שקל ראשון) = 258 ₪. מסלול א הזול יותר, אך שקל ראשון נותן כיסוי עדיף.'},
 {q:'מה אכ"ע?',opts:['אחריות כספית עצמאית','אובדן כושר עבודה — קצבה חודשית אם לא יכול לעבוד בשל מחלה/תאונה','אגרת כניסה עצמאית','אמנת כיסוי עצמאית'],ans:1,exp:'אכ"ע = אובדן כושר עבודה. קצבה חודשית (60–80% מהשכר) אם המבוטח לא יכול לעבוד בשל מחלה או תאונה. הפרמטרים: franchise (תקופת המתנה) + תקופת תשלום + סוג עיסוק.'},
 {q:'מה תקופת הקולקטיב של קריית מוצקין?',opts:['ספטמבר 2025 — אוגוסט 2030','דצמבר 2024 — נובמבר 2029','ינואר 2025 — דצמבר 2029','מרץ 2024 — פברואר 2029'],ans:1,exp:'קולקטיב קריית מוצקין (פניקס): דצמבר 2024 — נובמבר 2029. קולקטיב נמל חיפה (הראל): ספטמבר 2025 — אוגוסט 2030.'},
-{q:'לקוח "לא רוצה להיות נטל על הילדים" — מה המוצר?',opts:['CI','ריסק','סיעוד','אכ"ע'],ans:2,exp:'מוטיבציה של "לא רוצה להיות נטל" = סיעוד. ביטוח סיעוד נותן קצבה חודשית לתשלום מטפל ביתי (7,000–12,000 ₪/חודש) ומאפשר עצמאות ללא הסתמכות על ילדים.'}
+{q:'לקוח "לא רוצה להיות נטל על הילדים" — מה המוצר?',opts:['CI','ריסק','סיעוד','אכ"ע'],ans:2,exp:'מוטיבציה של "לא רוצה להיות נטל" = סיעוד. ביטוח סיעוד נותן קצבה חודשית לתשלום מטפל ביתי (7,000–12,000 ₪/חודש) ומאפשר עצמאות ללא הסתמכות על ילדים.'},
+
+// ===== LICENSING QUESTIONS (Q26–Q35) =====
+{id:'lic_1',topic:'licensing',q:'מהו עקרון תום הלב המוחלט בחוזה ביטוח?',opts:['הסוכן חייב להיות ישר עם הלקוח','הלקוח חייב לגלות כל עובדה מהותית גם אם לא נשאל','שני הצדדים חייבים לגלות כל עובדה מהותית','חברת הביטוח חייבת לגלות את כל תנאי הפוליסה'],ans:2,exp:'תום לב מוחלט (Utmost Good Faith) — שני הצדדים חייבים גילוי מלא. אם לקוח הסתיר מחלה קודמת → הפוליסה עלולה להיות מבוטלת.'},
+{id:'lic_2',topic:'licensing',q:'מה הוא עקרון השיפוי?',opts:['ביטוח יכול להביא לרווח אם מבטחים נכון','ביטוח מפצה על הנזק בלבד, לא יותר','ניתן לתבוע מכמה חברות ולצבור פיצויים','עיקרון זה לא חל בביטוח בריאות'],ans:1,exp:'שיפוי = הפיצוי לא יעלה על הנזק. בביטוח בריאות וחיים — עקרון זה לא חל, כי לא ניתן "לשים מחיר" על בריאות או חיים.'},
+{id:'lic_3',topic:'licensing',q:'מהי זיקת ביטוח (Insurable Interest)?',opts:['הריבית שגובה חברת הביטוח','הסכום המרבי לביטוח','אינטרס כלכלי בנושא הביטוח','הקשר בין הסוכן ללקוח'],ans:2,exp:'ניתן לבטח רק דבר שיש לך אינטרס כלכלי בקיומו. אדם יכול לבטח עצמו, בן/בת זוג, ילדים, נכסיו.'},
+{id:'lic_4',topic:'licensing',q:'מהו תחלוף (Subrogation)?',opts:['העברת הפוליסה לאדם אחר','זכות חברת הביטוח לתבוע מהאחראי לנזק אחרי שפיצתה','ביטול הפוליסה בשל אי-תשלום','שינוי תנאי הפוליסה'],ans:1,exp:'אחרי שחברה שילמה — היא "מתחלפת" לנעלי המבוטח ויכולה לתבוע מהגורם שגרם לנזק.'},
+{id:'lic_5',topic:'licensing',q:'סעיף 47 לפקודת מס הכנסה עוסק ב:',opts:['ניכוי עמית עצמאי','ניכוי עמית שכיר בגין ביטוח חיים/פנסיה','פטור ממס על קצבת פנסיה','הפקדות מעסיק'],ans:1,exp:'סעיף 47: ניכוי לעמית שכיר — עד 5% מהשכר לביטוח חיים/תגמולים. סעיף 45א: לעמית עצמאי.'},
+{id:'lic_6',topic:'licensing',q:'מהו ביטוח אכ"ע מסוג "עיסוק ספציפי"?',opts:['כיסוי רק אם אינך יכול לעבוד בשום עיסוק','כיסוי אם אינך יכול לעסוק בעיסוקך הספציפי','כיסוי רק לתאונות עבודה','כיסוי חלקי בלבד'],ans:1,exp:'עיסוק ספציפי = כיסוי גם אם יכול לעבוד בעיסוק אחר, אך לא בעיסוקו המקורי. יקר יותר, אבל עדיף. "כל עיסוק סביר" = רק אם אינו מסוגל לעבוד בשום דבר.'},
+{id:'lic_7',topic:'licensing',q:'מה ההבדל בין סוכן ביטוח פנסיוני ל"משווק פנסיוני"?',opts:['אין הבדל, שניהם יכולים לייצג כל חברה','סוכן יכול לייצג חברות שונות, משווק מייצג חברה אחת','משווק מוסמך יותר מסוכן','סוכן מייצג לקוח, משווק מייצג חברת ביטוח'],ans:1,exp:'סוכן ביטוח פנסיוני = בלתי תלוי, יכול להמליץ על מוצרים מכל חברה. משווק פנסיוני = מייצג חברה אחת בלבד.'},
+{id:'lic_8',topic:'licensing',q:'קרן השתלמות — מתי ניתן למשוך פטור ממס?',opts:['בכל עת','אחרי 3 שנים','אחרי 6 שנים','רק בפרישה'],ans:2,exp:'קרן השתלמות: משיכה פטורה ממס לאחר 6 שנים (או 3 שנים לצורך השתלמות). לפני כן — חייב במס.'},
+{id:'lic_9',topic:'licensing',q:'מה כוללת פנסיה מקיפה חדשה מבחינת הפקדות?',opts:['6% עובד + 6% מעסיק בלבד','6% עובד + 6.5% מעסיק תגמולים + 6% מעסיק פיצויים','5% עובד + 5% מעסיק + 8.33% פיצויים','תלוי בהסכם קיבוצי'],ans:1,exp:'פנסיה מקיפה חדשה: 6% עובד + 6.5% מעסיק (תגמולים) + 6% מעסיק (פיצויים) = 18.5% מהשכר לחיסכון פנסיוני.'},
+{id:'lic_10',topic:'licensing',q:'מה ביטוח לאומי משלם לנפגע עבודה שאיבד כושר עבודה לחלוטין?',opts:['100% מהשכר לצמיתות','עד 75% מהשכר הקודם','סכום קבוע ללא קשר לשכר','אין כיסוי — ביטוח פרטי בלבד'],ans:1,exp:'ביטוח לאומי לנפגע עבודה: עד 75% מהשכר. הגאפ: אכ"ע פרטי סוגר את ה-25% החסרים ומעניק עיסוק ספציפי.'},
+// ===== NEW QUESTIONS v7 (Q35–Q52) =====
+{q:'לקוח אומר "יש לי שב"ן" — מה האסטרטגיה הנכונה?',opts:['להסכים ולסגור שיחה','לשלול ולהסביר שהשב"ן חסר','לאשר ולשאול: "מה השב"ן שלך לא מכסה?"','להציע מיד הצעת מחיר'],ans:2,exp:'תמיד לאשר לפני שמרחיבים — בונה אמון. "מצוין שיש לך שב"ן — בוא נבדוק מה עוד חשוב לדעת." פורמולת 3 שלבים: הכר — הזדהה — הפנה.'},
+{q:'לקוח אומר "יקר לי" — מה הטיעון החזק ביותר?',opts:['להוריד מחיר מיידית','129 ₪ = 4.30 ₪/יום. ניתוח פרטי = 80,000 ₪. מה יקר יותר?','להציע תשלומים','להגיד שזה בכלל זול'],ans:1,exp:'הפוך את שאלת המחיר — "כמה עולה ניתוח ללא ביטוח?" 4.30 ₪ ביום לא נשמע הרבה לעומת 80,000 ₪ ניתוח.'},
+{q:'מה זמן הסגירה האידיאלי לאחר הצגת ההצעה?',opts:['לחכות עד שהלקוח יחזור','לבקש החלטה בתוך השיחה עצמה','לשלוח הצעה ולחכות שבוע','לא לדחוק בכלל'],ans:1,exp:'בשיחה עצמה — "מה עוד צריך כדי להתקדם?" מדחיים סגירה = מסבכים. כל שיחת המשך מורידה סיכוי ב-50%.'},
+{q:'מה ההבדל העיקרי בין קולקטיב מספנות ישראל לנמל חיפה?',opts:['מספנות תמיד זול יותר','מספנות יש 3 מסלולים (מצומצם/מורחב ניתוחים/מורחב שב"ן) לעומת 2 בנמל','נמל מציע ביטוח לגמלאים בלבד','אין הבדל מהותי'],ans:1,exp:'מספנות ישראל (פניקס, 2023–2028): 3 מסלולים — מצומצם (39.5 ₪), מורחב ניתוחים (111 ₪), מורחב שב"ן (108 ₪). נמל חיפה (הראל, 2025–2030): 2 מסלולים — משלים שב"ן (110 ₪), שקל ראשון (129 ₪).'},
+{q:'מה פרמיית גמלאי בקולקטיב דב"ס (DBS), הרחבה A — שקל ראשון?',opts:['119.52 ₪','230.40 ₪','182.40 ₪','170.40 ₪'],ans:1,exp:'גמלאי DBS — הרחבה A (שקל ראשון): 230.40 ₪. רובד בסיס בלבד: 119.52 ₪. הרחבה B (משלים שב"ן): 182.40 ₪. הרחבה C: 170.40 ₪.'},
+{q:'בקולקטיב מספנות ישראל — מה הפרמיה לגמלאי במסלול מורחב ניתוחים?',opts:['79 ₪','194.5 ₪','200 ₪','111 ₪'],ans:2,exp:'גמלאי מספנות (מעל גיל 67) — מורחב ניתוחים: 200 ₪. מצומצם: 79 ₪. מורחב שב"ן: 194.5 ₪.'},
+{q:'לקוח גבר 42, נשוי + 2 ילדים, שכיר 18,000 ₪/חודש — מה ה-COMBO האידיאלי?',opts:['שב"ן בלבד','קולקטיב בריאות שקל ראשון + CI','סיעוד + ריסק','אכ"ע בלבד'],ans:1,exp:'42 נשוי + ילדים + שכיר: (1) קולקטיב שקל ראשון — ניתוחים ותרופות. (2) CI — בגיל שיא, תלויים. (3) אכ"ע — 75% משכר. סיעוד — לא קריטי בגיל 42.'},
+{q:'לקוח 58, גמלאי מ-2 שנים — מה סדר העדיפויות?',opts:['ריסק ראשון','CI + סיעוד לפי מצב בריאותי','אכ"ע בלבד','שב"ן בלבד'],ans:1,exp:'גמלאי 58: (1) CI — עדיין יכול להיכנס לקולקטיב עד גיל 64+11 חודשים. (2) סיעוד — הדאגה הגדולה. (3) ריסק — אם יש תלויים. אכ"ע — פחות רלוונטי כגמלאי.'},
+{q:'מה פרמיית עובד בקולקטיב DBS — רובד בסיס בלבד?',opts:['115.20 ₪','91.20 ₪','59.76 ₪','85.20 ₪'],ans:2,exp:'רובד בסיס DBS — עובד/ת: 59.76 ₪ — <strong>משלם המעסיק</strong> (נחשב כהכנסה חייבת). הייחוד של DBS: המעסיק מממן את הבסיס.'},
+{q:'מה משמעות "מורחב שב"ן" במספנות לעומת "שקל ראשון" בנמל?',opts:['אותו כיסוי, שם שונה','מורחב שב"ן משלם רק מה שהשב"ן לא כיסה; שקל ראשון משלם מהרגע הראשון','שקל ראשון קיים רק בנמל','אין הבדל'],ans:1,exp:'מורחב שב"ן (108 ₪) = משלים פערי השב"ן. שקל ראשון = משלם מהרגע הראשון, ללא תלות בשב"ן. שניהם כיסוי בריאות — אסטרטגיית ה"צינור" שונה.'},
+{q:'למה עיסוק ספציפי עדיף על "כל עיסוק" באכ"ע?',opts:['זול יותר','מכסה גם אם יכול לעבוד בעיסוק אחר אבל לא בעיסוקו המקורי','נותן יותר כסף','מכסה יותר מחלות'],ans:1,exp:'רופא שנפגע ביד ולא יכול לנתח — עם "כל עיסוק" לא יקבל קצבה (כי יכול ללמד). עם "עיסוק ספציפי" יקבל, כי אינו יכול לעסוק ברפואה.'},
+{q:'מה CI אינו מכסה בדרך כלל?',opts:['סרטן לאחר ימי שרידות','ניתוחי לב','מחלות כרוניות קיימות לפני הרכישה','גידולים שפירים'],ans:2,exp:'CI לא מכסה מחלות קיימות לפני הרכישה (pre-existing). IN SITU מכוסה חלקית (10–25%). מחלות כרוניות — לא ב-CI עצמו.'},
+{q:'מה "הצמדה למדד" בפרמיה?',opts:['עלייה אוטומטית בכיסוי','הפרמיה מתעדכנת שנתית לפי שינוי מדד המחירים לצרכן','פרמיה קבועה ללא שינוי','מדד בנק ישראל'],ans:1,exp:'הצמדה למדד = הפרמיה עולה מדי שנה לפי שינוי ה-CPI. לדוגמה: מדד עלה 3% → הפרמיה עולה 3%. חשוב להסביר ללקוח שהפרמיה לא קבועה לנצח.'},
+{q:'מה "in situ" ואיך הוא מכוסה ב-CI?',opts:['ניתוח בחו"ל','סרטן שטרם פלש לרקמות סביבו — מכוסה ב-10–25% מסכום הביטוח','מחלת לב ספציפית','כינוי למחלה כרונית'],ans:1,exp:'IN SITU = סרטן "במקומו" לפני פלישה. רוב פוליסות CI מכסות ב-10–25% מסכום הביטוח. חשוב לבדוק בפוליסה הספציפית.'},
+{q:'מהו "מבוטח" בחוזה ביטוח?',opts:['מי שמקבל את הכספים בפטירה','מי שהכיסוי הביטוחי חל עליו','מי שמשלם את הפרמיה','חברת הביטוח'],ans:1,exp:'המבוטח = מי שהכיסוי חל עליו. הנהנה = מי שמקבל כספים (לרוב שונה בביטוח חיים). מבוטח ונהנה יכולים להיות אותו אדם.'},
+{q:'מה עקרון גילוי נאות (אתיקה מקצועית) לגבי סוכן ביטוח?',opts:['חובה לגלות עמלה רק אם הלקוח שואל','חובה ליידע לקוח על ניגוד עניינים וחובה לגלות כל מידע מהותי','מותר להסתיר מידע שיכול לפגוע במכירה','אין חובת גילוי בביטוח'],ans:1,exp:'חובת גילוי נאות: הסוכן חייב לגלות ניגוד עניינים, עמלות, ומידע מהותי שישפיע על החלטת הלקוח. הסתרה מהותית = הפרת אתיקה.'},
+{q:'ייעוץ השקעות ללא רישיון ISA — מה הדין?',opts:['קנס בלבד','עבירה פלילית — עד 5 שנות מאסר','אסור אך לא עונש פלילי','מותר אם הלקוח מסכים'],ans:1,exp:'ייעוץ השקעות ללא רישיון הוא עבירה פלילית לפי חוק הסדרת העיסוק בייעוץ השקעות. ניתן לקבל עד 5 שנות מאסר. גם "המלצה חברית" בהיקף מסחרי עלולה להיחשב ייעוץ ללא רישיון.'},
+{q:'מה מניפולציה בשוק ניירות ערך?',opts:['קנייה ומכירה לגיטימית בהיקל גדול','פעולות מלאכותיות להשפעה על מחיר ני"ע — אסור','ייעוץ ללא רישיון','דיווח כוזב על הוצאות'],ans:1,exp:'מניפולציה = פעולות מלאכותיות להשפעה על מחיר או נפח מסחר בני"ע. כולל: עסקאות מדומות, הפצת מידע כוזב, תיאום מחירים. עבירה פלילית לפי חוק ניירות ערך.'}
 ];
 
 // ===== TERMS DATA =====
@@ -2015,12 +2518,17 @@ const QUIZ_TOPICS = {
   5:'ci', 6:'ci', 7:'siud', 8:'franchise', 9:'clawback',
   10:'ci', 11:'ake', 12:'collective', 13:'collective', 14:'index',
   15:'sales', 16:'sales', 17:'sales', 18:'namal', 19:'namal',
-  20:'sales', 21:'namal', 22:'ake', 23:'kiryat', 24:'sales'
+  20:'sales', 21:'namal', 22:'ake', 23:'kiryat', 24:'sales',
+  35:'objection', 36:'objection', 37:'objection',
+  38:'collective', 39:'collective', 40:'collective',
+  41:'sales', 42:'sales', 43:'collective', 44:'collective',
+  45:'ake', 46:'ci', 47:'index', 48:'ci', 49:'collective',
+  50:'ethics', 51:'ethics', 52:'ethics'
 };
 const TOPIC_NAMES = {
   collective:'קולקטיב', shekel:'שקל ראשון', namal:'נמל חיפה',
   kiryat:'קריית מוצקין', ci:'מחלות קשות', siud:'סיעוד',
-  franchise:'פרנשיז', clawback:'ניכוי גיל', ake:'אכ"ע', index:'מדד', sales:'מכירה'
+  franchise:'פרנשיז', clawback:'ניכוי גיל', ake:'אכ"ע', index:'מדד', sales:'מכירה', objection:'התנגדויות', ethics:'אתיקה'
 };
 
 const SALES_INSIGHTS = [
@@ -2076,7 +2584,14 @@ function updateDueBadge() {
   }
 }
 
+function applyTrackFilter(indices) {
+  if (currentQuizFilter === 'licensing') return indices.filter(i => QUIZ_DATA[i] && QUIZ_DATA[i].topic === 'licensing');
+  if (currentQuizFilter === 'sales') return indices.filter(i => !QUIZ_DATA[i] || QUIZ_DATA[i].topic !== 'licensing');
+  return indices;
+}
+
 function buildQuizQueue() {
+  const nr = getNotRelevant();
   if (quizMode === 'srs') {
     const due = SRS.getDue();
     const dueIndices = due.map(item => {
@@ -2091,12 +2606,14 @@ function buildQuizQueue() {
     });
     const allUsed = new Set([...dueIndices, ...weakIndices]);
     const remaining = QUIZ_DATA.map((_,i) => i).filter(i => !allUsed.has(i));
-    const notRel = getNotRelevant();
-    return [...dueIndices, ...weakIndices, ...remaining].filter(i => !notRel.includes(i)).slice(0, QUIZ_DATA.length);
+    const merged = [...dueIndices, ...weakIndices, ...remaining].filter(i => !nr.includes(i));
+    return applyTrackFilter(merged).slice(0, QUIZ_DATA.length);
   }
-  const nr = getNotRelevant();
-  return QUIZ_DATA.map((_, i) => i).filter(i => !nr.includes(i));
+  const base = QUIZ_DATA.map((_, i) => i).filter(i => !nr.includes(i));
+  return applyTrackFilter(base);
 }
+
+function toggleObj(el) { el.classList.toggle('open'); }
 
 function initQuiz() {
   quizIdx = 0; quizScore = 0; quizAnswered = false; quizActive = true;
@@ -2360,7 +2877,150 @@ function renderWeaknessPanel() {
   if (!el) return;
   const weak = SRS.getWeakTopics();
   if (!weak.length) {
-    el.innerHTML = '<div class="weakness-section"><div style="text-align:center;padding:12px;opacity:0.6">עדיין אין נתוני חזרה — פתח חידון כדי להתחיל!</div></div>';
+    el.innerHTML = '  <!-- OBJECTION LIBRARY -->
+  <div class="product-card" style="border:1px solid rgba(168,85,247,.4);background:linear-gradient(135deg,rgba(168,85,247,.07),rgba(10,10,15,1))" id="pc-objections">
+    <div class="pc-header" onclick="toggleCard('pc-objections')">
+      <div class="pc-left"><div class="pc-icon">📚</div>
+        <div><div class="pc-title">ספר ההתנגדויות — 12 תשובות מנצחות</div><div class="pc-price" style="color:#a78bfa">שלוט בהתנגדויות ← סגור כל עסקה</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+        <span style="background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:#a78bfa;font-size:.7rem;padding:3px 9px;border-radius:20px;font-weight:700">12 התנגדויות</span>
+        <span style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#60a5fa;font-size:.7rem;padding:3px 9px;border-radius:20px">פורמולת 3 שלבים: הכר — הזדהה — הפנה</span>
+      </div>
+      <div id="obj-list">
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">1</span><span class="obj-q">יש לי שב"ן מהקופה — אני כבר מכוסה</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-common">הנפוצה ביותר</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"שב"ן נותן ניתוחים ברשת הקופה — אבל לא: ניתוחים בחו"ל (250% ממחיר ישראל), לא CI (כסף מזומן עם אבחנת סרטן), לא תרופות מחוץ לסל. <strong>שב"ן משלם לבית החולים. הקולקטיב משלם לך.</strong>"</p></div>
+            <div class="obj-tip">💡 שאל: "מה כתוב בכיסוי ניתוחים בחו"ל של השב"ן שלך?" — לרוב לא ידע. זה הפתח.</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">2</span><span class="obj-q">יקר לי / אין לי כסף</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-price">מחיר</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"129 ₪ = <strong>4.30 ₪ ביום</strong> — פחות מכוס קפה. ניתוח פרטי = 80,000 ₪. תרופה לסרטן = 15,000 ₪/חודש. <strong>אתה לא יכול להרשות לעצמך לא לקנות.</strong> אם תקציב בעיה — נתחיל במסלול א (110 ₪), נרחיב עוד שנה."</p></div>
+            <div class="obj-tip">💡 הפוך: "4 שנות ביטוח = 6,200 ₪. ניתוח = 80,000 ₪. מה יקר יותר?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">3</span><span class="obj-q">אני בריא — לא צריך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"זו בדיוק הסיבה לקנות עכשיו! ביטוח קונים כשבריאים — כי כשחולים לא מקבלים. בקולקטיב נכנסים ללא שאלות בריאות. <strong>1 מ-3 אנשים יאובחן בסרטן. אף אחד לא חשב שיהיה ה-1.</strong>"</p></div>
+            <div class="obj-tip">💡 שאל: "ההורים שלך — בריאים תמיד היו?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">4</span><span class="obj-q">אחשוב על זה / צריך לדון עם אשתי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-delay">דחייה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"בהחלט — זו החלטה משפחתית חשובה. נקבע שיחה קצרה גם עם אשתך — 10 דקות. <strong>כל חודש שעובר = חודש ביטוח שלא היה לך.</strong> מה מתאים לך — יום ב' בבוקר או ד' אחה"צ?"</p></div>
+            <div class="obj-tip">💡 שלח WhatsApp סיכום עם הנתונים לבן/בת הזוג — סוגר ספקות.</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">5</span><span class="obj-q">יש לי ביטוח דרך המעסיק / קרן פנסיה</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-employer">כפל ביטוח</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"פנסיה נותנת אכ"ע חלקי — אבל: (1) כיסוי 'כל עיסוק', לא 'עיסוק ספציפי'. (2) קולקטיב = ניתוחים + CI — שונה לחלוטין. (3) <strong>ביטוח מעסיק = של המעסיק, לא שלך</strong>. יום שתחליף עמדה — הכיסוי נעלם."</p></div>
+            <div class="obj-tip">💡 "האם תוכל לקחת את הביטוח אם תעזוב?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">6</span><span class="obj-q">כבר ניסיתי ביטוח — לא קיבלתי כסף</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-trust">אמון</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"מתסכל — ואני מבין. האם הייתה אכשרה? מחלה קודמת לרכישה? הקולקטיב שאני מציע: <strong>ללא הצהרת בריאות, ללא בדיקות</strong>. לחברה אין זכות לדחות בגלל מצב קודם. קולקטיב = מגן."</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">7</span><span class="obj-q">מחלות קשות — זה לא יקרה לי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"1 מ-3 מאובחן בסרטן. 1 מ-5 — אירוע לב. <strong>לא קונים CI כי זה בהכרח יקרה — קונים כי אם יקרה, לא יחרב הבית.</strong> המשכנתא תמשיך. הילדים ימשיכו ללמוד. אתה תתמקד בלהחלים."</p></div>
+            <div class="obj-tip">💡 "מישהו בסביבתך חלה בסרטן?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">8</span><span class="obj-q">הביטוח לא ישלם בעת הצורך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-trust">אמון</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"ולכן אני עובד עם הראל ופניקס — חברות ציבוריות מפוקחות. קולקטיב = <strong>לחברה אין זכות לדחות בגלל מצב רפואי קודם</strong>. ואני — הסוכן — עובד בשבילך בעת תביעה."</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">9</span><span class="obj-q">אני גר ליד בית חולים טוב</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"גישה לבי"ח טוב לא = יכולת לשלם עליו. ניתוח פרטי: 40,000–120,000 ₪. תרופה לסרטן: 15,000 ₪/חודש. <strong>הביטוח לא מביא אותך לבי"ח — הוא מכסה את עלות הטיפול שם.</strong>"</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">10</span><span class="obj-q">אני כבר מבוגר — מאוחר מדי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-age">גיל</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"נמל חיפה מקבל עד <strong>גיל 64+11 חודשים</strong> — עדיין יש זמן. פרמיית גמלאי: 220–258 ₪/חודש. <strong>עדיף לשלם עכשיו מאשר לגלות אחרי האבחנה שאי-אפשר להיכנס.</strong>"</p></div>
+            <div class="obj-tip">💡 "היום: 258 ₪/חודש. טיפול ללא ביטוח: 500,000 ₪."</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">11</span><span class="obj-q">תביא הצעה בכתב ואחזור אליך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-delay">דחייה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"אשלח — ואני רוצה לבקש: <strong>נקבע תאריך ספציפי לשיחת המשך</strong>. מה מתאים לך — יום ב' בבוקר או ד' אחה"צ?" [לא "מתי נוח?"]</p></div>
+            <div class="obj-tip">💡 "הצעה + תאריך = הסכמה עקרונית."</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">12</span><span class="obj-q">יש לי כבר הרבה ביטוחים</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-overlap">כפל</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"הרבה ביטוחים לא = כיסוי מלא. האם יש לך בריאות קולקטיב שקל ראשון? CI נפרד? <strong>הצע: ביקורת ביטוח חינם — 20 דקות, ונוודא שאין חורים.</strong>"</p></div>
+            <div class="obj-tip">💡 "ביקורת ביטוח" = כלי מכירה. פותח שיחה, מייצר אמון.</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- SALES SCRIPT -->
+  <div class="product-card" style="border:1px solid rgba(59,130,246,.35);background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(10,10,15,1))" id="pc-script">
+    <div class="pc-header" onclick="toggleCard('pc-script')">
+      <div class="pc-left"><div class="pc-icon">🎬</div>
+        <div><div class="pc-title">סקריפט מכירה — 5 שלבים מנצחים</div><div class="pc-price" style="color:#60a5fa">מהפתיחה עד הסגירה</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div class="script-steps">
+        <div class="script-step"><div class="script-step-num">1</div><div class="script-step-content">
+          <div class="script-step-title">🤝 פתיחה — אמון בשתי שורות</div><div class="script-step-time">2–3 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"שלום [שם], אני מתן מסוכנות קידמה — אני עובד עם עובדי נמל חיפה בנושא הקולקטיב של החברה."</div>
+            <div class="script-line">"יש לך 5 דקות? רציתי לוודא שאתה יודע מה <strong>מגיע לך</strong> כעובד."</div>
+          </div>
+          <div class="script-tip">💡 "מה מגיע לך" — לא "מה אני מוכר לך". פוזיציה של שירות, לא מכירה.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">2</div><div class="script-step-content">
+          <div class="script-step-title">🔍 איתור צרכים — 70% האזנה</div><div class="script-step-time">5–8 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"ספר לי קצת: נשוי? ילדים?" [הקשב — לא לדבר]</div>
+            <div class="script-line">"יש לך ביטוח בריאות מעבר לשב"ן של הקופה?"</div>
+            <div class="script-line">"מה הדאגה הבריאותית הכי גדולה שלך?"</div>
+          </div>
+          <div class="script-tip">💡 כלל הזהב: מי ששואל — שולט בשיחה.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">3</div><div class="script-step-content">
+          <div class="script-step-title">💡 הצגת הפתרון</div><div class="script-step-time">5–7 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"כעובד נמל חיפה, יש לך גישה לקולקטיב הראל — ביטוח שהחברה הוציאה לכל עובדיה."</div>
+            <div class="script-line">"היתרון: נכנסים ללא שאלות בריאות — גם מי שיש לו בעיות רפואיות."</div>
+            <div class="script-line">"מסלול שקל ראשון: 129 ₪/חודש. ילד: 39.5 ₪. ילד שלישי: <strong>חינם לגמרי</strong>."</div>
+          </div>
+          <div class="script-tip">💡 התאם: "מפחד ממחלה קשה" → הדגש CI. "ילדים" → ילד שלישי חינם.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">4</div><div class="script-step-content">
+          <div class="script-step-title">🛡️ טיפול בהתנגדויות</div><div class="script-step-time">3–5 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"יש לי שב"ן" → "שב"ן משלם לבי"ח. הקולקטיב משלים + שקל ראשון ישיר."</div>
+            <div class="script-line">"יקר" → "4.30 ₪/יום. ניתוח = 80K ₪. מה יקר יותר?"</div>
+            <div class="script-line">"אחשוב" → "נקבע תאריך — יום ב' או ד'?"</div>
+          </div>
+          <div class="script-tip">💡 ראה ספר ההתנגדויות ↑ לתשובות מלאות.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">5</div><div class="script-step-content">
+          <div class="script-step-title">✅ סגירה</div><div class="script-step-time">2–3 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"אז עם [שם] + בן/בת זוג + [X] ילדים — [חשב] ₪/חודש. זה הגיוני?"</div>
+            <div class="script-line">"מה עוד צריך כדי להתקדם?" [שתיקה — הקשב!]</div>
+            <div class="script-line">"מצוין — שולח לך טופס הצטרפות ל-WhatsApp עכשיו."</div>
+          </div>
+          <div class="script-tip">💡 אל תשאל "האם אתה רוצה?" — שאל "מה עוד צריך?". הנחת מחויבות.</div>
+        </div></div>
+      </div>
+    </div></div>
+  </div>
+
+<div class="weakness-section"><div style="text-align:center;padding:12px;opacity:0.6">עדיין אין נתוני חזרה — פתח חידון כדי להתחיל!</div></div>';
     return;
   }
   const rows = weak.slice(0,6).map(w => {
@@ -2373,7 +3033,150 @@ function renderWeaknessPanel() {
       <span class="weakness-pct">${pct}%</span>
     </div>`;
   }).join('');
-  el.innerHTML = `<div class="weakness-section"><div class="weakness-title">📊 נקודות חולשה</div>${rows}</div>`;
+  el.innerHTML = `  <!-- OBJECTION LIBRARY -->
+  <div class="product-card" style="border:1px solid rgba(168,85,247,.4);background:linear-gradient(135deg,rgba(168,85,247,.07),rgba(10,10,15,1))" id="pc-objections">
+    <div class="pc-header" onclick="toggleCard('pc-objections')">
+      <div class="pc-left"><div class="pc-icon">📚</div>
+        <div><div class="pc-title">ספר ההתנגדויות — 12 תשובות מנצחות</div><div class="pc-price" style="color:#a78bfa">שלוט בהתנגדויות ← סגור כל עסקה</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+        <span style="background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:#a78bfa;font-size:.7rem;padding:3px 9px;border-radius:20px;font-weight:700">12 התנגדויות</span>
+        <span style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#60a5fa;font-size:.7rem;padding:3px 9px;border-radius:20px">פורמולת 3 שלבים: הכר — הזדהה — הפנה</span>
+      </div>
+      <div id="obj-list">
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">1</span><span class="obj-q">יש לי שב"ן מהקופה — אני כבר מכוסה</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-common">הנפוצה ביותר</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"שב"ן נותן ניתוחים ברשת הקופה — אבל לא: ניתוחים בחו"ל (250% ממחיר ישראל), לא CI (כסף מזומן עם אבחנת סרטן), לא תרופות מחוץ לסל. <strong>שב"ן משלם לבית החולים. הקולקטיב משלם לך.</strong>"</p></div>
+            <div class="obj-tip">💡 שאל: "מה כתוב בכיסוי ניתוחים בחו"ל של השב"ן שלך?" — לרוב לא ידע. זה הפתח.</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">2</span><span class="obj-q">יקר לי / אין לי כסף</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-price">מחיר</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"129 ₪ = <strong>4.30 ₪ ביום</strong> — פחות מכוס קפה. ניתוח פרטי = 80,000 ₪. תרופה לסרטן = 15,000 ₪/חודש. <strong>אתה לא יכול להרשות לעצמך לא לקנות.</strong> אם תקציב בעיה — נתחיל במסלול א (110 ₪), נרחיב עוד שנה."</p></div>
+            <div class="obj-tip">💡 הפוך: "4 שנות ביטוח = 6,200 ₪. ניתוח = 80,000 ₪. מה יקר יותר?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">3</span><span class="obj-q">אני בריא — לא צריך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"זו בדיוק הסיבה לקנות עכשיו! ביטוח קונים כשבריאים — כי כשחולים לא מקבלים. בקולקטיב נכנסים ללא שאלות בריאות. <strong>1 מ-3 אנשים יאובחן בסרטן. אף אחד לא חשב שיהיה ה-1.</strong>"</p></div>
+            <div class="obj-tip">💡 שאל: "ההורים שלך — בריאים תמיד היו?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">4</span><span class="obj-q">אחשוב על זה / צריך לדון עם אשתי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-delay">דחייה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"בהחלט — זו החלטה משפחתית חשובה. נקבע שיחה קצרה גם עם אשתך — 10 דקות. <strong>כל חודש שעובר = חודש ביטוח שלא היה לך.</strong> מה מתאים לך — יום ב' בבוקר או ד' אחה"צ?"</p></div>
+            <div class="obj-tip">💡 שלח WhatsApp סיכום עם הנתונים לבן/בת הזוג — סוגר ספקות.</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">5</span><span class="obj-q">יש לי ביטוח דרך המעסיק / קרן פנסיה</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-employer">כפל ביטוח</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"פנסיה נותנת אכ"ע חלקי — אבל: (1) כיסוי 'כל עיסוק', לא 'עיסוק ספציפי'. (2) קולקטיב = ניתוחים + CI — שונה לחלוטין. (3) <strong>ביטוח מעסיק = של המעסיק, לא שלך</strong>. יום שתחליף עמדה — הכיסוי נעלם."</p></div>
+            <div class="obj-tip">💡 "האם תוכל לקחת את הביטוח אם תעזוב?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">6</span><span class="obj-q">כבר ניסיתי ביטוח — לא קיבלתי כסף</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-trust">אמון</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"מתסכל — ואני מבין. האם הייתה אכשרה? מחלה קודמת לרכישה? הקולקטיב שאני מציע: <strong>ללא הצהרת בריאות, ללא בדיקות</strong>. לחברה אין זכות לדחות בגלל מצב קודם. קולקטיב = מגן."</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">7</span><span class="obj-q">מחלות קשות — זה לא יקרה לי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"1 מ-3 מאובחן בסרטן. 1 מ-5 — אירוע לב. <strong>לא קונים CI כי זה בהכרח יקרה — קונים כי אם יקרה, לא יחרב הבית.</strong> המשכנתא תמשיך. הילדים ימשיכו ללמוד. אתה תתמקד בלהחלים."</p></div>
+            <div class="obj-tip">💡 "מישהו בסביבתך חלה בסרטן?"</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">8</span><span class="obj-q">הביטוח לא ישלם בעת הצורך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-trust">אמון</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"ולכן אני עובד עם הראל ופניקס — חברות ציבוריות מפוקחות. קולקטיב = <strong>לחברה אין זכות לדחות בגלל מצב רפואי קודם</strong>. ואני — הסוכן — עובד בשבילך בעת תביעה."</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">9</span><span class="obj-q">אני גר ליד בית חולים טוב</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-denial">הכחשה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"גישה לבי"ח טוב לא = יכולת לשלם עליו. ניתוח פרטי: 40,000–120,000 ₪. תרופה לסרטן: 15,000 ₪/חודש. <strong>הביטוח לא מביא אותך לבי"ח — הוא מכסה את עלות הטיפול שם.</strong>"</p></div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">10</span><span class="obj-q">אני כבר מבוגר — מאוחר מדי</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-age">גיל</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"נמל חיפה מקבל עד <strong>גיל 64+11 חודשים</strong> — עדיין יש זמן. פרמיית גמלאי: 220–258 ₪/חודש. <strong>עדיף לשלם עכשיו מאשר לגלות אחרי האבחנה שאי-אפשר להיכנס.</strong>"</p></div>
+            <div class="obj-tip">💡 "היום: 258 ₪/חודש. טיפול ללא ביטוח: 500,000 ₪."</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">11</span><span class="obj-q">תביא הצעה בכתב ואחזור אליך</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-delay">דחייה</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"אשלח — ואני רוצה לבקש: <strong>נקבע תאריך ספציפי לשיחת המשך</strong>. מה מתאים לך — יום ב' בבוקר או ד' אחה"צ?" [לא "מתי נוח?"]</p></div>
+            <div class="obj-tip">💡 "הצעה + תאריך = הסכמה עקרונית."</div>
+          </div>
+        </div>
+        <div class="obj-item" onclick="toggleObj(this)"><div class="obj-header"><span class="obj-num">12</span><span class="obj-q">יש לי כבר הרבה ביטוחים</span><span class="obj-chev">▼</span></div>
+          <div class="obj-body"><div class="obj-tag tag-overlap">כפל</div>
+            <div class="obj-section"><div class="obj-section-label">💬 תשובה</div><p>"הרבה ביטוחים לא = כיסוי מלא. האם יש לך בריאות קולקטיב שקל ראשון? CI נפרד? <strong>הצע: ביקורת ביטוח חינם — 20 דקות, ונוודא שאין חורים.</strong>"</p></div>
+            <div class="obj-tip">💡 "ביקורת ביטוח" = כלי מכירה. פותח שיחה, מייצר אמון.</div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- SALES SCRIPT -->
+  <div class="product-card" style="border:1px solid rgba(59,130,246,.35);background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(10,10,15,1))" id="pc-script">
+    <div class="pc-header" onclick="toggleCard('pc-script')">
+      <div class="pc-left"><div class="pc-icon">🎬</div>
+        <div><div class="pc-title">סקריפט מכירה — 5 שלבים מנצחים</div><div class="pc-price" style="color:#60a5fa">מהפתיחה עד הסגירה</div></div>
+      </div><span class="pc-chevron">▼</span>
+    </div>
+    <div class="pc-body"><div class="pc-inner"><hr class="pc-divider">
+      <div class="script-steps">
+        <div class="script-step"><div class="script-step-num">1</div><div class="script-step-content">
+          <div class="script-step-title">🤝 פתיחה — אמון בשתי שורות</div><div class="script-step-time">2–3 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"שלום [שם], אני מתן מסוכנות קידמה — אני עובד עם עובדי נמל חיפה בנושא הקולקטיב של החברה."</div>
+            <div class="script-line">"יש לך 5 דקות? רציתי לוודא שאתה יודע מה <strong>מגיע לך</strong> כעובד."</div>
+          </div>
+          <div class="script-tip">💡 "מה מגיע לך" — לא "מה אני מוכר לך". פוזיציה של שירות, לא מכירה.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">2</div><div class="script-step-content">
+          <div class="script-step-title">🔍 איתור צרכים — 70% האזנה</div><div class="script-step-time">5–8 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"ספר לי קצת: נשוי? ילדים?" [הקשב — לא לדבר]</div>
+            <div class="script-line">"יש לך ביטוח בריאות מעבר לשב"ן של הקופה?"</div>
+            <div class="script-line">"מה הדאגה הבריאותית הכי גדולה שלך?"</div>
+          </div>
+          <div class="script-tip">💡 כלל הזהב: מי ששואל — שולט בשיחה.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">3</div><div class="script-step-content">
+          <div class="script-step-title">💡 הצגת הפתרון</div><div class="script-step-time">5–7 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"כעובד נמל חיפה, יש לך גישה לקולקטיב הראל — ביטוח שהחברה הוציאה לכל עובדיה."</div>
+            <div class="script-line">"היתרון: נכנסים ללא שאלות בריאות — גם מי שיש לו בעיות רפואיות."</div>
+            <div class="script-line">"מסלול שקל ראשון: 129 ₪/חודש. ילד: 39.5 ₪. ילד שלישי: <strong>חינם לגמרי</strong>."</div>
+          </div>
+          <div class="script-tip">💡 התאם: "מפחד ממחלה קשה" → הדגש CI. "ילדים" → ילד שלישי חינם.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">4</div><div class="script-step-content">
+          <div class="script-step-title">🛡️ טיפול בהתנגדויות</div><div class="script-step-time">3–5 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"יש לי שב"ן" → "שב"ן משלם לבי"ח. הקולקטיב משלים + שקל ראשון ישיר."</div>
+            <div class="script-line">"יקר" → "4.30 ₪/יום. ניתוח = 80K ₪. מה יקר יותר?"</div>
+            <div class="script-line">"אחשוב" → "נקבע תאריך — יום ב' או ד'?"</div>
+          </div>
+          <div class="script-tip">💡 ראה ספר ההתנגדויות ↑ לתשובות מלאות.</div>
+        </div></div>
+        <div class="script-step"><div class="script-step-num">5</div><div class="script-step-content">
+          <div class="script-step-title">✅ סגירה</div><div class="script-step-time">2–3 דק'</div>
+          <div class="script-lines">
+            <div class="script-line">"אז עם [שם] + בן/בת זוג + [X] ילדים — [חשב] ₪/חודש. זה הגיוני?"</div>
+            <div class="script-line">"מה עוד צריך כדי להתקדם?" [שתיקה — הקשב!]</div>
+            <div class="script-line">"מצוין — שולח לך טופס הצטרפות ל-WhatsApp עכשיו."</div>
+          </div>
+          <div class="script-tip">💡 אל תשאל "האם אתה רוצה?" — שאל "מה עוד צריך?". הנחת מחויבות.</div>
+        </div></div>
+      </div>
+    </div></div>
+  </div>
+
+<div class="weakness-section"><div class="weakness-title">📊 נקודות חולשה</div>${rows}</div>`;
 }
 
 // ===== SALES INSIGHTS =====
@@ -2562,7 +3365,7 @@ function updateProgressTab() {
   const sr = document.getElementById('stat-roleplays');
   const ss = document.getElementById('stat-streak');
   const st = document.getElementById('stat-total-xp');
-  if(sl) sl.textContent = `${state.completedLessons.length}/16`;
+  if(sl) sl.textContent = `${state.completedLessons.length}/17`;
   if(sc) sc.textContent = `${state.completedChapters.length}/3`;
   if(sq) sq.textContent = state.quizHighScore >= 0 ? `${state.quizHighScore}/25` : '—';
   if(sr) sr.textContent = state.completedRoleplays;
@@ -2646,9 +3449,89 @@ document.addEventListener('DOMContentLoaded', () => {
   renderScenarioSelect();
   renderSalesInsights();
   updateAllUI();
+  renderExamCountdown();
   // Open first chapter by default
   toggleChapter(1);
 });
+
+// ===== TRACK SWITCHER =====
+let currentTrack = 'sales';
+
+function switchTrack(track, btn) {
+  currentTrack = track;
+  document.querySelectorAll('.track-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const salesContent = document.getElementById('track-sales-content');
+  const licContent = document.getElementById('track-licensing-content');
+  if (track === 'sales') {
+    if (salesContent) salesContent.style.display = '';
+    if (licContent) licContent.style.display = 'none';
+    document.querySelector('.section-head p') && (document.querySelector('#tab-path .section-head p').textContent = '3 פרקים · 16 שיעורים · השלם בסדר כדי לפתוח את הבא');
+  } else {
+    if (salesContent) salesContent.style.display = 'none';
+    if (licContent) licContent.style.display = '';
+    document.querySelector('#tab-path .section-head p') && (document.querySelector('#tab-path .section-head p').textContent = '2 מבחנים · 13 שיעורים · יסודות הביטוח + גמר פנסיוני');
+    // Open first licensing chapter
+    const ychap = document.getElementById('chap-y');
+    if (ychap && !ychap.classList.contains('open')) toggleChapter('y');
+  }
+}
+
+// ===== QUIZ TRACK FILTER =====
+let currentQuizFilter = 'all';
+
+function setQuizFilter(filter, btn) {
+  currentQuizFilter = filter;
+  document.querySelectorAll('.qtf-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  initQuiz();
+}
+
+function getFilteredQuizIndices() {
+  const nr = getNotRelevant();
+  return QUIZ_DATA.map((q, i) => i).filter(i => {
+    if (nr.includes(i)) return false;
+    const q = QUIZ_DATA[i];
+    if (currentQuizFilter === 'licensing') return q.topic === 'licensing';
+    if (currentQuizFilter === 'sales') return q.topic !== 'licensing';
+    return true;
+  });
+}
+
+// ===== EXAM COUNTDOWN =====
+const EXAMS = [
+  {name:'אתיקה מקצועית ודיני ניירות ערך (ISA, מועד ב' 2026)', date:'2026-11-05', reg:'06.10.26', url:'https://govforms.gov.il/mw/forms/p001@isa.gov.il', urgent:true},
+  {name:'יסודות הביטוח + גמר פנסיוני (CMA)', date:'2026-12-09', reg:'10.11.26', url:'https://www.gov.il/he/service/agents_licensing'},
+  {name:'מקצועית א\' (ISA) — לאחר הגשת פ008 + תואר', date:'2027-06-01', reg:'פ008 ← ינואר 2027', url:'https://govforms.gov.il/mw/forms/p008@isa.gov.il'}
+];
+
+function renderExamCountdown() {
+  const el = document.getElementById('exam-countdown-list');
+  if (!el) return;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  el.innerHTML = EXAMS.map(exam => {
+    const examDate = new Date(exam.date);
+    examDate.setHours(0,0,0,0);
+    const diff = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+    let daysClass = 'ok', daysLabel = diff + ' ימים';
+    if (diff < 0) { daysClass = 'urgent'; daysLabel = 'עבר'; }
+    else if (diff <= 60) { daysClass = 'urgent'; }
+    else if (diff <= 120) { daysClass = 'soon'; }
+    const dateStr = examDate.toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
+    return `<div class="exam-row">
+      <div class="exam-icon">${exam.urgent ? '⚡' : '⏳'}</div>
+      <div class="exam-info">
+        <div class="exam-name">${exam.name}</div>
+        <div class="exam-meta">📅 ${dateStr} | רישום עד: ${exam.reg}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+          <span class="exam-days ${daysClass}">${diff > 0 ? '⏱ ' + daysLabel : '⚠️ ' + daysLabel}</span>
+          <a href="${exam.url}" target="_blank" class="exam-reg-link">🔗 לרישום</a>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 // ===== NOT-RELEVANT QUESTIONS =====
 function getNotRelevant() {
@@ -2848,6 +3731,42 @@ function renderRelevanceManager() {
 .toast-text strong{color:#fff;display:block}
 #pwa-install-btn{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0}
 .toast-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;padding:0 4px;flex-shrink:0}
+
+/* ===== OBJECTION LIBRARY ===== */
+.obj-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.obj-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none}
+.obj-num{background:rgba(168,85,247,.2);border:1px solid rgba(168,85,247,.4);color:#c4b5fd;font-size:.72rem;font-weight:800;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.obj-q{flex:1;font-size:.87rem;font-weight:700;color:#fff;line-height:1.3}
+.obj-chev{color:var(--muted);font-size:.75rem;transition:transform .3s;flex-shrink:0}
+.obj-item.open .obj-chev{transform:rotate(180deg)}
+.obj-item.open{border-color:rgba(168,85,247,.4)}
+.obj-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.obj-item.open .obj-body{max-height:600px}
+.obj-tag{display:inline-block;font-size:.65rem;font-weight:700;padding:2px 9px;border-radius:20px;margin:10px 14px 4px;text-transform:uppercase;letter-spacing:.5px}
+.tag-common{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#f87171}
+.tag-price{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:#fbbf24}
+.tag-denial{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);color:#60a5fa}
+.tag-delay{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#34d399}
+.tag-employer{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);color:#a78bfa}
+.tag-trust{background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:#c4b5fd}
+.tag-age{background:rgba(236,72,153,.15);border:1px solid rgba(236,72,153,.3);color:#f472b6}
+.tag-overlap{background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.3);color:#22d3ee}
+.obj-section{padding:6px 14px}
+.obj-section-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:700;margin-bottom:4px}
+.obj-section p{font-size:.85rem;color:#ccc;line-height:1.65;margin:0}
+.obj-tip{background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:7px;padding:9px 14px;font-size:.8rem;color:#e0c860;margin:8px 14px 12px}
+
+/* ===== SALES SCRIPT ===== */
+.script-steps{display:flex;flex-direction:column;gap:14px}
+.script-step{display:flex;gap:12px;align-items:flex-start}
+.script-step-num{background:linear-gradient(135deg,var(--blue),rgba(59,130,246,.5));color:#fff;font-size:.9rem;font-weight:800;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.script-step-content{flex:1}
+.script-step-title{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:3px}
+.script-step-time{font-size:.68rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px}
+.script-lines{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.script-line{background:rgba(255,255,255,.04);border-right:3px solid rgba(59,130,246,.4);border-radius:0 7px 7px 0;padding:9px 12px;font-size:.84rem;color:#ccc;font-style:italic;line-height:1.5}
+.script-tip{background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:7px;padding:8px 12px;font-size:.78rem;color:#e0c860}
+
 </style>
 
 </body>

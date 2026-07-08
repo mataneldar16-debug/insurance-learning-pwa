@@ -1398,23 +1398,42 @@ document.addEventListener('click', function(e) {
 // ===== TAB SYSTEM =====
 let currentTab = 'home';
 function showTab(id) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
-  const target = document.getElementById('tab-' + id);
-  if (target) target.style.display = 'block';
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const btn = document.querySelector('.nav-btn[data-param="' + id + '"]');
-  if (btn) btn.classList.add('active');
-  const main = document.getElementById('app-main');
-  if (main) main.scrollTop = 0;
   try {
+    // Use getElementsByClassName for maximum iOS compatibility (no NodeList.forEach needed)
+    var panes = document.getElementsByClassName('tab-pane');
+    for (var i = 0; i < panes.length; i++) {
+      panes[i].style.display = 'none';
+    }
+    var target = document.getElementById('tab-' + id);
+    if (target) { target.style.display = 'block'; }
+    var btns = document.getElementsByClassName('nav-btn');
+    for (var j = 0; j < btns.length; j++) {
+      btns[j].classList.remove('active');
+    }
+    var activeBtn = document.querySelector('[data-param="' + id + '"]');
+    if (activeBtn) { activeBtn.classList.add('active'); }
+    var main = document.getElementById('app-main');
+    if (main) { main.scrollTop = 0; }
+    // Render tab content
     if (id === 'home') renderHome();
     else if (id === 'learn') renderLearn();
     else if (id === 'quiz') renderQuizShell();
     else if (id === 'sim') showSimSelect();
     else if (id === 'perf') renderPerf();
   } catch(err) {
-    var errDiv = document.getElementById('tab-' + id);
-    if (errDiv) errDiv.innerHTML = '<div style="color:#ef4444;padding:20px;font-size:13px;direction:ltr;word-break:break-all"><strong>JS Error in tab: ' + id + '</strong><br>' + err.message + '<br><br>' + (err.stack||'').substring(0,400) + '</div>';
+    // Show error in the debug badge
+    var dbg = document.getElementById('nd');
+    if (dbg) {
+      dbg.textContent = 'ERR:' + err.message.substring(0, 40);
+      dbg.style.background = 'rgba(239,68,68,.95)';
+      dbg.style.opacity = '1';
+    }
+    // Also try to show in the tab itself
+    var errTarget = document.getElementById('tab-' + id);
+    if (errTarget) {
+      errTarget.style.display = 'block';
+      errTarget.innerHTML = '<div style="color:#ef4444;padding:20px;font-size:13px;direction:ltr;word-break:break-all"><strong>JS Error in showTab(' + id + '):</strong><br>' + err.message + '<br><br>' + (err.stack||'').substring(0,500) + '</div>';
+    }
   }
 }
 

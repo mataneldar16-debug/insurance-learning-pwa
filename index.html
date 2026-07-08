@@ -25,13 +25,13 @@
   --text:#f8fafc;--muted:#94a3b8;--dim:#475569;
   --r:14px;--r-lg:20px;--p:16px;
   --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,20px);
-  --nav-h:60px
+  --nav-h:60px;--header-h:calc(var(--safe-top) + 52px)
 }
 html{scroll-behavior:smooth;height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Heebo','Segoe UI',system-ui,sans-serif;direction:rtl;height:100%;line-height:1.6;overflow:hidden;font-size:15px}
+body{background:var(--bg);color:var(--text);font-family:'Heebo','Segoe UI',system-ui,sans-serif;direction:rtl;height:100%;width:100%;line-height:1.6;overflow:hidden;position:fixed;font-size:15px}
 [data-action],button,a{touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none}
 a{color:var(--blue);text-decoration:none}
-.app-header{background:rgba(10,10,18,.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border2);padding:calc(var(--safe-top) + 10px) 18px 12px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.app-header{background:rgba(10,10,18,.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border2);padding:calc(var(--safe-top) + 10px) 18px 12px;display:flex;align-items:center;gap:12px;position:fixed;top:0;left:0;right:0;z-index:100}
 .header-logo{font-size:1.2rem;font-weight:900;color:#fff;flex:1;letter-spacing:-.02em}
 .header-logo span{background:linear-gradient(90deg,var(--blue-b),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .header-xp{display:inline-flex;align-items:center;gap:5px;background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:20px;padding:4px 11px;font-size:.75rem;color:var(--gold);font-weight:700;white-space:nowrap}
@@ -41,7 +41,7 @@ a{color:var(--blue);text-decoration:none}
 .nav-btn .ni{font-size:1.3rem;line-height:1;transition:transform .15s}
 .nav-btn.active .ni{transform:scale(1.1)}
 .nav-btn .nl{font-size:.57rem;font-weight:700;letter-spacing:.03em}
-#app-main{max-width:680px;margin:0 auto;padding:16px 13px calc(var(--nav-h) + var(--safe-bottom) + 18px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+#app-main{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:16px 13px calc(var(--nav-h) + var(--safe-bottom) + 18px)}
 .tab-pane{display:none}
 .tab-pane.active{display:block;animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
@@ -268,8 +268,20 @@ a{color:var(--blue);text-decoration:none}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+/* QUIZ STATS CARD */
+.quiz-stats-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:13px}
+.qs-row{display:flex;gap:8px}
+.qs-item{flex:1;text-align:center;background:var(--blue-dim);border:1px solid var(--blue-ring);border-radius:9px;padding:10px 6px;transition:background .2s}
+.qs-num{font-size:1.4rem;font-weight:800;color:var(--blue-b);line-height:1;margin-bottom:3px}
+.qs-label{font-size:.62rem;color:var(--muted)}
+/* SM-2 NOTE */
+.sm2-note{margin-top:7px;font-size:.78rem;color:var(--muted);font-style:italic;display:flex;align-items:center;gap:5px}
+/* CARD HOVER TRANSITIONS */
+.card{transition:border-color .2s}
+.readiness-card{transition:border-color .2s}
+.weakness-section{transition:border-color .2s}
 @media(max-width:480px){
-  #app-main{padding:12px 10px calc(var(--nav-h) + var(--safe-bottom) + 12px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #app-main{padding:12px 10px calc(var(--nav-h) + var(--safe-bottom) + 12px)}
   .persona-grid{grid-template-columns:1fr}
   .stats-grid{gap:6px}
   .stat-box{padding:10px 4px}
@@ -317,6 +329,14 @@ a{color:var(--blue);text-decoration:none}
       <div class="tc-num sn-gold" id="home-next-num">-</div>
       <div class="tc-label">שיעור הבא</div>
       <div class="tc-sub" id="home-next-sub">התחל ללמוד</div>
+    </div>
+  </div>
+  <div class="quiz-stats-card">
+    <div class="ws-title">📊 סטטיסטיקות בוחן</div>
+    <div class="qs-row">
+      <div class="qs-item"><div class="qs-num" id="qst-answered">0</div><div class="qs-label">שאלות שנענו</div></div>
+      <div class="qs-item"><div class="qs-num" id="qst-streak">-</div><div class="qs-label">ימי רצף 🔥</div></div>
+      <div class="qs-item"><div class="qs-num" id="qst-due">0</div><div class="qs-label">לחזרה היום</div></div>
     </div>
   </div>
   <div class="weakness-section" id="home-weakness-section" style="display:none">
@@ -1259,6 +1279,9 @@ function showTab(id) {
   const pane = document.getElementById('tab-'+id);
   if (pane) pane.classList.add('active');
   currentTab = id;
+  // Reset scroll position on tab switch
+  const main = document.getElementById('app-main');
+  if (main) main.scrollTop = 0;
   // Render dynamic content
   if (id === 'home') renderHome();
   if (id === 'learn') renderLearn();
@@ -1340,12 +1363,12 @@ function openLesson(id) {
       ${isDone ? '✓ הושלם' : '✅ סיום שיעור +'+l.xp+' XP'}
     </button>`;
   document.getElementById('modal').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
+  document.getElementById('app-main').style.overflowY = 'hidden';
 }
 
 function closeModal() {
   document.getElementById('modal').style.display = 'none';
-  document.body.style.overflow = '';
+  document.getElementById('app-main').style.overflowY = 'scroll';
 }
 
 function completeLesson(id) {
@@ -1520,6 +1543,12 @@ function submitAnswer(ansIdx, el) {
   h.nextSeen = nextDate.toISOString();
   S.quizHistory[qid] = h;
   save();
+
+  // SM-2 note after wrong answer
+  if (!isCorrect && fb) {
+    const days = h.interval || 1;
+    fb.innerHTML += `<div class="sm2-note">📅 נסה שוב בעוד ${days} ${days === 1 ? 'יום' : 'ימים'}</div>`;
+  }
 }
 
 function nextQuestion() {
@@ -1837,6 +1866,15 @@ function renderHome() {
     }).join('');
   } else if (wsec) wsec.style.display = 'none';
   
+  // Quiz stats card
+  const totalAnswered = Object.values(S.quizHistory).reduce((s,h) => s + (h.attempts||0), 0);
+  const qstA = document.getElementById('qst-answered');
+  if (qstA) qstA.textContent = totalAnswered;
+  const qstS = document.getElementById('qst-streak');
+  if (qstS) qstS.textContent = S.streak.count;
+  const qstD = document.getElementById('qst-due');
+  if (qstD) qstD.textContent = getDueCount();
+
   // Daily tip
   const tip = SALES_INSIGHTS[new Date().getDate() % SALES_INSIGHTS.length];
   const tipEl = document.getElementById('home-tip-text');

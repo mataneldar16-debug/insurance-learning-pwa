@@ -35,6 +35,7 @@ a{color:var(--blue);text-decoration:none}
 .header-logo{font-size:1.2rem;font-weight:900;color:#fff;flex:1;letter-spacing:-.02em}
 .header-logo span{background:linear-gradient(90deg,var(--blue-b),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .header-xp{display:inline-flex;align-items:center;gap:5px;background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:20px;padding:4px 11px;font-size:.75rem;color:var(--gold);font-weight:700;white-space:nowrap}
+.header-streak{display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);border-radius:20px;padding:4px 10px;font-size:.75rem;color:#fc6a6a;font-weight:700}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:rgba(7,7,16,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border2);display:flex;align-items:stretch;z-index:200}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;border-top:2px solid transparent;color:var(--dim);font-family:inherit;padding:6px 2px;transition:color .2s,border-color .2s}
 .nav-btn.active{color:var(--blue);border-top-color:var(--blue)}
@@ -276,6 +277,20 @@ a{color:var(--blue);text-decoration:none}
 .qs-label{font-size:.62rem;color:var(--muted)}
 /* SM-2 NOTE */
 .sm2-note{margin-top:7px;font-size:.78rem;color:var(--muted);font-style:italic;display:flex;align-items:center;gap:5px}
+.quiz-confidence{margin-top:12px}
+.confidence-label{font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:8px;font-weight:600}
+.confidence-btns{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
+.conf-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:9px 4px;border:1px solid var(--border2);border-radius:10px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;background:var(--card2);transition:all .18s;color:#fff}
+.conf-btn:hover{transform:translateY(-1px)}
+.conf-again{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.conf-again:hover{background:var(--red);color:#fff}
+.conf-hard{border-color:var(--gold);background:var(--gold-dim);color:var(--gold)}
+.conf-hard:hover{background:var(--gold);color:#fff}
+.conf-good{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.conf-good:hover{background:var(--green);color:#fff}
+.conf-easy{border-color:var(--blue);background:var(--blue-dim);color:var(--blue-b)}
+.conf-easy:hover{background:var(--blue);color:#fff}
+.conf-interval{font-size:.62rem;font-weight:500;opacity:.8;margin-top:1px}
 /* CARD HOVER TRANSITIONS */
 .card{transition:border-color .2s}
 .readiness-card{transition:border-color .2s}
@@ -295,6 +310,7 @@ a{color:var(--blue);text-decoration:none}
 <header class="app-header">
   <div class="header-logo">🛡️ ביטוח <span>Pro</span></div>
   <div class="header-xp" id="header-xp">⭐ 0 XP</div>
+  <div class="header-streak" id="header-streak">🔥 0</div>
 </header>
 <nav class="bottom-nav">
   <button class="nav-btn active" data-action="tab" data-param="home"><span class="ni">🏠</span><span class="nl">בית</span></button>
@@ -390,11 +406,16 @@ a{color:var(--blue);text-decoration:none}
     <button class="qms-btn" data-action="quiz-mode" data-param="practice">📝 תרגול</button>
   </div>
   <div class="quiz-filter">
-    <button class="qf-btn active" data-action="quiz-filter" data-param="all">הכל</button>
-    <button class="qf-btn" data-action="quiz-filter" data-param="sales">מכירה</button>
-    <button class="qf-btn" data-action="quiz-filter" data-param="namal">נמל חיפה</button>
-    <button class="qf-btn" data-action="quiz-filter" data-param="licensing">רישוי</button>
-  </div>
+  <button class="qf-btn active" data-action="quiz-filter" data-param="all">הכל</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="namal">⚓ נמל</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="kiryat">🏙️ קריית מוצקין</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="davs">📡 דב"ס/YES</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="rakevet">🚂 רכבת</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="tnuva">🥛 תנובה</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="msapanot">⚓ מספנות</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="sales">💼 מכירה</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="licensing">📜 רישוי</button>
+</div>
   <div class="quiz-wrap" id="quiz-area">
     <div style="text-align:center;padding:20px 0;color:var(--muted)">
       <div style="font-size:2rem;margin-bottom:10px">🎯</div>
@@ -1293,6 +1314,7 @@ const ACTIONS = {
   'quiz-filter': f => setQuizFilter(f),
   'quiz-answer': (idx, el) => submitAnswer(parseInt(idx), el),
   'quiz-next': () => nextQuestion(),
+  'quiz-rate': r => rateAnswer(parseInt(r)),
   'not-relevant': i => toggleNotRelevant(parseInt(i)),
   'sim-start': id => startSim(parseInt(id)),
   'sim-choice': (idx, el) => simChoice(parseInt(idx), el),
@@ -1435,7 +1457,7 @@ function completeLesson(id) {
 // ===== QUIZ ENGINE =====
 let QS = { // Quiz state
   mode:'srs', filter:'all', pool:[], idx:0,
-  correct:0, total:0, sessionDone:false
+  correct:0, total:0, sessionDone:false, sessionAnswers:[]
 };
 
 function getQuizPool() {
@@ -1444,9 +1466,14 @@ function getQuizPool() {
 
   if (QS.filter !== 'all') {
     pool = pool.filter(q => {
-      if (QS.filter === 'licensing') return q.topic === 'licensing';
-      if (QS.filter === 'sales') return ['sales','objection','shekel','collective'].includes(q.topic);
       if (QS.filter === 'namal') return q.topic === 'namal';
+      if (QS.filter === 'kiryat') return q.topic === 'kiryat';
+      if (QS.filter === 'davs') return ['davs','yes','dbs'].includes(q.topic);
+      if (QS.filter === 'rakevet') return q.topic === 'rakevet';
+      if (QS.filter === 'tnuva') return q.topic === 'tnuva';
+      if (QS.filter === 'msapanot') return q.topic === 'msapanot';
+      if (QS.filter === 'sales') return ['sales','objection','shekel','collective'].includes(q.topic);
+      if (QS.filter === 'licensing') return q.topic === 'licensing';
       return true;
     });
   }
@@ -1467,6 +1494,27 @@ function getQuizPool() {
     // Practice: shuffle
     pool.sort(() => Math.random() - 0.5);
     pool = pool.slice(0, 15);
+    // Interleave: prevent same topic back-to-back
+    function interleave(arr) {
+      const result = [];
+      const byTopic = {};
+      arr.forEach(q => {
+        const t = q.topic || 'other';
+        if (!byTopic[t]) byTopic[t] = [];
+        byTopic[t].push(q);
+      });
+      const topics = Object.keys(byTopic);
+      let last = null;
+      while (result.length < arr.length) {
+        const avail = topics.filter(t => byTopic[t].length > 0 && t !== last);
+        if (!avail.length) break;
+        const t = avail[Math.floor(Math.random() * avail.length)];
+        result.push(byTopic[t].shift());
+        last = t;
+      }
+      return result;
+    }
+    pool = interleave(pool);
   }
   return pool;
 }
@@ -1507,6 +1555,7 @@ function startQuiz() {
   QS.correct = 0;
   QS.total = QS.pool.length;
   QS.sessionDone = false;
+  QS.sessionAnswers = [];
   if (QS.pool.length === 0) {
     document.getElementById('quiz-area').innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted)"><div style="font-size:2rem;margin-bottom:10px">🎉</div><p style="color:#fff;font-weight:700">אין שאלות לחזרה!</p><p>חזור מחר או עבור לתרגול חופשי.</p></div>`;
     return;
@@ -1543,7 +1592,7 @@ function showQuestion() {
       </button>
       ${h ? `<span>ניסיונות: ${h.attempts||0} | נכון: ${h.correct||0}</span>` : ''}
     </div>
-    <button class="q-next-btn" id="q-next" data-action="quiz-next">הבא ←</button>
+    <button class="quiz-confidence" id="q-confidence"></div>
   `;
 }
 
@@ -1552,51 +1601,98 @@ function submitAnswer(ansIdx, el) {
   if (!q) return;
   const opts = document.querySelectorAll('.q-opt');
   opts.forEach(b => { b.classList.add('locked'); b.dataset.action = ''; });
-  
+
   const isCorrect = ansIdx === q.ans;
   opts[ansIdx].classList.add(isCorrect ? 'correct' : 'wrong');
   if (!isCorrect) opts[q.ans].classList.add('correct');
-  
+
   const fb = document.getElementById('q-fb');
   if (fb) {
     fb.className = `q-fb show ${isCorrect ? 'ok' : 'err'}`;
     fb.innerHTML = `<strong>${isCorrect ? '✅ נכון!' : '❌ לא נכון'}</strong>${q.exp}`;
   }
-  
-  const next = document.getElementById('q-next');
-  if (next) next.classList.add('show');
-  
-  // Update SRS
+
+  // Track answer for session stats
+  if (isCorrect) {
+    QS.correct++;
+    addXP(XP_CONFIG.quizCorrect, 'תשובה נכונה');
+  }
+  QS.sessionAnswers = QS.sessionAnswers || [];
+  QS.sessionAnswers.push({topic: q.topic || 'other', correct: isCorrect});
+
+  // Update attempt/correct count in history
   const qid = q.id ?? QS.pool[QS.idx].idx;
   const h = S.quizHistory[qid] || {correct:0, attempts:0, interval:1, ease:2.5, nextSeen:null};
   h.attempts = (h.attempts||0) + 1;
-  if (isCorrect) {
-    h.correct = (h.correct||0) + 1;
-    QS.correct++;
-    addXP(XP_CONFIG.quizCorrect, 'תשובה נכונה');
-    h.interval = Math.max(1, Math.round((h.interval||1) * (h.ease||2.5)));
-    h.ease = Math.max(1.3, (h.ease||2.5) + 0.1);
-  } else {
-    h.interval = 1;
-    h.ease = Math.max(1.3, (h.ease||2.5) - 0.2);
-  }
-  const nextDate = new Date();
-  nextDate.setDate(nextDate.getDate() + h.interval);
-  h.nextSeen = nextDate.toISOString();
+  if (isCorrect) h.correct = (h.correct||0) + 1;
   S.quizHistory[qid] = h;
-  save();
 
-  // SM-2 note after wrong answer
-  if (!isCorrect && fb) {
-    const days = h.interval || 1;
-    fb.innerHTML += `<div class="sm2-note">📅 נסה שוב בעוד ${days} ${days === 1 ? 'יום' : 'ימים'}</div>`;
+  // Calculate SM-2 preview intervals for confidence buttons
+  const iv = h.interval || 1;
+  const ease = h.ease || 2.5;
+  const ivAgain = 1;
+  const ivHard = Math.max(1, Math.round(iv * 1.2));
+  const ivGood = Math.max(1, Math.round(iv * ease));
+  const ivEasy = Math.max(1, Math.round(iv * ease * 1.3));
+  function ivLabel(d) { return d === 1 ? '1 יום' : d + ' ימים'; }
+
+  // Show SM-2 confidence rating buttons
+  const conf = document.getElementById('q-confidence');
+  if (conf) {
+    conf.innerHTML = `
+      <div class="confidence-label">כמה ידעת?</div>
+      <div class="confidence-btns">
+        <button class="conf-btn conf-again" data-action="quiz-rate" data-param="0">
+          🔴 שכחתי<span class="conf-interval">${ivLabel(ivAgain)}</span>
+        </button>
+        <button class="conf-btn conf-hard" data-action="quiz-rate" data-param="3">
+          🟡 קשה<span class="conf-interval">${ivLabel(ivHard)}</span>
+        </button>
+        <button class="conf-btn conf-good" data-action="quiz-rate" data-param="4">
+          🟢 ידעתי<span class="conf-interval">${ivLabel(ivGood)}</span>
+        </button>
+        <button class="conf-btn conf-easy" data-action="quiz-rate" data-param="5">
+          ⚡ קל<span class="conf-interval">${ivLabel(ivEasy)}</span>
+        </button>
+      </div>
+    `;
   }
+  save();
 }
 
 function nextQuestion() {
   QS.idx++;
   if (QS.idx >= QS.pool.length) { showQuizResult(); return; }
   showQuestion();
+}
+
+function rateAnswer(rating) {
+  const q = QS.pool[QS.idx];
+  if (!q) return;
+  const qid = q.id ?? QS.pool[QS.idx].idx;
+  const h = S.quizHistory[qid] || {correct:0, attempts:0, interval:1, ease:2.5, nextSeen:null};
+  const iv = h.interval || 1;
+  const ease = h.ease || 2.5;
+
+  if (rating === 0) { // שכחתי - Again
+    h.interval = 1;
+    h.ease = Math.max(1.3, ease - 0.2);
+  } else if (rating === 3) { // קשה - Hard
+    h.interval = Math.max(1, Math.round(iv * 1.2));
+    h.ease = Math.max(1.3, ease - 0.15);
+  } else if (rating === 4) { // ידעתי - Good
+    h.interval = Math.max(1, Math.round(iv * ease));
+  } else if (rating === 5) { // קל - Easy
+    h.interval = Math.max(1, Math.round(iv * ease * 1.3));
+    h.ease = Math.min(4.0, ease + 0.15);
+  }
+
+  const nextDate = new Date();
+  nextDate.setDate(nextDate.getDate() + h.interval);
+  h.nextSeen = nextDate.toISOString();
+  S.quizHistory[qid] = h;
+  save();
+  nextQuestion();
 }
 
 function showQuizResult() {
@@ -1606,13 +1702,31 @@ function showQuizResult() {
   addXP(XP_CONFIG.quizComplete, `חידון הושלם: ${pct}%`);
   checkBadges();
   save();
-  
+
   const msg = pct >= 90 ? '🏆 מצוין! מסיים ברמה גבוהה' : pct >= 70 ? '✅ כל הכבוד!' : '💪 המשך להתאמן';
+
+  // Build per-topic breakdown from session answers
+  const topicBreakdown = {};
+  (QS.sessionAnswers || []).forEach(a => {
+    if (!topicBreakdown[a.topic]) topicBreakdown[a.topic] = {c:0, t:0};
+    topicBreakdown[a.topic].t++;
+    if (a.correct) topicBreakdown[a.topic].c++;
+  });
+  const topicHtml = Object.entries(topicBreakdown).map(([t,v]) => {
+    const p = Math.round(v.c / v.t * 100);
+    const color = p >= 75 ? 'var(--green)' : p >= 50 ? 'var(--gold)' : 'var(--red)';
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">`
+      + `<span style="font-size:.78rem;color:#ccc;flex:1">${TOPIC_NAMES[t] || t}</span>`
+      + `<span style="font-size:.78rem;font-weight:700;color:${color}">${v.c}/${v.t}</span>`
+      + `</div>`;
+  }).join('');
+
   document.getElementById('quiz-area').innerHTML = `
     <div class="quiz-result">
       <div class="res-circle"><div class="res-score">${pct}%</div><div class="res-of">${QS.correct}/${QS.total}</div></div>
       <div class="res-msg">${msg}</div>
       <div class="res-sub">נכון: ${QS.correct} · טעויות: ${QS.total-QS.correct}</div>
+      ${topicHtml ? `<div class="result-topics" style="margin:14px 0;text-align:right;border-top:1px solid var(--border);padding-top:12px">${topicHtml}</div>` : ''}
       <button class="q-next-btn show" data-action="start-quiz">שחק שוב →</button>
     </div>
   `;
@@ -1841,6 +1955,8 @@ function getTopicStats() {
 function updateHeader() {
   const lv = getLevel();
   document.getElementById('header-xp').textContent = `⭐ ${S.xp} XP · ${lv.name} ${lv.icon}`;
+  const strkEl = document.getElementById('header-streak');
+  if (strkEl) strkEl.textContent = `🔥 ${S.streak.count}`;
 }
 
 // ===== HOME TAB =====

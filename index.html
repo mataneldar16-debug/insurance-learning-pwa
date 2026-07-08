@@ -11,7 +11,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <link rel="manifest" id="pwa-manifest">
-<title>ביטוח Pro v4.1 | מערכת לימוד סוכנים</title>
+<title>ביטוח Pro v5.0 | מערכת לימוד סוכנים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -356,6 +356,33 @@ a{color:var(--blue);text-decoration:none}
 .ms-bar-bg{flex:2;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
 .ms-bar-f{height:100%;border-radius:3px}
 .ms-pct{font-size:.72rem;color:var(--muted);min-width:28px;text-align:left}
+
+/* ── v5.0 ── */
+.conf-check-wrap{padding:18px 14px;text-align:center}
+.conf-check-wrap p{font-size:.95rem;font-weight:800;color:#fff;margin-bottom:14px}
+.conf-check-btns{display:flex;gap:8px}
+.conf-pick-btn{flex:1;padding:12px 6px;border:1px solid var(--border);border-radius:9px;background:var(--card2);color:var(--text);font-family:inherit;font-size:.84rem;font-weight:700;cursor:pointer;transition:all .18s;text-align:center}
+.conf-pick-btn:hover{border-color:var(--blue-ring);background:var(--blue-dim)}
+.interleave-tag{display:inline-block;background:var(--purple-dim);border:1px solid var(--purple-ring);color:var(--purple);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:8px;margin-bottom:8px}
+.pretest-screen,.posttest-screen{padding:2px 0}
+.pretest-intro{font-size:.88rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+.pretest-note{font-size:.76rem;color:var(--muted);margin-bottom:12px}
+.pretest-q{font-size:.92rem;font-weight:600;color:#fff;margin-bottom:12px;line-height:1.5}
+.pretest-opts{display:flex;flex-direction:column;gap:6px}
+.pretest-result{padding:8px 12px;border-radius:8px;font-size:.84rem;font-weight:700;margin-bottom:12px}
+.pretest-result.ok{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffda}
+.pretest-result.err{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffcece}
+.posttest-hdr{font-size:.92rem;font-weight:800;color:#fff;margin-bottom:6px}
+.posttest-note{font-size:.78rem;color:var(--muted);margin-bottom:12px}
+.err-item{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.err-q-txt{flex:1;font-size:.82rem;color:#ccc;line-height:1.4}
+.err-cnt{font-size:.75rem;color:var(--red);font-weight:700;white-space:nowrap}
+.err-drill{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:5px 10px;font-family:inherit;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap}
+.cal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.cal-box{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.cal-lbl{font-size:.68rem;color:var(--muted);margin-bottom:3px}
+.cal-val{font-size:1.1rem;font-weight:800;color:#fff}
+.cal-warn{background:rgba(239,68,68,.08);border:1px solid var(--red-ring);border-radius:9px;padding:10px 13px;margin-top:8px;font-size:.82rem;color:#ffcece;line-height:1.45}
 </style>
 </head>
 <body>
@@ -461,6 +488,7 @@ a{color:var(--blue);text-decoration:none}
   <div class="quiz-mode-sel">
     <button class="qms-btn active" data-action="quiz-mode" data-param="srs">🔁 חזרה <span class="due-badge" id="srs-due-badge">0</span></button>
     <button class="qms-btn" data-action="quiz-mode" data-param="practice">📝 תרגול</button>
+    <button class="qms-btn" data-action="quiz-mode" data-param="interleave">🔀 מעורב</button>
   </div>
   <div class="quiz-filter">
   <button class="qf-btn active" data-action="quiz-filter" data-param="all">הכל</button>
@@ -521,6 +549,8 @@ a{color:var(--blue);text-decoration:none}
   <div id="perf-forecast" style="margin-bottom:13px"></div>
   <div id="perf-mastery" style="margin-bottom:13px"></div>
   <div class="xp-log" id="perf-xp-log"></div>
+  <div id="perf-calibration" style="margin-bottom:13px"></div>
+  <div id="perf-errors" style="margin-bottom:13px"></div>
   <div style="text-align:center;margin-top:6px">
     <button class="reset-btn" data-action="reset-progress">🔄 אפס התקדמות</button>
   </div>
@@ -1120,6 +1150,18 @@ const TOPIC_NAMES = {
   shekel:'שקל ראשון',licensing:'רישוי',davs:'דב"ס',rakevet:'רכבת ישראל',tnuva:'תנובה',msapanot:'מספנות ישראל'
 };
 
+const LESSON_TOPIC_MAP = {
+  '1.1':'collective','1.2':'collective','1.3':'namal','1.4':'ci',
+  '1.5':'siud','1.6':'ake',
+  '2.1':'namal','2.2':'kiryat','2.3':'davs','2.4':'rakevet',
+  '2.5':'tnuva','2.6':'msapanot',
+  '3.1':'sales','3.2':'sales','3.3':'objection','3.4':'objection','3.5':'sales',
+  'y.1':'licensing','y.2':'licensing','y.3':'licensing','y.4':'licensing',
+  'y.5':'licensing','y.6':'licensing','y.7':'licensing','y.8':'licensing',
+  'g.1':'licensing','g.2':'licensing','g.3':'licensing','g.4':'licensing','g.5':'licensing'
+};
+
+
 // ===== SCENARIOS DATA (8 sims) =====
 const SCENARIOS = [
 {id:0,name:'דני אביגיל',icon:'🤨',type:'הסקפטי',desc:'עובד נמל חיפה ותיק, 40. "יש לי שב"ן, לא צריך כלום."',
@@ -1339,6 +1381,8 @@ function getState() {
     if (!p.xpLog) p.xpLog = [];
     if (p.quizBestPct == null) p.quizBestPct = null;
     if (!p.activityLog) p.activityLog = {};
+    if (!p.confLog) p.confLog = [];
+    if (!p.errorLog) p.errorLog = [];
     return p;
   } catch(e) { return initState(); }
 }
@@ -1355,7 +1399,9 @@ function initState() {
     xpLog:[],
     activeTrack:'sales',
     quizBestPct:null,
-    activityLog:{}
+    activityLog:{},
+    confLog:[],
+    errorLog:[]
   };
 }
 
@@ -1375,6 +1421,9 @@ const ACTIONS = {
   'quiz-mode': m => setQuizMode(m),
   'quiz-filter': f => setQuizFilter(f),
   'quiz-answer': (idx, el) => submitAnswer(parseInt(idx), el),
+  'quiz-confidence': conf => showAnswerFeedback(parseInt(conf)),
+  'pretest-answer': idx => pretestAnswer(parseInt(idx)),
+  'posttest-answer': idx => posttestAnswer(parseInt(idx)),
   'quiz-next': () => nextQuestion(),
   'quiz-rate': r => rateAnswer(parseInt(r)),
   'not-relevant': i => toggleNotRelevant(parseInt(i)),
@@ -1502,17 +1551,27 @@ function renderLearn() {
 function openLesson(id) {
   const l = LESSONS[id];
   if (!l) return;
-  const isDone = S.completedLessons.includes(id);
+  const lessonTopic = LESSON_TOPIC_MAP[id];
+  const candidates = lessonTopic ? QUIZ_DATA.filter(q => q.topic === lessonTopic) : [];
+  const pretestQ = candidates.length > 0
+    ? candidates[Math.floor(Math.random() * candidates.length)]
+    : QUIZ_DATA[Math.floor(Math.random() * QUIZ_DATA.length)];
+  QS._pretest = {q: pretestQ, lessonId: id, chosenIdx: null, correct: null};
   document.getElementById('modal-title').textContent = l.title;
-  document.getElementById('modal-body').innerHTML = `<div class="lesson-content">${l.content}</div>`;
-  document.getElementById('modal-footer').innerHTML = `
-    <button class="complete-btn ${isDone?'done':''}" data-action="complete-lesson" data-param="${id}">
-      ${isDone ? '✓ הושלם' : '✅ סיום שיעור +'+l.xp+' XP'}
-    </button>`;
+  document.getElementById('modal-body').innerHTML = `
+    <div class="pretest-screen">
+      <p class="pretest-intro">🧪 בדיקת פתיחה — נסה לענות לפני שלמדת</p>
+      <p class="pretest-note">אין נקודות, רק להפעיל את המוח</p>
+      <div class="pretest-q">${pretestQ.q}</div>
+      <div class="pretest-opts">
+        ${pretestQ.opts.map((opt,i)=>`<button class="q-opt" data-action="pretest-answer" data-param="${i}"><span class="ol">${String.fromCharCode(65+i)}</span><span>${opt}</span></button>`).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML = '';
   document.getElementById('modal').style.display = 'flex';
   document.getElementById('app-main').style.overflowY = 'hidden';
 }
-
 function closeModal() {
   document.getElementById('modal').style.display = 'none';
   document.getElementById('app-main').style.overflowY = 'scroll';
@@ -1522,19 +1581,94 @@ function completeLesson(id) {
   if (S.completedLessons.includes(id)) return;
   S.completedLessons.push(id);
   addXP(XP_CONFIG.lesson, 'שיעור: '+LESSONS[id]?.title);
-  
-  // Chapter bonus
   const ch = Object.values(CHAPTERS).find(c => c.lessons.includes(id));
   if (ch && ch.lessons.every(lid => S.completedLessons.includes(lid))) {
     addXP(XP_CONFIG.chapter, 'פרק הושלם: '+ch.title);
   }
-  
   checkBadges();
   save();
-  closeModal();
   renderLearn();
   renderHome();
   updateHeader();
+
+  // Pretesting Effect: post-test if pretest was answered
+  if (QS._pretest && QS._pretest.lessonId === id && QS._pretest.chosenIdx !== null) {
+    const _ptQ  = QS._pretest.q;
+    const _ptOk = QS._pretest.correct;
+    const _ptTxt = _ptQ.opts[QS._pretest.chosenIdx];
+    QS._posttestQ = _ptQ;
+    QS._pretest = null;
+    document.getElementById('modal-body').innerHTML = `
+      <div class="posttest-screen">
+        <p class="posttest-hdr">🔁 אותה שאלה שוב</p>
+        <p class="posttest-note">בתחילה ${_ptOk ? '✅ ענית נכון' : '❌ ענית: "'+_ptTxt+'"'}</p>
+        <div class="pretest-q">${_ptQ.q}</div>
+        <div class="pretest-opts">
+          ${_ptQ.opts.map((opt,i)=>`<button class="q-opt" data-action="posttest-answer" data-param="${i}"><span class="ol">${String.fromCharCode(65+i)}</span><span>${opt}</span></button>`).join('')}
+        </div>
+      </div>
+    `;
+    document.getElementById('modal-footer').innerHTML = '';
+  } else {
+    QS._pretest = null;
+    closeModal();
+  }
+}
+
+function pretestAnswer(idx) {
+  if (!QS._pretest) return;
+  const q = QS._pretest.q;
+  const isCorrect = idx === q.ans;
+  QS._pretest.chosenIdx = idx;
+  QS._pretest.correct = isCorrect;
+  document.querySelectorAll('.pretest-opts .q-opt').forEach((b,i) => {
+    b.classList.add('locked'); b.dataset.action = '';
+    if (i === idx) b.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect && i === q.ans) b.classList.add('correct');
+  });
+  const id = QS._pretest.lessonId;
+  const l = LESSONS[id];
+  const isDone = S.completedLessons.includes(id);
+  setTimeout(() => {
+    const badge = isCorrect
+      ? `<div class="pretest-result ok">✅ נכון! בוא נבין למה</div>`
+      : `<div class="pretest-result err">❌ לא בדיוק — בוא נלמד</div>`;
+    document.getElementById('modal-body').innerHTML = badge + `<div class="lesson-content">${l.content}</div>`;
+    document.getElementById('modal-footer').innerHTML = `
+      <button class="complete-btn ${isDone?'done':''}" data-action="complete-lesson" data-param="${id}">
+        ${isDone ? '✓ הושלם' : '✅ סיום שיעור +'+l.xp+' XP'}
+      </button>`;
+  }, 550);
+}
+
+function posttestAnswer(idx) {
+  const q = QS._posttestQ;
+  if (!q) { closeModal(); return; }
+  const isCorrect = idx === q.ans;
+  document.querySelectorAll('.pretest-opts .q-opt').forEach((b,i) => {
+    b.classList.add('locked'); b.dataset.action = '';
+    if (i === idx) b.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect && i === q.ans) b.classList.add('correct');
+  });
+  QS._posttestQ = null;
+  setTimeout(() => {
+    document.getElementById('modal-footer').innerHTML = `<button class="complete-btn done" onclick="closeModal()">✓ סגור</button>`;
+  }, 400);
+}
+
+function startFocusedPractice(qIds) {
+  const idSet = new Set(qIds);
+  const pool = QUIZ_DATA.filter(q => idSet.has(q.id ?? QUIZ_DATA.indexOf(q))).map((q,_) => ({...q, idx: QUIZ_DATA.indexOf(q)}));
+  if (pool.length === 0) return;
+  QS.mode = 'practice';
+  QS.filter = 'all';
+  QS.pool = pool.sort(() => Math.random() - 0.5);
+  QS.idx = 0; QS.correct = 0; QS.hearts = 3;
+  QS.total = QS.pool.length; QS.sessionDone = false; QS.sessionAnswers = [];
+  document.querySelectorAll('.qms-btn').forEach(b => b.classList.toggle('active', b.dataset.param === 'practice'));
+  showTab('quiz');
+  startTimer();
+  showQuestion();
 }
 
 // ===== QUIZ ENGINE =====
@@ -1573,6 +1707,28 @@ function getQuizPool() {
       return da - db;
     });
     if (pool.length === 0) pool = QUIZ_DATA.map((q,i) => ({...q, idx:i})).filter(q => !S.notRelevant.includes(i)).slice(0, 10);
+  } else if (QS.mode === 'interleave') {
+    // Interleave: 5 weakest-topic + 5 SRS-due + 5 random different-topics
+    const tStats = {};
+    pool.forEach(q => {
+      const t = q.topic || 'other';
+      if (!tStats[t]) tStats[t] = {correct:0, total:0};
+      const h = S.quizHistory[q.id ?? q.idx];
+      if (h && h.attempts > 0) { tStats[t].total++; if ((h.correct||0) > 0) tStats[t].correct++; }
+    });
+    const topicAcc = Object.entries(tStats).filter(([,v])=>v.total>0)
+      .map(([t,v])=>({topic:t,pct:v.correct/v.total})).sort((a,b)=>a.pct-b.pct);
+    const weakTopic = topicAcc.length>0 ? topicAcc[0].topic : null;
+    const weakPool = weakTopic ? pool.filter(q=>q.topic===weakTopic).sort(()=>Math.random()-.5).slice(0,5) : [];
+    const weakIds = new Set(weakPool.map(q=>q.id??q.idx));
+    const srsPool = pool.filter(q=>isDue(q.id??q.idx)&&!weakIds.has(q.id??q.idx)).sort(()=>Math.random()-.5).slice(0,5);
+    const usedIds = new Set([...weakPool,...srsPool].map(q=>q.id??q.idx));
+    const usedTopics = new Set([...weakPool,...srsPool].map(q=>q.topic||'other'));
+    const randPool = [];
+    pool.filter(q=>!usedIds.has(q.id??q.idx)).sort(()=>Math.random()-.5).forEach(q=>{
+      if(randPool.length<5 && !usedTopics.has(q.topic||'other')){randPool.push(q);usedTopics.add(q.topic||'other');}
+    });
+    pool = [...weakPool,...srsPool,...randPool].sort(()=>Math.random()-.5).slice(0,15);
   } else {
     // Practice: shuffle
     pool.sort(() => Math.random() - 0.5);
@@ -1629,7 +1785,7 @@ function renderQuizShell() {
   const badge = document.getElementById('srs-due-badge');
   if (badge) badge.textContent = dueCount;
   const sub = document.getElementById('quiz-sub');
-  if (sub) sub.textContent = QS.mode === 'srs' ? `${dueCount} שאלות לחזרה היום` : 'תרגול חופשי – 15 שאלות';
+  if (sub) sub.textContent = QS.mode === 'srs' ? `${dueCount} שאלות לחזרה היום` : QS.mode === 'interleave' ? '🔀 מעורב – 15 שאלות מגוונות' : 'תרגול חופשי – 15 שאלות';
 }
 
 function startQuiz() {
@@ -1653,6 +1809,7 @@ function showQuestion() {
   if (!q) { showQuizResult(); return; }
   const pct = QS.total > 1 ? Math.round(QS.idx / QS.total * 100) : 0;
   const topicName = TOPIC_NAMES[q.topic] || q.topic || '';
+  const topicTagHtml = QS.mode === 'interleave' ? `<div class="interleave-tag">[${topicName}]</div>` : `<div class="q-topic-tag">${topicName}</div>`;
   const qRealId = q.id ?? QS.pool[QS.idx].idx;
   const h = S.quizHistory[qRealId];
   const isNR = S.notRelevant.includes(qRealId);
@@ -1667,7 +1824,7 @@ function showQuestion() {
     <div class="card-scene">
       <div class="card-3d" id="quiz-card-3d">
         <div class="card-face card-front">
-          <div class="q-topic-tag">${topicName}</div>
+          ${topicTagHtml}
           <div class="q-text">${q.q}</div>
           <div class="q-options">
             ${q.opts.map((opt, i) => `<button class="q-opt" data-action="quiz-answer" data-param="${i}">
@@ -1701,7 +1858,13 @@ function submitAnswer(ansIdx, el) {
 
   const isCorrect = ansIdx === q.ans;
   opts[ansIdx].classList.add(isCorrect ? 'correct' : 'wrong');
-  if (!isCorrect) opts[q.ans].classList.add('correct');
+  if (!isCorrect) {
+    opts[q.ans].classList.add('correct');
+    // Error Pattern Tracking
+    S.errorLog = S.errorLog || [];
+    const _eqid = q.id ?? QS.pool[QS.idx].idx;
+    S.errorLog.push({qId:_eqid, chosenIdx:ansIdx, correctIdx:q.ans, topic:q.topic||'other', timestamp:new Date().toISOString()});
+  }
 
   if (isCorrect) {
     QS.correct++;
@@ -1710,6 +1873,12 @@ function submitAnswer(ansIdx, el) {
     QS.hearts = (QS.hearts !== undefined) ? QS.hearts - 1 : 2;
     updateHearts();
     if (QS.hearts <= 0) {
+      QS.sessionAnswers = QS.sessionAnswers || [];
+      QS.sessionAnswers.push({topic: q.topic || 'other', correct: false});
+      const _hqid = q.id ?? QS.pool[QS.idx].idx;
+      const _hh = S.quizHistory[_hqid] || {correct:0,attempts:0,interval:1,ease:2.5,nextSeen:null};
+      _hh.attempts = (_hh.attempts||0) + 1;
+      S.quizHistory[_hqid] = _hh;
       const _todayH = new Date().toISOString().split('T')[0];
       S.activityLog = S.activityLog || {};
       S.activityLog[_todayH] = (S.activityLog[_todayH]||0)+1;
@@ -1718,17 +1887,55 @@ function submitAnswer(ansIdx, el) {
       return;
     }
   }
-  QS.sessionAnswers = QS.sessionAnswers || [];
-  QS.sessionAnswers.push({topic: q.topic || 'other', correct: isCorrect});
+
+  // Store pending answer for Metacognitive Calibration check
+  QS._pendingAnswer = {ansIdx, isCorrect, q};
+
+  // Show confidence check before feedback
+  const back = document.getElementById('quiz-card-back');
+  if (back) {
+    back.innerHTML = `
+      <div class="conf-check-wrap">
+        <p>כמה היית בטוח?</p>
+        <div class="conf-check-btns">
+          <button class="conf-pick-btn" data-action="quiz-confidence" data-param="1">😰 ניחוש</button>
+          <button class="conf-pick-btn" data-action="quiz-confidence" data-param="2">🤔 50/50</button>
+          <button class="conf-pick-btn" data-action="quiz-confidence" data-param="3">💪 בטוח</button>
+        </div>
+      </div>
+    `;
+    setTimeout(() => {
+      const c3d = document.getElementById('quiz-card-3d');
+      const cf = c3d && c3d.querySelector('.card-front');
+      if (c3d && cf && back) {
+        c3d.style.height = Math.max(cf.scrollHeight, back.scrollHeight) + 'px';
+        c3d.classList.add('flipped');
+      }
+    }, 50);
+  }
+}
+
+function showAnswerFeedback(confidence) {
+  if (!QS._pendingAnswer) return;
+  const {isCorrect, q} = QS._pendingAnswer;
+  QS._pendingAnswer = null;
 
   const qid = q.id ?? QS.pool[QS.idx].idx;
+
+  // Save Metacognitive Calibration log
+  S.confLog = S.confLog || [];
+  S.confLog.push({qId:qid, correct:isCorrect, confidence:confidence, timestamp:new Date().toISOString()});
+
+  // Update quiz history
   const h = S.quizHistory[qid] || {correct:0, attempts:0, interval:1, ease:2.5, nextSeen:null};
   h.attempts = (h.attempts||0) + 1;
   if (isCorrect) h.correct = (h.correct||0) + 1;
   S.quizHistory[qid] = h;
 
+  QS.sessionAnswers = QS.sessionAnswers || [];
+  QS.sessionAnswers.push({topic: q.topic || 'other', correct: isCorrect});
+
   const iv = h.interval || 1;
-  const ease = h.ease || 2.5;
   const _fsD = h.D || 5;
   const _fsS = h.S || 1;
   const ivAgain = 1;
@@ -1736,12 +1943,12 @@ function submitAnswer(ansIdx, el) {
   const ivGood = Math.max(1, Math.round(_fsS * (1 + 0.1 * (11 - _fsD))));
   const ivEasy = Math.max(1, Math.round(_fsS * (1 + 0.15 * (11 - _fsD)) * 1.3));
   const _topicAcc = getTopicAccuracy(q.topic);
-  const _topicAccHtml = _topicAcc !== null ? `<div class="topic-acc">📊 דיוק שלך ב${TOPIC_NAMES[q.topic]||q.topic}: ${_topicAcc}%</div>` : '';
+  const _topicAccHtml = _topicAcc !== null ? `<div class="topic-acc">\u{1F4CA} דיוק שלך ב${TOPIC_NAMES[q.topic]||q.topic}: ${_topicAcc}%</div>` : '';
   function ivLabel(d) { return d === 1 ? '1 יום' : d + ' ימים'; }
 
-  const back = document.getElementById('quiz-card-back');
   const qRealId = q.id ?? QS.pool[QS.idx].idx;
   const isNR = S.notRelevant.includes(qRealId);
+  const back = document.getElementById('quiz-card-back');
   if (back) {
     back.innerHTML = `
       <div class="q-fb show ${isCorrect ? 'ok' : 'err'}">
@@ -1773,10 +1980,8 @@ function submitAnswer(ansIdx, el) {
     `;
     setTimeout(() => {
       const c3d = document.getElementById('quiz-card-3d');
-      const cf = c3d && c3d.querySelector('.card-front');
-      if (c3d && cf && back) {
-        c3d.style.height = Math.max(cf.scrollHeight, back.scrollHeight) + 'px';
-        c3d.classList.add('flipped');
+      if (c3d && back) {
+        c3d.style.height = Math.max(c3d.scrollHeight, back.scrollHeight) + 'px';
       }
     }, 50);
   }
@@ -1786,7 +1991,6 @@ function submitAnswer(ansIdx, el) {
   S.activityLog[_today] = (S.activityLog[_today]||0)+1;
   save();
 }
-
 function nextQuestion() {
   QS.idx++;
   if (QS.idx >= QS.pool.length) { showQuizResult(); return; }
@@ -2401,6 +2605,53 @@ function renderMastery() {
     + rows + '</div>';
 }
 
+function renderCalibration() {
+  const el = document.getElementById('perf-calibration');
+  if (!el) return;
+  const log = S.confLog || [];
+  if (log.length === 0) { el.innerHTML = ''; return; }
+  const byConf = {1:{c:0,t:0},2:{c:0,t:0},3:{c:0,t:0}};
+  log.forEach(e => {
+    const lvl = e.confidence || 1;
+    if (!byConf[lvl]) byConf[lvl] = {c:0,t:0};
+    byConf[lvl].t++;
+    if (e.correct) byConf[lvl].c++;
+  });
+  const pct = lvl => byConf[lvl].t > 0 ? Math.round(byConf[lvl].c / byConf[lvl].t * 100) : null;
+  const pGuess = pct(1), pHalf = pct(2), pSure = pct(3);
+  const gapWarn = (pGuess !== null && pSure !== null && Math.abs(pSure - pGuess) < 15)
+    ? `<div class="cal-warn">⚠️ אזור עיוור: אתה בטוח אך הפער מהדיוק של כללר קטן מ-15%</div>` : '';
+  el.innerHTML = `<div class="sw-section"><h3 style="font-size:.9rem;font-weight:800;color:#fff;margin-bottom:10px">🧠 כיול בטחון עצמי</h3>
+    <div class="cal-grid">
+      <div class="cal-box"><div class="cal-lbl">😰 ניחוש</div><div class="cal-val">${pGuess !== null ? pGuess+'%' : 'אין'}</div></div>
+      <div class="cal-box"><div class="cal-lbl">🤔 50/50</div><div class="cal-val">${pHalf !== null ? pHalf+'%' : 'אין'}</div></div>
+      <div class="cal-box"><div class="cal-lbl">💪 בטוח</div><div class="cal-val">${pSure !== null ? pSure+'%' : 'אין'}</div></div>
+    </div>${gapWarn}</div>`;
+}
+
+function renderErrorPatterns() {
+  const el = document.getElementById('perf-errors');
+  if (!el) return;
+  const log = S.errorLog || [];
+  if (log.length === 0) { el.innerHTML = ''; return; }
+  const counts = {};
+  log.forEach(e => { counts[e.qId] = (counts[e.qId] || 0) + 1; });
+  const top3 = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,3);
+  if (top3.length === 0) { el.innerHTML = ''; return; }
+  const rows = top3.map(([qid, cnt]) => {
+    const q = QUIZ_DATA.find(q => String(q.id ?? QUIZ_DATA.indexOf(q)) === String(qid));
+    if (!q) return '';
+    const shortQ = q.q.length > 60 ? q.q.slice(0,60)+'…' : q.q;
+    return `<div class="err-item">
+      <div class="err-q-txt">${shortQ}</div>
+      <div class="err-cnt">×${cnt}</div>
+      <button class="err-drill" onclick="startFocusedPractice([${JSON.stringify(q.id ?? QUIZ_DATA.indexOf(q))}])">תרגול</button>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="sw-section"><h3 style="font-size:.9rem;font-weight:800;color:#fff;margin-bottom:10px">🔴 הטעויות הנפוצות שלך</h3>${rows}</div>`;
+}
+
+
 // ===== PERFORMANCE TAB =====
 function renderPerf() {
   const lv = getLevel();
@@ -2508,6 +2759,8 @@ function renderPerf() {
   renderHeatmap();
   renderForecast();
   renderMastery();
+  renderCalibration();
+  renderErrorPatterns();
 }
 
 // ===== RENDER ALL =====
@@ -2535,6 +2788,8 @@ function renderAll() {
 
 // ===== INIT =====
 function init() {
+  S.confLog = S.confLog || [];
+  S.errorLog = S.errorLog || [];
   checkStreak();
   renderAll();
   showTab('home');

@@ -46,6 +46,9 @@ a{color:var(--blue);text-decoration:none}
 .tab-pane{display:none}
 .tab-pane.active{display:block;animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes pulse-green{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 10px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+@keyframes slideDown{from{opacity:0;max-height:0;transform:translateY(-4px)}to{opacity:1;max-height:300px;transform:translateY(0)}}
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r)}
 .sec-h{margin-bottom:12px}
 .sec-h h2{font-size:1rem;font-weight:800;color:#fff;margin-bottom:1px}
@@ -144,13 +147,13 @@ a{color:var(--blue);text-decoration:none}
 .q-opt .ol{background:var(--border);color:var(--muted);width:22px;height:22px;min-width:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;transition:all .18s;flex-shrink:0}
 .q-opt:hover:not(.locked){background:var(--blue-dim);border-color:var(--blue-ring)}
 .q-opt:hover:not(.locked) .ol{background:var(--blue);color:#fff}
-.q-opt.correct{background:var(--green-dim);border-color:var(--green-ring)}
+.q-opt.correct{background:var(--green-dim);border-color:var(--green-ring);animation:pulse-green .5s ease}
 .q-opt.correct .ol{background:var(--green);color:#fff}
-.q-opt.wrong{background:var(--red-dim);border-color:var(--red-ring);opacity:.65}
+.q-opt.wrong{background:var(--red-dim);border-color:var(--red-ring);opacity:.65;animation:shake .4s ease}
 .q-opt.wrong .ol{background:var(--red);color:#fff}
 .q-opt.locked{cursor:default}
 .q-fb{margin-top:10px;padding:11px 13px;border-radius:8px;font-size:.82rem;line-height:1.5;display:none}
-.q-fb.show{display:block;animation:fadeUp .2s}
+.q-fb.show{display:block;animation:slideDown .25s ease}
 .q-fb.ok{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffda}
 .q-fb.err{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffcece}
 .q-fb strong{display:block;font-size:.86rem;margin-bottom:3px}
@@ -303,6 +306,25 @@ a{color:var(--blue);text-decoration:none}
   .stat-num{font-size:1.3rem}
   .quiz-wrap{padding:14px 12px}
 }
+
+.hm-card,.fc-card,.ms-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.heatmap-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;direction:ltr;margin-top:8px}
+.hm-cell{aspect-ratio:1;border-radius:2px;background:rgba(255,255,255,.05)}
+.hm-cell.l1{background:rgba(99,102,241,.25)}
+.hm-cell.l2{background:rgba(99,102,241,.55)}
+.hm-cell.l3{background:rgba(99,102,241,.85)}
+.hm-today{outline:2px solid var(--blue-b);outline-offset:1px}
+.forecast-bars{display:flex;gap:5px;align-items:flex-end;height:70px;margin-top:10px}
+.fc-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center}
+.fc-count{font-size:.6rem;color:var(--muted);font-weight:700;margin-bottom:2px;min-height:12px}
+.fc-bar{width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:height .3s}
+.fc-day{font-size:.56rem;color:var(--dim);text-align:center;margin-top:2px}
+.ms-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ms-name{font-size:.79rem;font-weight:600;flex:1.5}
+.ms-stars{font-size:.85rem;min-width:48px}
+.ms-bar-bg{flex:2;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.ms-bar-f{height:100%;border-radius:3px}
+.ms-pct{font-size:.72rem;color:var(--muted);min-width:28px;text-align:left}
 </style>
 </head>
 <body>
@@ -460,6 +482,9 @@ a{color:var(--blue);text-decoration:none}
     </div>
   </div>
   <div class="badges-sec" id="perf-badges"></div>
+  <div id="perf-heatmap" style="margin-bottom:13px"></div>
+  <div id="perf-forecast" style="margin-bottom:13px"></div>
+  <div id="perf-mastery" style="margin-bottom:13px"></div>
   <div class="xp-log" id="perf-xp-log"></div>
   <div style="text-align:center;margin-top:6px">
     <button class="reset-btn" data-action="reset-progress">🔄 אפס התקדמות</button>
@@ -1278,6 +1303,7 @@ function getState() {
     if (!p.simScores) p.simScores = {};
     if (!p.xpLog) p.xpLog = [];
     if (p.quizBestPct == null) p.quizBestPct = null;
+    if (!p.activityLog) p.activityLog = {};
     return p;
   } catch(e) { return initState(); }
 }
@@ -1293,7 +1319,8 @@ function initState() {
     simScores:{},
     xpLog:[],
     activeTrack:'sales',
-    quizBestPct:null
+    quizBestPct:null,
+    activityLog:{}
   };
 }
 
@@ -1657,6 +1684,10 @@ function submitAnswer(ansIdx, el) {
       </div>
     `;
   }
+  // Track daily activity
+  const _today = new Date().toISOString().split('T')[0];
+  S.activityLog = S.activityLog || {};
+  S.activityLog[_today] = (S.activityLog[_today]||0)+1;
   save();
 }
 
@@ -2055,6 +2086,97 @@ function renderHome() {
   examBadgeHtml('eb-yesodot', '2026-12-09');
 }
 
+
+function renderHeatmap() {
+  var el = document.getElementById('perf-heatmap');
+  if (!el) return;
+  var log = S.activityLog || {};
+  var today = new Date();
+  var streak = S.streak.count || 0;
+  var cells = '';
+  for (var i = 69; i >= 0; i--) {
+    var d = new Date(today);
+    d.setDate(d.getDate() - i);
+    var key = d.toISOString().split('T')[0];
+    var cnt = log[key] || 0;
+    var lvl = cnt === 0 ? '' : cnt < 5 ? 'l1' : cnt < 10 ? 'l2' : 'l3';
+    var isToday = i === 0 ? ' hm-today' : '';
+    cells += '<div class="hm-cell ' + lvl + isToday + '" title="' + key + ': ' + cnt + ' שאלות"></div>';
+  }
+  el.innerHTML = '<div class="hm-card">'
+    + '<div class="ws-title">📅 10 שבועות אחרונות · ' + streak + ' ימי רצף 🔥</div>'
+    + '<div class="heatmap-grid">' + cells + '</div>'
+    + '</div>';
+}
+
+function renderForecast() {
+  var el = document.getElementById('perf-forecast');
+  if (!el) return;
+  var todayD = new Date();
+  todayD.setHours(0, 0, 0, 0);
+  var DAY_NAMES = [
+    'ראשון', 'שני', 'שלישי',
+    'רביעי', 'חמישי',
+    'שישי', 'שבת'
+  ];
+  var counts = [0, 0, 0, 0, 0, 0, 0];
+  Object.values(S.quizHistory).forEach(function(h) {
+    if (!h.nextSeen) return;
+    var ns = new Date(h.nextSeen);
+    ns.setHours(0, 0, 0, 0);
+    var diff = Math.round((ns - todayD) / 86400000);
+    if (diff >= 0 && diff < 7) counts[diff]++;
+  });
+  var maxCount = Math.max.apply(null, counts.concat([1]));
+  var bars = '';
+  for (var i = 0; i < 7; i++) {
+    var d2 = new Date(todayD);
+    d2.setDate(d2.getDate() + i);
+    var dayName = i === 0 ? 'היום' : i === 1 ? 'מחר' : DAY_NAMES[d2.getDay()];
+    var barH = Math.max(4, Math.round((counts[i] / maxCount) * 60));
+    var color = i === 0 ? 'var(--blue)' : i === 1 ? 'var(--gold)' : 'rgba(148,163,184,.4)';
+    bars += '<div class="fc-bar-wrap">'
+      + '<div class="fc-count">' + (counts[i] > 0 ? counts[i] : '') + '</div>'
+      + '<div class="fc-bar" style="height:' + barH + 'px;background:' + color + '"></div>'
+      + '<div class="fc-day">' + dayName + '</div>'
+      + '</div>';
+  }
+  el.innerHTML = '<div class="fc-card">'
+    + '<div class="ws-title">📅 תחזית חזרות — 7 ימים קרובים</div>'
+    + '<div class="forecast-bars">' + bars + '</div>'
+    + '</div>';
+}
+
+function renderMastery() {
+  var el = document.getElementById('perf-mastery');
+  if (!el) return;
+  var COLS = [
+    {key:'namal',   name:'נמל חיפה',            emoji:'⚓️'},
+    {key:'kiryat',  name:'קריית מוצקין', emoji:'🏘️'},
+    {key:'davs',    name:'דב"ס',                                      emoji:'🔧'},
+    {key:'rakevet', name:'רכבת ישראל', emoji:'🚂'},
+    {key:'tnuva',   name:'תנובה',                           emoji:'🥛'},
+    {key:'msapanot',name:'מספנות ישראל', emoji:'🚢'}
+  ];
+  var stats = getTopicStats();
+  var rows = '';
+  COLS.forEach(function(c) {
+    var s = stats[c.key] || {correct:0, total:0};
+    var pct = s.total > 0 ? Math.round(s.correct / s.total * 100) : 0;
+    var stars = pct >= 80 ? '★★★' : pct >= 60 ? '★★☆' : pct >= 40 ? '★☆☆' : '☆☆☆';
+    var color = s.total === 0 ? 'var(--dim)' : pct >= 75 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+    rows += '<div class="ms-row">'
+      + '<div class="ms-name">' + c.emoji + ' ' + c.name + '</div>'
+      + '<div class="ms-stars" style="color:' + color + '">' + stars + '</div>'
+      + '<div class="ms-bar-bg"><div class="ms-bar-f" style="width:' + pct + '%;background:' + color + '"></div></div>'
+      + '<div class="ms-pct">' + (s.total > 0 ? pct + '%' : '—') + '</div>'
+      + '</div>';
+  });
+  el.innerHTML = '<div class="ms-card">'
+    + '<div class="ws-title">🏆 מאסטרי קולקטיב</div>'
+    + rows + '</div>';
+}
+
 // ===== PERFORMANCE TAB =====
 function renderPerf() {
   const lv = getLevel();
@@ -2159,6 +2281,9 @@ function renderPerf() {
         }
       </div>`;
   }
+  renderHeatmap();
+  renderForecast();
+  renderMastery();
 }
 
 // ===== RENDER ALL =====

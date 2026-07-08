@@ -1,0 +1,2805 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#070710">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ביטוח Pro">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="manifest" id="pwa-manifest">
+<title>ביטוח Pro v5.0 | מערכת לימוד סוכנים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+:root{
+  --bg:#070710;--surface:#0f0f1a;--card:#15151f;--card2:#1a1a28;--card3:#1f1f30;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --blue:#6366f1;--blue-b:#818cf8;--blue-d:#4f46e5;
+  --blue-dim:rgba(99,102,241,.1);--blue-ring:rgba(99,102,241,.45);
+  --gold:#f59e0b;--gold-dim:rgba(245,158,11,.1);--gold-ring:rgba(245,158,11,.4);
+  --green:#10b981;--green-dim:rgba(16,185,129,.1);--green-ring:rgba(16,185,129,.4);
+  --red:#ef4444;--red-dim:rgba(239,68,68,.1);--red-ring:rgba(239,68,68,.4);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,.1);--purple-ring:rgba(168,85,247,.4);
+  --text:#f8fafc;--muted:#94a3b8;--dim:#475569;
+  --r:14px;--r-lg:20px;--p:16px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,20px);
+  --nav-h:60px;--header-h:calc(var(--safe-top) + 52px)
+}
+html{scroll-behavior:smooth;height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Heebo','Segoe UI',system-ui,sans-serif;direction:rtl;height:100%;width:100%;line-height:1.6;overflow:hidden;position:fixed;font-size:15px}
+[data-action],button,a{touch-action:manipulation;cursor:pointer;user-select:none;-webkit-user-select:none}
+a{color:var(--blue);text-decoration:none}
+.app-header{background:rgba(10,10,18,.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border2);padding:calc(var(--safe-top) + 10px) 18px 12px;display:flex;align-items:center;gap:12px;position:fixed;top:0;left:0;right:0;z-index:100}
+.header-logo{font-size:1.2rem;font-weight:900;color:#fff;flex:1;letter-spacing:-.02em}
+.header-logo span{background:linear-gradient(90deg,var(--blue-b),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header-xp{display:inline-flex;align-items:center;gap:5px;background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:20px;padding:4px 11px;font-size:.75rem;color:var(--gold);font-weight:700;white-space:nowrap}
+.header-streak{display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);border-radius:20px;padding:4px 10px;font-size:.75rem;color:#fc6a6a;font-weight:700}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;z-index:10001;will-change:transform}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0;background:none;border:none;cursor:pointer;color:var(--muted);font-size:.6rem;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.nav-btn.active{color:var(--blue)}
+.nav-icon{font-size:1.2rem;line-height:1}
+.nav-label{font-size:.6rem;font-weight:700}
+#app-main{position:fixed;top:var(--header-h);left:0;right:0;bottom:calc(var(--nav-h) + var(--safe-bottom));z-index:1;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding:16px 13px 18px}
+.tab-pane{display:none}
+.tab-pane.active{display:block;animation:fadeUp .2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes pulse-green{0%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}70%{box-shadow:0 0 0 10px rgba(16,185,129,0)}100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}}
+@keyframes slideDown{from{opacity:0;max-height:0;transform:translateY(-4px)}to{opacity:1;max-height:300px;transform:translateY(0)}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r)}
+.sec-h{margin-bottom:12px}
+.sec-h h2{font-size:1rem;font-weight:800;color:#fff;margin-bottom:1px}
+.sec-h p{font-size:.78rem;color:var(--muted)}
+/* HOME */
+.readiness-card{background:linear-gradient(135deg,rgba(99,102,241,.14),rgba(168,85,247,.08));border:1px solid var(--blue-ring);border-radius:var(--r-lg);padding:20px 18px;margin-bottom:13px;display:flex;align-items:center;gap:16px}
+.readiness-ring{width:80px;height:80px;flex-shrink:0;position:relative}
+.readiness-ring svg{transform:rotate(-90deg)}
+.readiness-ring .rr-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:7}
+.readiness-ring .rr-fill{fill:none;stroke:url(#rr-grad);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s}
+.readiness-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.readiness-num .rn{font-size:1.45rem;font-weight:900;color:var(--blue-b);line-height:1}
+.readiness-num .rl{font-size:.55rem;color:var(--muted)}
+.readiness-info h3{font-size:.95rem;font-weight:700;color:#fff;margin-bottom:3px}
+.readiness-info p{font-size:.78rem;color:var(--muted);line-height:1.45}
+.today-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}
+.today-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:border-color .2s,transform .15s}
+.today-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.tc-icon{font-size:1.4rem;margin-bottom:5px}
+.tc-num{font-size:1.6rem;font-weight:800;line-height:1;margin-bottom:2px}
+.tc-label{font-size:.7rem;color:var(--muted)}
+.tc-sub{font-size:.76rem;color:#ccc;font-weight:600;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.weakness-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:13px}
+.ws-title{font-size:.68rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin-bottom:10px}
+.w-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.w-label{font-size:.78rem;color:#ccc;width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.w-bar-wrap{flex:1;background:var(--border);border-radius:6px;height:6px;overflow:hidden}
+.w-bar-fill{height:100%;border-radius:6px}
+.w-pct{font-size:.7rem;color:var(--muted);width:30px;text-align:left;flex-shrink:0}
+.tip-card{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(249,115,22,.05));border:1px solid var(--gold-ring);border-radius:var(--r);padding:13px;margin-bottom:13px}
+.tip-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.7px;color:var(--gold);font-weight:700;margin-bottom:4px}
+.tip-text{font-size:.85rem;color:#e8d070;line-height:1.55;font-style:italic}
+.exam-card{background:linear-gradient(135deg,rgba(168,85,247,.08),rgba(99,102,241,.05));border:1px solid rgba(168,85,247,.22);border-radius:var(--r);padding:14px;margin-bottom:13px}
+.exam-title-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.7px;color:var(--purple);font-weight:700;margin-bottom:10px}
+.exam-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.exam-row:last-child{border-bottom:none;padding-bottom:0}
+.exam-info{flex:1}
+.exam-name{font-weight:700;color:#fff;font-size:.86rem;margin-bottom:1px}
+.exam-meta{font-size:.72rem;color:var(--muted)}
+.exam-badge{display:inline-block;padding:2px 7px;border-radius:8px;font-size:.65rem;font-weight:800;margin-top:4px}
+.eb-ok{background:var(--green-dim);color:var(--green);border:1px solid var(--green-ring)}
+.eb-soon{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-ring)}
+.eb-urgent{background:var(--red-dim);color:var(--red);border:1px solid var(--red-ring)}
+/* LEARN */
+.track-sel{display:flex;gap:8px;margin-bottom:15px}
+.track-btn{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;font-family:inherit;font-size:.83rem;font-weight:700;color:var(--muted);transition:all .2s}
+.track-btn[data-param="sales"].active{background:var(--blue-dim);border-color:var(--blue-ring);color:var(--blue)}
+.track-btn[data-param="licensing"].active{background:var(--purple-dim);border-color:var(--purple-ring);color:var(--purple)}
+.chapter-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:9px;overflow:hidden;transition:border-color .2s}
+.chapter-card.open{border-color:var(--border2)}
+.chap-hdr{display:flex;align-items:center;gap:11px;padding:14px 15px;cursor:pointer}
+.chap-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.ci-blue{background:var(--blue-dim);color:var(--blue)}
+.ci-green{background:var(--green-dim);color:var(--green)}
+.ci-purple{background:var(--purple-dim);color:var(--purple)}
+.ci-gold{background:var(--gold-dim);color:var(--gold)}
+.chap-info{flex:1;min-width:0}
+.chap-title{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:1px}
+.chap-meta{font-size:.72rem;color:var(--muted)}
+.chap-prog-bar{background:var(--border);border-radius:4px;height:4px;margin-top:5px;overflow:hidden}
+.chap-prog-fill{height:100%;border-radius:4px;transition:width .4s}
+.chap-chevron{color:var(--muted);font-size:.85rem;transition:transform .3s;flex-shrink:0;margin-right:2px}
+.chapter-card.open .chap-chevron{transform:rotate(180deg)}
+.chap-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.chapter-card.open .chap-body{max-height:5000px}
+.lesson-list{padding:4px 13px 11px}
+.week-hdr{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;margin:8px 0 4px;border-radius:7px;background:rgba(255,255,255,.025);border:1px solid var(--border)}
+.lesson-item{display:flex;align-items:center;gap:9px;padding:10px 11px;border-radius:9px;margin-bottom:4px;cursor:pointer;transition:all .2s;border:1px solid transparent}
+.lesson-item:hover{background:rgba(255,255,255,.04);border-color:var(--border)}
+.lesson-item.done{background:var(--green-dim);border-color:var(--green-ring)}
+.lesson-item.current{background:var(--blue-dim);border-color:var(--blue-ring)}
+.l-num{width:26px;height:26px;border-radius:50%;background:var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0;transition:all .2s}
+.lesson-item.done .l-num{background:var(--green);color:#fff}
+.lesson-item.current .l-num{background:var(--blue);color:#fff}
+.l-info{flex:1;min-width:0}
+.l-title{font-size:.86rem;font-weight:600;color:#fff;margin-bottom:1px;line-height:1.3}
+.l-desc{font-size:.71rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.l-xp{font-size:.65rem;color:var(--gold);font-weight:700;background:var(--gold-dim);padding:2px 6px;border-radius:8px;flex-shrink:0}
+/* QUIZ */
+.quiz-mode-sel{display:flex;gap:5px;margin-bottom:9px;background:var(--card2);border-radius:9px;padding:4px;border:1px solid var(--border)}
+.qms-btn{flex:1;padding:8px 8px;border:none;border-radius:7px;cursor:pointer;font-family:inherit;font-size:.78rem;font-weight:700;color:var(--muted);background:transparent;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px}
+.qms-btn.active{background:var(--blue);color:#fff}
+.due-badge{background:var(--red);color:#fff;font-size:.58rem;font-weight:800;padding:1px 4px;border-radius:7px}
+.quiz-filter{display:flex;gap:5px;margin-bottom:11px;flex-wrap:wrap}
+.qf-btn{padding:5px 11px;border:1px solid var(--border);border-radius:7px;cursor:pointer;font-family:inherit;font-size:.75rem;font-weight:700;color:var(--muted);background:var(--card2);transition:all .2s}
+.qf-btn.active{border-color:var(--blue-ring);background:var(--blue-dim);color:var(--blue)}
+.quiz-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px 17px}
+.qprog-wrap{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.qprog-bg{flex:1;background:var(--border);border-radius:6px;height:5px;overflow:hidden}
+.qprog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:6px;transition:width .3s}
+.qprog-txt{font-size:.72rem;color:var(--muted);white-space:nowrap}
+.q-topic-tag{font-size:.65rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:5px;font-weight:600}
+.q-text{font-size:.94rem;font-weight:600;color:#fff;margin-bottom:15px;line-height:1.55}
+.q-options{display:flex;flex-direction:column;gap:6px}
+.q-opt{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;padding:11px 12px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;font-family:inherit;color:var(--text);text-align:right;width:100%;font-size:.85rem;line-height:1.45;transition:all .18s}
+.q-opt .ol{background:var(--border);color:var(--muted);width:22px;height:22px;min-width:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;transition:all .18s;flex-shrink:0}
+.q-opt:hover:not(.locked){background:var(--blue-dim);border-color:var(--blue-ring)}
+.q-opt:hover:not(.locked) .ol{background:var(--blue);color:#fff}
+.q-opt.correct{background:var(--green-dim);border-color:var(--green-ring);animation:pulse-green .5s ease}
+.q-opt.correct .ol{background:var(--green);color:#fff}
+.q-opt.wrong{background:var(--red-dim);border-color:var(--red-ring);opacity:.65;animation:shake .4s ease}
+.q-opt.wrong .ol{background:var(--red);color:#fff}
+.q-opt.locked{cursor:default}
+.q-fb{margin-top:10px;padding:11px 13px;border-radius:8px;font-size:.82rem;line-height:1.5;display:none}
+.q-fb.show{display:block;animation:slideDown .25s ease}
+.q-fb.ok{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffda}
+.q-fb.err{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffcece}
+.q-fb strong{display:block;font-size:.86rem;margin-bottom:3px}
+.q-not-rel{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:.76rem;color:var(--muted)}
+.nr-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:3px 8px;border-radius:6px;font-family:inherit;font-size:.7rem;cursor:pointer;transition:all .18s}
+.nr-btn:hover,.nr-btn.marked{background:var(--red-dim);border-color:var(--red-ring);color:var(--red)}
+.q-next-btn{background:var(--blue);border:none;color:#fff;padding:10px 22px;border-radius:8px;cursor:pointer;font-size:.87rem;font-weight:700;margin-top:11px;display:none;font-family:inherit;transition:all .18s}
+.q-next-btn.show{display:inline-block}
+.q-next-btn:hover{background:var(--blue-d);transform:translateY(-1px)}
+.quiz-result{text-align:center;padding:8px 0;animation:fadeUp .3s}
+.res-circle{width:96px;height:96px;border-radius:50%;border:4px solid var(--blue);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 14px}
+.res-score{font-size:2rem;font-weight:900;color:var(--blue);line-height:1}
+.res-of{font-size:.7rem;color:var(--muted)}
+.res-msg{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px}
+.res-sub{font-size:.82rem;color:var(--muted);margin-bottom:16px}
+/* SIM */
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.persona-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;text-align:right;font-family:inherit;width:100%;transition:all .18s}
+.persona-card:hover{border-color:var(--purple-ring);background:var(--purple-dim);transform:translateY(-1px)}
+.pc-emoji{font-size:1.5rem;display:block;margin-bottom:5px}
+.pc-name{font-size:.86rem;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.25}
+.pc-desc{font-size:.68rem;color:var(--muted);margin-bottom:5px;line-height:1.3}
+.pc-type{display:inline-block;font-size:.58rem;background:var(--purple-dim);color:var(--purple);padding:2px 6px;border-radius:7px;font-weight:700}
+.pc-score{display:inline-block;font-size:.65rem;background:var(--green-dim);color:var(--green);padding:2px 6px;border-radius:7px;font-weight:700;margin-right:4px}
+.sim-back-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:8px;font-family:inherit;font-size:.78rem;margin-bottom:11px;display:inline-block;cursor:pointer;transition:all .18s}
+.sim-back-btn:hover{border-color:var(--border2);color:var(--text)}
+.sim-profile{background:var(--card2);border:1px solid var(--border2);border-radius:var(--r);padding:13px;margin-bottom:11px;display:flex;gap:11px;align-items:flex-start}
+.sim-emoji-big{font-size:2rem;flex-shrink:0}
+.sim-profile-info h3{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:2px}
+.sim-profile-info p{font-size:.73rem;color:var(--muted);line-height:1.4}
+.sim-type-badge{font-size:.62rem;background:var(--purple-dim);color:var(--purple);padding:2px 6px;border-radius:7px;font-weight:700;display:inline-block;margin-top:4px}
+.sim-step-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:9px}
+.sim-step-lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.7px;color:var(--purple);font-weight:700;margin-bottom:4px}
+.sim-situation{font-size:.9rem;font-weight:700;color:#fff;margin-bottom:11px;line-height:1.45}
+.sim-opts{display:flex;flex-direction:column;gap:6px}
+.sim-opt{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:11px 13px;cursor:pointer;text-align:right;font-family:inherit;color:var(--text);font-size:.84rem;line-height:1.4;width:100%;transition:all .18s}
+.sim-opt:hover:not(.locked){border-color:var(--purple-ring);background:var(--purple-dim)}
+.sim-opt.locked{cursor:default}
+.sim-opt.great{background:var(--green-dim);border-color:var(--green-ring)}
+.sim-opt.neutral{background:var(--gold-dim);border-color:var(--gold-ring)}
+.sim-opt.bad{background:var(--red-dim);border-color:var(--red-ring);opacity:.65}
+.sim-fb{margin-top:9px;padding:10px 12px;border-radius:8px;font-size:.81rem;line-height:1.5;display:none}
+.sim-fb.show{display:block;animation:fadeUp .2s}
+.sim-fb.great{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffd6}
+.sim-fb.neutral{background:var(--gold-dim);border:1px solid var(--gold-ring);color:#fff0c0}
+.sim-fb.bad{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffd0d0}
+.sim-next-btn{background:var(--purple);border:none;color:#fff;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:700;margin-top:9px;display:none;font-family:inherit;transition:all .18s}
+.sim-next-btn.show{display:inline-block}
+.sim-next-btn:hover{opacity:.85}
+.sim-score-card{background:var(--card);border:1px solid var(--purple-ring);border-radius:var(--r-lg);padding:22px;text-align:center;animation:fadeUp .3s}
+.sim-score-num{font-size:2.8rem;font-weight:900;color:var(--purple);line-height:1;margin-bottom:5px}
+/* PERF */
+.perf-hero{background:linear-gradient(135deg,#0c1020,#13172e);border:1px solid var(--blue-ring);border-radius:var(--r-lg);padding:20px;margin-bottom:13px}
+.level-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.level-icon-big{font-size:2.4rem;flex-shrink:0}
+.level-info h2{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:1px}
+.level-info p{font-size:.75rem;color:var(--muted)}
+.xp-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:3px}
+.xp-bar-wrap{background:rgba(255,255,255,.07);border-radius:20px;height:8px;overflow:hidden;margin:7px 0 2px}
+.xp-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
+.stat-num{font-size:1.45rem;font-weight:800;line-height:1;margin-bottom:3px}
+.stat-label{font-size:.68rem;color:var(--muted)}
+.sn-blue{color:var(--blue)}.sn-gold{color:var(--gold)}.sn-green{color:var(--green)}.sn-purple{color:var(--purple)}.sn-red{color:var(--red)}
+.sw-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:13px}
+.sw-section h3{font-size:.67rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin-bottom:11px}
+.sw-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.sw-label{font-size:.8rem;color:#ccc;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sw-pct{font-size:.74rem;font-weight:700;width:36px;text-align:left}
+.sw-bar-bg{width:80px;background:var(--border);border-radius:5px;height:5px;overflow:hidden;flex-shrink:0}
+.sw-bar-f{height:100%;border-radius:5px}
+.badges-sec{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:13px}
+.badges-sec h3{font-size:.67rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);font-weight:700;margin-bottom:11px}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:8px}
+.badge-item{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center;transition:all .2s}
+.badge-item.earned{background:var(--gold-dim);border-color:var(--gold-ring)}
+.badge-item.locked-b{opacity:.3}
+.badge-emoji-b{font-size:1.6rem;display:block;margin-bottom:4px}
+.badge-name{font-size:.74rem;font-weight:700;color:#fff;margin-bottom:2px}
+.badge-desc{font-size:.62rem;color:var(--muted);line-height:1.3}
+.badge-item.earned .badge-name{color:var(--gold)}
+.xp-log{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:13px}
+.xp-log h3{font-size:.67rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin-bottom:9px}
+.xp-log-list{max-height:150px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.xp-log-item{display:flex;align-items:center;gap:7px;padding:5px 8px;background:rgba(255,255,255,.03);border-radius:6px;font-size:.78rem;color:#aaa}
+.xa{color:var(--gold);font-weight:700;margin-right:auto}
+.reset-btn{background:none;border:1px solid var(--border);color:var(--dim);padding:7px 13px;border-radius:8px;font-family:inherit;font-size:.76rem;cursor:pointer;margin-top:4px;transition:all .18s}
+.reset-btn:hover{border-color:var(--red-ring);color:var(--red)}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:16px;animation:fadeIn .2s;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);width:100%;max-width:640px;max-height:calc(100vh - 32px);overflow:hidden;display:flex;flex-direction:column;animation:slideUp .28s cubic-bezier(.16,1,.3,1);box-sizing:border-box}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:17px 17px 13px;border-bottom:1px solid var(--border);gap:10px;flex-shrink:0;position:sticky;top:0;background:var(--surface);z-index:10}
+.modal-header h2{font-size:1rem;font-weight:800;color:#fff;line-height:1.3}
+.modal-close{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 9px;border-radius:7px;cursor:pointer;font-size:1.1rem;font-family:inherit;flex-shrink:0;transition:all .18s;line-height:1}
+.modal-close:hover{background:var(--border);color:var(--text)}
+.modal-body{padding:17px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.lesson-content{font-size:.86rem;color:#c8d0dc;line-height:1.75}
+.lesson-content h3{color:#fff;font-size:.93rem;margin:13px 0 7px;font-weight:700}
+.lesson-content h4{color:var(--blue-b);font-size:.84rem;margin:10px 0 5px;font-weight:700}
+.lesson-content p{margin-bottom:9px}
+.lesson-content strong{color:#fff}
+.lesson-content ul{padding-right:17px;margin-bottom:9px}
+.lesson-content li{margin-bottom:3px}
+.lesson-tip{background:var(--blue-dim);border:1px solid var(--blue-ring);border-radius:8px;padding:10px 13px;margin:11px 0;font-size:.81rem;color:#b0d0ff;line-height:1.5}
+.lesson-warn{background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:8px;padding:10px 13px;margin:11px 0;font-size:.81rem;color:#ffe8a0;line-height:1.5}
+.modal-footer{padding:12px 17px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;background:var(--surface)}
+.complete-btn{background:var(--green);border:none;color:#fff;padding:10px 22px;border-radius:9px;cursor:pointer;font-size:.88rem;font-weight:700;font-family:inherit;flex:1;transition:all .18s}
+.complete-btn:hover{background:#0ea472}
+.complete-btn.done{background:var(--green-dim);border:1px solid var(--green-ring);color:var(--green);cursor:default;pointer-events:none}
+/* TOAST */
+.xp-toast{position:fixed;top:calc(var(--safe-top) + 18px);left:50%;transform:translateX(-50%) translateY(-70px);background:rgba(10,10,18,.97);border:1px solid var(--gold-ring);border-radius:20px;padding:9px 17px;display:flex;align-items:center;gap:7px;z-index:1000;font-size:.88rem;font-weight:700;color:var(--gold);transition:transform .35s cubic-bezier(.16,1,.3,1),opacity .3s;opacity:0;pointer-events:none;white-space:nowrap}
+.xp-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+/* 3D CARD FLIP */
+.card-scene{perspective:800px;width:100%;margin-bottom:10px}
+.card-3d{position:relative;z-index:1;width:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.card-3d.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-front{transform:rotateY(0deg)}
+.card-back{transform:rotateY(180deg);background:var(--card2);border:1px solid var(--border2);border-radius:var(--r);padding:15px}
+/* CONFETTI */
+@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+/* TIMER */
+.q-timer{font-size:.72rem;color:var(--muted);margin-right:8px}
+.q-hearts{font-size:1.1rem;letter-spacing:2px;margin-left:8px}
+.q-hearts.pulse{animation:heartPulse .3s ease}
+@keyframes heartPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+.topic-acc{font-size:.72rem;color:var(--muted);margin-top:5px;padding-top:5px;border-top:1px solid var(--border)}
+.levelup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;z-index:10000;animation:fadeInOut 2.5s ease forwards;pointer-events:none}
+@keyframes fadeInOut{0%{opacity:0}15%{opacity:1}75%{opacity:1}100%{opacity:0}}
+.levelup-card{background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:16px;padding:30px 40px;text-align:center;transform:scale(0);animation:popIn .4s .2s ease forwards}
+@keyframes popIn{to{transform:scale(1)}}
+.levelup-icon{font-size:3rem;margin-bottom:8px}
+.levelup-title{font-size:1.4rem;font-weight:800;color:#fff}
+.levelup-sub{font-size:1rem;color:rgba(255,255,255,.8);margin-top:4px}
+/* TODAY PLAN */
+.plan-card{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(168,85,247,.05));border:1px solid var(--blue-ring);border-radius:var(--r);padding:13px;margin-bottom:13px}
+.plan-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:.83rem}
+.plan-item:last-child{border-bottom:none}
+.plan-check{width:18px;height:18px;border-radius:4px;background:var(--blue-dim);border:1px solid var(--blue-ring);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+/* KEYBOARD HINT */
+.kb-hint{font-size:.65rem;color:var(--dim);text-align:center;margin-top:6px}
+/* QUIZ STATS CARD */
+.quiz-stats-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:13px}
+.qs-row{display:flex;gap:8px}
+.qs-item{flex:1;text-align:center;background:var(--blue-dim);border:1px solid var(--blue-ring);border-radius:9px;padding:10px 6px;transition:background .2s}
+.qs-num{font-size:1.4rem;font-weight:800;color:var(--blue-b);line-height:1;margin-bottom:3px}
+.qs-label{font-size:.62rem;color:var(--muted)}
+/* SM-2 NOTE */
+.sm2-note{margin-top:7px;font-size:.78rem;color:var(--muted);font-style:italic;display:flex;align-items:center;gap:5px}
+.quiz-confidence{margin-top:12px}
+.confidence-label{font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:8px;font-weight:600}
+.confidence-btns{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
+.conf-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:9px 4px;border:1px solid var(--border2);border-radius:10px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:700;background:var(--card2);transition:all .18s;color:#fff}
+.conf-btn:hover{transform:translateY(-1px)}
+.conf-again{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.conf-again:hover{background:var(--red);color:#fff}
+.conf-hard{border-color:var(--gold);background:var(--gold-dim);color:var(--gold)}
+.conf-hard:hover{background:var(--gold);color:#fff}
+.conf-good{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.conf-good:hover{background:var(--green);color:#fff}
+.conf-easy{border-color:var(--blue);background:var(--blue-dim);color:var(--blue-b)}
+.conf-easy:hover{background:var(--blue);color:#fff}
+.conf-interval{font-size:.62rem;font-weight:500;opacity:.8;margin-top:1px}
+/* CARD HOVER TRANSITIONS */
+.card{transition:border-color .2s}
+.readiness-card{transition:border-color .2s}
+.weakness-section{transition:border-color .2s}
+@media(max-width:480px){
+  #app-main{padding:12px 10px 12px}
+  .persona-grid{grid-template-columns:1fr}
+  .stats-grid{gap:6px}
+  .stat-box{padding:10px 4px}
+  .stat-num{font-size:1.3rem}
+  .quiz-wrap{padding:14px 12px}
+}
+
+.hm-card,.fc-card,.ms-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.heatmap-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;direction:ltr;margin-top:8px}
+.hm-cell{aspect-ratio:1;border-radius:2px;background:rgba(255,255,255,.05)}
+.hm-cell.l1{background:rgba(99,102,241,.25)}
+.hm-cell.l2{background:rgba(99,102,241,.55)}
+.hm-cell.l3{background:rgba(99,102,241,.85)}
+.hm-today{outline:2px solid var(--blue-b);outline-offset:1px}
+.forecast-bars{display:flex;gap:5px;align-items:flex-end;height:70px;margin-top:10px}
+.fc-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center}
+.fc-count{font-size:.6rem;color:var(--muted);font-weight:700;margin-bottom:2px;min-height:12px}
+.fc-bar{width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:height .3s}
+.fc-day{font-size:.56rem;color:var(--dim);text-align:center;margin-top:2px}
+.ms-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ms-name{font-size:.79rem;font-weight:600;flex:1.5}
+.ms-stars{font-size:.85rem;min-width:48px}
+.ms-bar-bg{flex:2;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.ms-bar-f{height:100%;border-radius:3px}
+.ms-pct{font-size:.72rem;color:var(--muted);min-width:28px;text-align:left}
+
+/* ── v5.0 ── */
+.conf-check-wrap{padding:18px 14px;text-align:center}
+.conf-check-wrap p{font-size:.95rem;font-weight:800;color:#fff;margin-bottom:14px}
+.conf-check-btns{display:flex;gap:8px}
+.conf-pick-btn{flex:1;padding:12px 6px;border:1px solid var(--border);border-radius:9px;background:var(--card2);color:var(--text);font-family:inherit;font-size:.84rem;font-weight:700;cursor:pointer;transition:all .18s;text-align:center}
+.conf-pick-btn:hover{border-color:var(--blue-ring);background:var(--blue-dim)}
+.interleave-tag{display:inline-block;background:var(--purple-dim);border:1px solid var(--purple-ring);color:var(--purple);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:8px;margin-bottom:8px}
+.pretest-screen,.posttest-screen{padding:2px 0}
+.pretest-intro{font-size:.88rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+.pretest-note{font-size:.76rem;color:var(--muted);margin-bottom:12px}
+.pretest-q{font-size:.92rem;font-weight:600;color:#fff;margin-bottom:12px;line-height:1.5}
+.pretest-opts{display:flex;flex-direction:column;gap:6px}
+.pretest-result{padding:8px 12px;border-radius:8px;font-size:.84rem;font-weight:700;margin-bottom:12px}
+.pretest-result.ok{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffda}
+.pretest-result.err{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffcece}
+.posttest-hdr{font-size:.92rem;font-weight:800;color:#fff;margin-bottom:6px}
+.posttest-note{font-size:.78rem;color:var(--muted);margin-bottom:12px}
+.err-item{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.err-q-txt{flex:1;font-size:.82rem;color:#ccc;line-height:1.4}
+.err-cnt{font-size:.75rem;color:var(--red);font-weight:700;white-space:nowrap}
+.err-drill{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:5px 10px;font-family:inherit;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap}
+.cal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.cal-box{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.cal-lbl{font-size:.68rem;color:var(--muted);margin-bottom:3px}
+.cal-val{font-size:1.1rem;font-weight:800;color:#fff}
+.cal-warn{background:rgba(239,68,68,.08);border:1px solid var(--red-ring);border-radius:9px;padding:10px 13px;margin-top:8px;font-size:.82rem;color:#ffcece;line-height:1.45}
+</style>
+</head>
+<body>
+<div class="xp-toast" id="xp-toast">⭐ <span id="xp-toast-msg"></span></div>
+<header class="app-header">
+  <div class="header-logo">🛡️ ביטוח <span>Pro</span></div>
+  <div class="header-xp" id="header-xp">⭐ 0 XP</div>
+  <div class="header-streak" id="header-streak">🔥 0</div>
+</header>
+<nav class="bottom-nav" id="app-nav">
+  <button class="nav-btn active" data-param="home" onclick="showTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">בית</span></button>
+  <button class="nav-btn" data-param="learn" onclick="showTab('learn')"><span class="nav-icon">📚</span><span class="nav-label">למידה</span></button>
+  <button class="nav-btn" data-param="quiz" onclick="showTab('quiz')"><span class="nav-icon">🎯</span><span class="nav-label">חידון</span></button>
+  <button class="nav-btn" data-param="sim" onclick="showTab('sim')"><span class="nav-icon">🎮</span><span class="nav-label">סימולטור</span></button>
+  <button class="nav-btn" data-param="perf" onclick="showTab('perf')"><span class="nav-icon">🏆</span><span class="nav-label">ביצועים</span></button>
+</nav>
+<main id="app-main">
+<!-- TAB 1: HOME -->
+<div class="tab-pane active" id="tab-home">
+  <svg width="0" height="0"><defs><linearGradient id="rr-grad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#6366f1"/><stop offset="100%" style="stop-color:#a855f7"/></linearGradient></defs></svg>
+  <div class="readiness-card">
+    <div class="readiness-ring">
+      <svg viewBox="0 0 80 80" width="80" height="80"><circle class="rr-bg" cx="40" cy="40" r="33"/><circle class="rr-fill" id="rr-circle" cx="40" cy="40" r="33" stroke-dasharray="207.3" stroke-dashoffset="207.3"/></svg>
+      <div class="readiness-num"><span class="rn" id="home-readiness-pct">0%</span><span class="rl">כשירות</span></div>
+    </div>
+    <div class="readiness-info">
+      <h3 id="home-greeting">👋 שלום מתן</h3>
+      <p id="home-readiness-msg">מוכן להתחיל? בחר שיעור למטה</p>
+    </div>
+  </div>
+  <div class="plan-card" id="today-plan">
+    <div class="tip-lbl">📋 תוכנית היום</div>
+    <div id="plan-items"></div>
+  </div>
+  <div class="today-grid">
+    <div class="today-card" data-action="tab" data-param="quiz">
+      <div class="tc-icon">🎯</div>
+      <div class="tc-num sn-blue" id="home-due-count">0</div>
+      <div class="tc-label">שאלות לחזרה</div>
+      <div class="tc-sub" id="home-due-sub">לא דחופות</div>
+    </div>
+    <div class="today-card" data-action="tab" data-param="learn">
+      <div class="tc-icon">📚</div>
+      <div class="tc-num sn-gold" id="home-next-num">-</div>
+      <div class="tc-label">שיעור הבא</div>
+      <div class="tc-sub" id="home-next-sub">התחל ללמוד</div>
+    </div>
+  </div>
+  <div class="quiz-stats-card">
+    <div class="ws-title">📊 סטטיסטיקות בוחן</div>
+    <div class="qs-row">
+      <div class="qs-item"><div class="qs-num" id="qst-answered">0</div><div class="qs-label">שאלות שנענו</div></div>
+      <div class="qs-item"><div class="qs-num" id="qst-streak">-</div><div class="qs-label">ימי רצף 🔥</div></div>
+      <div class="qs-item"><div class="qs-num" id="qst-due">0</div><div class="qs-label">לחזרה היום</div></div>
+    </div>
+  </div>
+  <div class="weakness-section" id="home-weakness-section" style="display:none">
+    <div class="ws-title">🎯 אזורים לשיפור</div>
+    <div id="home-weakness-list"></div>
+  </div>
+  <div class="tip-card" id="home-tip">
+    <div class="tip-lbl">💡 טיפ מכירה יומי</div>
+    <div class="tip-text" id="home-tip-text"></div>
+  </div>
+  <div class="exam-card">
+    <div class="exam-title-lbl">🎓 לוח בחינות – ISA</div>
+    <div class="exam-row">
+      <div class="exam-info">
+        <div class="exam-name">יסודות + גמר פנסיוני</div>
+        <div class="exam-meta">09.12.2026 · ביטוח חיים, פנסיה, אכ"ע, סיעוד</div>
+        <span class="exam-badge" id="eb-yesodot"></span>
+      </div>
+    </div>
+    <div class="exam-row">
+      <div class="exam-info">
+        <div class="exam-name">מקצועית א' – בריאות</div>
+        <div class="exam-meta">~יוני 2027 · ביטוח בריאות, קולקטיבים, שב"ן</div>
+        <span class="exam-badge eb-ok">~11 חודשים</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: LEARN -->
+<div class="tab-pane" id="tab-learn">
+  <div class="sec-h">
+    <h2>📚 מסלולי לימוד</h2>
+    <p>בחר מסלול ולחץ על פרק כדי להתחיל</p>
+  </div>
+  <div class="track-sel">
+    <button class="track-btn active" data-action="switch-track" data-param="sales">🏢 מכירה – 6 שבועות</button>
+    <button class="track-btn" data-action="switch-track" data-param="licensing">📜 רישוי – דצמבר 2026</button>
+  </div>
+  <div id="learn-chapters"></div>
+</div>
+
+<!-- TAB 3: QUIZ -->
+<div class="tab-pane" id="tab-quiz">
+  <div class="sec-h">
+    <h2>🎯 חידון אדפטיבי</h2>
+    <p id="quiz-sub">כרטיסיות SRS – חזרה בזמן הנכון</p>
+  </div>
+  <div class="quiz-mode-sel">
+    <button class="qms-btn active" data-action="quiz-mode" data-param="srs">🔁 חזרה <span class="due-badge" id="srs-due-badge">0</span></button>
+    <button class="qms-btn" data-action="quiz-mode" data-param="practice">📝 תרגול</button>
+    <button class="qms-btn" data-action="quiz-mode" data-param="interleave">🔀 מעורב</button>
+  </div>
+  <div class="quiz-filter">
+  <button class="qf-btn active" data-action="quiz-filter" data-param="all">הכל</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="namal">⚓ נמל</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="kiryat">🏙️ קריית מוצקין</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="davs">📡 דב"ס/YES</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="rakevet">🚂 רכבת</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="tnuva">🥛 תנובה</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="msapanot">⚓ מספנות</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="sales">💼 מכירה</button>
+  <button class="qf-btn" data-action="quiz-filter" data-param="licensing">📜 רישוי</button>
+</div>
+  <div class="quiz-wrap" id="quiz-area">
+    <div style="text-align:center;padding:20px 0;color:var(--muted)">
+      <div style="font-size:2rem;margin-bottom:10px">🎯</div>
+      <p>לחץ <strong style="color:#fff">התחל חידון</strong> כדי להתחיל</p>
+    </div>
+    <button class="q-next-btn show" data-action="start-quiz">התחל חידון →</button>
+  </div>
+</div>
+
+<!-- TAB 4: SIM -->
+<div class="tab-pane" id="tab-sim">
+  <div class="sec-h">
+    <h2>🎮 סימולטור שיחות מכירה</h2>
+    <p>תרגל שיחות אמיתיות עם לקוחות מאתגרים</p>
+  </div>
+  <div id="sim-area"></div>
+</div>
+
+<!-- TAB 5: PERF -->
+<div class="tab-pane" id="tab-perf">
+  <div class="perf-hero" id="perf-hero">
+    <div class="level-row">
+      <div class="level-icon-big" id="perf-level-icon">🌱</div>
+      <div class="level-info">
+        <h2 id="perf-level-name">מתחיל</h2>
+        <p id="perf-level-sub">0 XP · שלב 1 מתוך 5</p>
+      </div>
+    </div>
+    <div class="xp-bar-wrap"><div class="xp-bar" id="perf-xp-bar" style="width:0%"></div></div>
+    <div class="xp-labels"><span id="perf-xp-cur">0 XP</span><span id="perf-xp-next">100 XP</span></div>
+  </div>
+  <div class="stats-grid" id="perf-stats"></div>
+  <div class="sw-section" id="perf-sw"></div>
+  <div class="exam-card" style="margin-bottom:13px">
+    <div class="exam-title-lbl">🎓 ספירת ימים לבחינות</div>
+    <div class="exam-row">
+      <div class="exam-info">
+        <div class="exam-name">יסודות + גמר פנסיוני</div>
+        <div class="exam-meta">09.12.2026</div>
+      </div>
+      <span class="exam-badge" id="perf-eb-2"></span>
+    </div>
+  </div>
+  <div class="badges-sec" id="perf-badges"></div>
+  <div id="perf-heatmap" style="margin-bottom:13px"></div>
+  <div id="perf-forecast" style="margin-bottom:13px"></div>
+  <div id="perf-mastery" style="margin-bottom:13px"></div>
+  <div class="xp-log" id="perf-xp-log"></div>
+  <div id="perf-calibration" style="margin-bottom:13px"></div>
+  <div id="perf-errors" style="margin-bottom:13px"></div>
+  <div style="text-align:center;margin-top:6px">
+    <button class="reset-btn" data-action="reset-progress">🔄 אפס התקדמות</button>
+  </div>
+</div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2 id="modal-title">שיעור</h2>
+      <button class="modal-close" data-action="close-modal">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<script>
+// ===== LESSONS DATA =====
+const LESSONS = {
+'1.1':{id:'1.1',track:'sales',chapter:'c1',title:'מה זה ביטוח בריאות?',desc:'3 שכבות ביטוח – שב"ן, קולקטיב, פרטי',xp:15,content:`
+<h3>3 שכבות הביטוח בישראל</h3>
+<p>כל תושב ישראל חי בתוך מערכת ביטוח בריאות של 3 שכבות שפועלות יחד:</p>
+<ul>
+<li><strong>שכבה 1 – קופת חולים (שב"ן):</strong> ביטוח החובה שכולם משלמים דמי ביטוח לאומי עבורו. מכסה שירותים בסיסיים, אך עם תורים ארוכים ומגבלות רבות.</li>
+<li><strong>שכבה 2 – ביטוח קולקטיבי (קבוצתי):</strong> ביטוח שנרכש על ידי המעסיק עבור עובדיו. עלות נמוכה, כיסוי רחב יותר. דוגמה: ביטוח נמל חיפה עם הראל.</li>
+<li><strong>שכבה 3 – ביטוח פרטי:</strong> ביטוח אישי שנרכש ישירות מחברת ביטוח. הכי יקר אך הכי גמיש.</li>
+</ul>
+<h3>למה השכבות חשובות?</h3>
+<p>השב"ן מכסה רק את הבסיס. ניתוחים מורכבים, תרופות לא בסל, רופאים פרטיים – כל אלה דורשים כיסוי נוסף. הקולקטיב ממלא את הפער בעלות נמוכה מאד.</p>
+<div class="lesson-tip">💡 <strong>טיפ מכירה:</strong> "קופת החולים היא הבסיס, הקולקטיב הוא הביטחון, הפרטי הוא הנוחות. רוב האנשים צריכים לפחות שכבה 2."</div>
+`},
+'1.2':{id:'1.2',track:'sales',chapter:'c1',title:'מה מכסה קופת החולים',desc:'פערי הכיסוי שהלקוח לא מכיר',xp:15,content:`
+<h3>מה כן בסל?</h3>
+<ul>
+<li>ביקורי רופא משפחה וטיפולים בסיסיים</li>
+<li>חלק מהתרופות (עם השתתפות עצמית)</li>
+<li>ניתוחים דחופים ומצבי חירום</li>
+<li>אשפוז בבית חולים ציבורי</li>
+</ul>
+<h3>מה חסר בסל? (=הזדמנות המכירה)</h3>
+<ul>
+<li><strong>ניתוחים פרטיים:</strong> תורים של חודשים רבים בניתוחים "לא דחופים"</li>
+<li><strong>תרופות חדשניות:</strong> הרבה תרופות ביולוגיות ואונקולוגיות לא בסל</li>
+<li><strong>השתלות:</strong> עלות מאות אלפי שקלים, לא מכוסה</li>
+<li><strong>רופאים מומחים:</strong> ביקור ברופא מומחה עם בחירה אישית = תשלום פרטי</li>
+<li><strong>טיפולים בחו"ל:</strong> פרוטוקולים חדשניים בחו"ל אינם מכוסים</li>
+</ul>
+<div class="lesson-tip">💡 <strong>שאלת פתיחה:</strong> "היה לך פעם מצב שהיית צריך ניתוח ולא רצית לחכות חצי שנה?"</div>
+<div class="lesson-warn">⚠️ <strong>טעות נפוצה:</strong> לקוח חושב שהשב"ן מכסה הכל. תשאל אותו כמה תשלם על תרופת אונקולוגיה שלא בסל.</div>
+`},
+'1.3':{id:'1.3',track:'sales',chapter:'c1',title:'שקל ראשון vs משלים שב"ן',desc:'ההבדל המכריע + המספרים',xp:15,content:`
+<h3>שני סוגי ביטוח בריאות</h3>
+<p><strong>ביטוח "משלים שב"ן":</strong> משלם רק אם הקופה משלמת קודם (%שמשלמים מה שמעבר). זול יותר אבל פחות גמיש.</p>
+<p><strong>ביטוח "שקל ראשון":</strong> משלם מהשקל הראשון, ללא תלות בקופה. יקר יותר אך נותן כיסוי מלא עצמאי.</p>
+<h3>נמל חיפה – פרמיות שקל ראשון (דוגמה)</h3>
+<ul>
+<li>מסלול א (בסיסי): עובד/בן-זוג <strong>110₪/חודש</strong></li>
+<li>מסלול ב (מורחב): עובד/בן-זוג <strong>129₪/חודש</strong></li>
+<li>ילד מסלול א: <strong>30₪</strong> | ילד מסלול ב: <strong>39.5₪</strong></li>
+<li>גמלאי מסלול א: <strong>220₪</strong> | גמלאי מסלול ב: <strong>258₪</strong></li>
+</ul>
+<div class="lesson-tip">💡 פרמיה של 129₪ לחודש = 4.3₪ ביום. עלות כוס קפה להגנה על הבריאות!</div>
+`},
+'1.4':{id:'1.4',track:'sales',chapter:'c1',title:'מחלות קשות – CI',desc:'מה מכסה, גידולים in situ, ימי שרידות',xp:15,content:`
+<h3>מה זה CI (Critical Illness)?</h3>
+<p>ביטוח שמשלם <strong>סכום חד-פעמי</strong> (לא החזר הוצאות) עם אבחנה של מחלה קשה. הכסף הולך ישירות לחולה – לשימוש לפי בחירתו.</p>
+<h3>מחלות מכוסות בדרך כלל:</h3>
+<ul>
+<li>🦀 סרטן (ממאיר)</li>
+<li>❤️ אוטם שריר הלב (התקף לב)</li>
+<li>🧠 שבץ מוחי</li>
+<li>🫀 ניתוח מעקפים, השתלת לב/ריאה/כליה</li>
+<li>🧠 מחלת פרקינסון, ALS, MS</li>
+</ul>
+<h3>גידול in situ – חשוב!</h3>
+<p>גידול <strong>בשלב מוקדם</strong> (לא פולשני). פוליסות רבות מכסות רק חלק מהסכום (20%-50%) עבור גידול in situ. חשוב לבדוק בפוליסה!</p>
+<h3>ימי שרידות (Survival Days)</h3>
+<p>תקופה שחייבים <strong>לשרוד</strong> לאחר האבחנה לפני שמקבלים את הכסף. בדרך כלל 14-30 ימים.</p>
+<div class="lesson-tip">💡 <strong>שאלת מפתח:</strong> "אם מחר יגידו לך שיש לך סרטן, מה תעשה עם 500,000₪?"</div>
+`},
+'1.5':{id:'1.5',track:'sales',chapter:'c1',title:"אכ\"ע, ריסק, סיעוד",desc:'3 מוצרים שחייב לדעת',xp:15,content:`
+<h3>אכ"ע – אובדן כושר עבודה</h3>
+<p>מחליף הכנסה אם לא יכולת לעבוד בגלל מחלה או תאונה. מקסימום 75% מהשכר. שניים מהמוצרים הכי חשובים:</p>
+<ul>
+<li><strong>עיסוק ספציפי:</strong> משלם אם לא יכול לעבוד בעיסוקו הספציפי</li>
+<li><strong>כל עיסוק:</strong> משלם רק אם לא יכול לעבוד בשום עיסוק (הגבלה יותר מחמירה)</li>
+</ul>
+<h3>ריסק – ביטוח חיים</h3>
+<p>משלם <strong>סכום חד-פעמי</strong> למוטבים אם המבוטח נפטר. עלות נמוכה מאד לצעירים. חיוני לבעלי משפחה עם משכנתה.</p>
+<h3>סיעוד</h3>
+<p>משלם קצבה חודשית אם אדם מאבד את יכולתו לתפקד ב-ADL (Activities of Daily Living): אכילה, רחצה, לבישה, ניידות, שליטה על סוגרים.</p>
+<div class="lesson-tip">💡 "אכ"ע = ביטוח המשכורת שלך. ריסק = ביטוח שהמשפחה שלך תוכל לחיות בלעדיך."</div>
+`},
+'1.6':{id:'1.6',track:'sales',chapter:'c1',title:'רפורמות ביטוח בריאות — מה השתנה',desc:'ביטול תאונות אישיות, ביטול סיעוד, ומה קיים היום',xp:20,content:`
+<h3>רפורמות מרכזיות בביטוח בריאות ישראל</h3>
+
+<h4>❌ מה בוטל / לא ניתן לרכישה עוד</h4>
+<ul>
+  <li><strong>ביטוח סיעוד פרטי</strong> — בוטל ינואר 2018 ע"י רשות שוק ההון</li>
+  <li><strong>ביטוח תאונות אישיות כמוצר עצמאי</strong> — הוגבל/בוטל ברפורמת 2021</li>
+</ul>
+
+<h4>✅ מה קיים היום (חלופות)</h4>
+<ul>
+  <li>כיסוי תאונות ומחלות <strong>בתוך פוליסת הקולקטיב</strong> (שב"ן / שקל ראשון)</li>
+  <li>ביטוח חיים ונכות ארוכת טווח דרך הפנסיה</li>
+  <li>ביטוח אובדן כושר עבודה (נפרד)</li>
+</ul>
+
+<div class="lesson-tip">💡 טיפ מכירתי: כשלקוח שואל על ביטוח תאונות אישיות — הסבר שזה לא קיים עוד כמוצר נפרד, אבל הכיסוי בתוך הקולקטיב (שקל ראשון) מכסה אשפוז ממחלה ותאונה כאחד.</div>
+
+<h4>🔍 למה זה קרה?</h4>
+<p>רשות שוק ההון מצאה שמוצרים אלה גרמו לכפל ביטוח יקר ולהטעיית צרכנים. הכיסוי עבר להיות חלק אינטגרלי מפוליסות הבריאות הקיימות.</p>
+`},
+'2.1':{id:'2.1',track:'sales',chapter:'c2',title:'נמל חיפה – הראל 2025-2030',desc:'פרמיות, כיסויים, תאריכים',xp:15,content:`
+<h3>פרטי הפוליסה</h3>
+<ul>
+<li><strong>חברה:</strong> הראל ביטוח</li>
+<li><strong>תוקף:</strong> ספטמבר 2025 – אוגוסט 2030</li>
+<li><strong>סוג:</strong> שקל ראשון</li>
+</ul>
+<h3>פרמיות חודשיות</h3>
+<ul>
+<li>עובד / בן-זוג – מסלול א: <strong>110₪</strong> | מסלול ב: <strong>129₪</strong></li>
+<li>ילד – מסלול א: <strong>30₪</strong> | מסלול ב: <strong>39.5₪</strong></li>
+<li>גמלאי – מסלול א: <strong>220₪</strong> | מסלול ב: <strong>258₪</strong></li>
+</ul>
+<h3>כיסויים עיקריים (מסלול ב)</h3>
+<ul>
+<li>השתלות: עד <strong>5,000,000₪</strong></li>
+<li>תרופות שאינן בסל: עד <strong>3,000,000₪</strong></li>
+<li>ניתוחים בחו"ל: עד <strong>250% מהתעריף</strong> בישראל</li>
+<li>ניתוחים בישראל: רשת ספקים פתוחה (לא מוגבלת)</li>
+</ul>
+<div class="lesson-tip">💡 גמלאי ב-220₪ = 7.3₪ ליום. הכי יקר בגיל הכי בעייתי – שימוש בנימוק הערך.</div>
+<div class="lesson-warn">⚠️ שים לב: גמלאי לא יכול להצטרף לראשונה לאחר הפרישה אם לא היה מבוטח כעובד!</div>
+`},
+'2.2':{id:'2.2',track:'sales',chapter:'c2',title:'קריית מוצקין – פניקס 2024-2029',desc:'ניתוחים ברשת פניקס בלבד!',xp:15,content:`
+<h3>פרטי הפוליסה</h3>
+<ul>
+<li><strong>חברה:</strong> פניקס</li>
+<li><strong>תוקף:</strong> דצמבר 2024 – נובמבר 2029</li>
+</ul>
+<h3>פרמיות (זהות לכל הסטטוסים)</h3>
+<ul>
+<li>עובד / בן-זוג / ילד – מסלול א: <strong>137₪</strong> | מסלול ב: <strong>179₪</strong></li>
+</ul>
+<h3>כיסויים עיקריים</h3>
+<ul>
+<li>ניתוחים בישראל: עד <strong>500,000₪</strong> לניתוח</li>
+<li>תרופות שאינן בסל: <strong>1,000,000₪</strong></li>
+<li>השתלות: <strong>3,000,000₪</strong></li>
+</ul>
+<div class="lesson-warn">⚠️ <strong>הגבלה חשובה מאוד!</strong> ניתוחים בישראל מבוצעים <strong>ברשת פניקס בלבד</strong> – לא ניתן לבחור מנתח חיצוני. זה הבדל קריטי מנמל חיפה!</div>
+<div class="lesson-tip">💡 השוואה: נמל חיפה = 129₪ ורשת פתוחה. קריית מוצקין = 179₪ אבל רשת מוגבלת. שים לב להצביע על ההבדל!</div>
+`},
+'2.3':{id:'2.3',track:'sales',chapter:'c2',title:'דב"ס / YES – הראל',desc:'קולקטיב עובדי yes (חברת די.בי.אס) – הראל',xp:15,content:`
+<p>דב"ס (DBS — Direct Broadcasting Services) היא החברה האם של <strong>yes</strong>, חברת שידורי הלוויין הישראלית. הקולקטיב מכסה עובדי yes/דב"ס.</p>
+<h3>פרטי הפוליסה</h3>
+<ul>
+<li><strong>חברה:</strong> הראל ביטוח</li>
+<li><strong>סוג:</strong> שקל ראשון + שב"ן</li>
+<li><strong>בסיס:</strong> ועד עובדים – הסכם קיבוצי</li>
+</ul>
+<h3>המסלולים הזמינים</h3>
+<ul>
+<li><strong>מסלול א – שב"ן:</strong> תרופות שאינן בסל + ניתוחים מהסל הציבורי</li>
+<li><strong>מסלול ב – שקל ראשון:</strong> ניתוחים ברשת פתוחה + שב"ן מורחב</li>
+</ul>
+<h3>פרמיות חודשיות</h3>
+<ul>
+<li>עובד / בן-זוג – מסלול א: <strong>לפי הסכם ועד</strong> | מסלול ב: <strong>לפי הסכם ועד</strong></li>
+<li>ילד – <strong>לפי הסכם ועד</strong></li>
+<li>גמלאי – <strong>לפי הסכם ועד (בדוק המשכייות!)</strong></li>
+</ul>
+<h3>פרופיל עמיתי דב"ס</h3>
+<ul>
+<li>עובדים בחברה עם ועד עובדים פעיל</li>
+<li>מגוון תפקידים: מנהלה, ייצור, שטח</li>
+<li>ביטוח נרכש קיבוצית – כוח קנייה גבוה</li>
+<li>ביטחון תעסוקתי יחסי – לקוחות עם פוטנציאל ארוך טווח</li>
+</ul>
+<div class="lesson-tip">💡 טיפ מכירתי: אצל עובד דב"ס – שאל "מה יקרה לביטוח שלך אם תעזוב?" הביטוח פוקע עם עזיבה – זה ה-gap שאתה מוכר.</div>
+<div class="lesson-warn">⚠️ לוודא עם העובד: האם הכיסוי כולל בני משפחה? האם קיים כיסוי גמלאים? תנאים אלו משתנים בין חוזה לחוזה!</div>
+`},
+'2.4':{id:'2.4',track:'sales',chapter:'c2',title:'רכבת ישראל',desc:'קולקטיב רכבת – עובדי מסילה',xp:15,content:`
+<h3>קולקטיב רכבת ישראל</h3>
+<p>עובדי רכבת ישראל הם ציבור לקוחות ייחודי – עם ותק, יציבות תעסוקתית גבוהה, ועם ביטוח קולקטיבי מוסכם דרך ועד העובדים.</p>
+<h3>נקודות חשובות בגישה</h3>
+<ul>
+<li>עובדים בדרך כלל שנים רבות – כדאי לבדוק גמלאות עתידיות</li>
+<li>ביטוח גמלאים לאחר פרישה – אפשרות המשך</li>
+<li>פרמיות – לפי הסכם קיבוצי שנחתם</li>
+</ul>
+<div class="lesson-tip">💡 עם עובדי רכבת – שאל על תוכניות לפרישה. גמלאות וביטוח גמלאים הם נושא חם.</div>
+<div class="lesson-tip">✅ יתרון ייחודי לאחר קביעות: לאחר שעובד מקבל קביעות ברכבת ישראל, <strong>רובד הבסיס של ביטוח הבריאות משולם על ידי המעסיק</strong> — לא על ידי העובד. זהו יתרון כספי משמעותי שכדאי להדגיש בפגישה!</div>
+`},
+'2.5':{id:'2.5',track:'sales',chapter:'c2',title:'תנובה',desc:'קולקטיב תנובה – עובדי תעשייה',xp:15,content:`
+<h3>קולקטיב תנובה</h3>
+<p>תנובה היא חברת מזון גדולה עם אלפי עובדים – חלקם מפעל, חלקם ניהול. ביטוח הבריאות הקולקטיבי נרכש כחלק מהסכם קיבוצי.</p>
+<h3>פרופיל עובדי תנובה</h3>
+<ul>
+<li>מגוון גילאים ותפקידים</li>
+<li>עובדים רבים עם משפחות – כיסוי בני משפחה חשוב</li>
+<li>שאלות על תנאי עבודה פיזית ואכ"ע</li>
+</ul>
+<div class="lesson-tip">💡 אצל עובדי ייצור – שים דגש על אכ"ע ותאונות עבודה. סיכון פיזי גבוה יותר.</div>
+`},
+'2.6':{id:'2.6',track:'sales',chapter:'c2',title:'מספנות ישראל',desc:'קולקטיב מספנות – עובדי ים',xp:15,content:`
+<h3>קולקטיב מספנות ישראל</h3>
+<p>מספנות ישראל (חיפה) מעסיקה עובדים בעלי מקצועות ים וטכניים. הסיכונים המקצועיים גבוהים יחסית.</p>
+<h3>נקודות ייחודיות</h3>
+<ul>
+<li>עובדים לעיתים בסביבה מסוכנת</li>
+<li>ביטוח תאונות עבודה – חשוב במיוחד</li>
+<li>גיל ממוצע גבוה – שאלות על גמלאות</li>
+<li>ביטוח רב-תחומי (בריאות + חיים + פנסיה)</li>
+</ul>
+<div class="lesson-tip">💡 עובדי מספנות עובדים בסביבה מסוכנת — הדגש כיסוי אשפוז ומחלות מקצוע בתוך פוליסת הקולקטיב. ביטוח תאונות אישיות כעמוד עצמאי אינו זמין עוד לרכישה מאז רפורמת 2021.</div>
+`},
+'3.1':{id:'3.1',track:'sales',chapter:'c3',title:'פרופיל הלקוח – 8 טיפוסים',desc:'זיהוי מניע הלקוח = מפתח לסגירה',xp:15,content:`
+<h3>8 פרופילי לקוחות</h3>
+<p>כל לקוח מונע ממניע שונה. זיהוי המניע האמיתי = מפתח לסגירה.</p>
+<h4>🛡️ המגן – "אני מגן על המשפחה"</h4>
+<p>מניע: פחד מלהשאיר את המשפחה חסרת הגנה. קונה ריסק, CI, אכ"ע. שאל: "מה יהיה אם לא תוכל לעבוד חצי שנה?"</p>
+<h4>💰 מתנגד המחיר – "אין לי תקציב"</h4>
+<p>מניע: עלות. גישה: הפוך את הפרמיה ליומית (4.3₪/יום) + השוואה לעלות ניתוח פרטי (80,000–200,000₪).</p>
+<h4>📊 האנליטי – "הוכח לי עם מספרים"</h4>
+<p>מניע: נתונים ועובדות. רוצה השוואות, סטטיסטיקות ותשואה על ההשקעה. תן מספרים קונקרטיים ותחשיב תשואה.</p>
+<h4>😐 הסקפטי – "לא בא לי עכשיו"</h4>
+<p>מניע: אדישות. שאל שאלה שחושפת סיכון ספציפי: "אם מחר תצטרך ניתוח דחוף – האם יהיה לך כיסוי?"</p>
+<h4>⚡ הממהר – "אין לי זמן, תהיה קצר"</h4>
+<p>מניע: זמן. פתח ב-15 שניות: "ניתוח תוך שבוע, רופא חופשי, 129₪/חודש." שאל אם ירצה לשמוע עוד.</p>
+<h4>🏥 המרוצה מהשב"ן – "הקופה מכסה הכל"</h4>
+<p>מניע: תחושת ביטחון שגויה. שאל על תור לניתוח ספציפי: "כמה המתנת לניתוח קטרקט בקופה?" – חשוף את הפער.</p>
+<h4>👫 מחליט זוגי – "אני צריך לדבר עם אשתי"</h4>
+<p>מניע: תהליך משותף. כבד את הדינמיקה – הצע פגישה לשני בני הזוג יחד. אל תלחץ להחלטה מיידית.</p>
+<h4>🤔 מפחד מהחלטות – "מה אם אחרטה?"</h4>
+<p>מניע: חרדת החלטה. פשט: הצג שתי אפשרויות בלבד. הסבר שניתן לבטל בכל עת תוך 30 ימים ללא קנס.</p>
+<div class="lesson-tip">💡 שאלת זיהוי: "מה הדאגה הכי גדולה שלך מבחינת בריאות?" – התשובה תגלה את הפרופיל.</div>
+`},
+'3.2':{id:'3.2',track:'sales',chapter:'c3',title:'שאלות פתיחה שעובדות',desc:'5 שאלות שפותחות שיחה',xp:15,content:`
+<h3>5 שאלות פתיחה מנצחות</h3>
+<h4>1. שאלת הכוס הריקה</h4>
+<p>"אם הקופה תגיד לך שאתה צריך ניתוח, מה הדבר הכי חשוב לך – שיהיה מהיר, עם הרופא שאתה בוחר, או בלי עלות?"</p>
+<h4>2. שאלת "מה יהיה אם"</h4>
+<p>"מה יקרה למשפחה שלך פיננסית אם לא תוכל לעבוד חצי שנה?"</p>
+<h4>3. שאלת הפרמיה</h4>
+<p>"כמה אתה חושב שעולה ביטוח בריאות שנותן לך ניתוח פרטי תוך שבוע?" (ואז מגלה שמדובר ב-129₪)</p>
+<h4>4. שאלת "מישהו שמכיר"</h4>
+<p>"יש לך חבר או משפחה שהיה צריך ניתוח דחוף ולא היה לו ביטוח?"</p>
+<h4>5. שאלת הגמלאות</h4>
+<p>"כשאתה פורש, מה קורה לביטוח הבריאות שיש לך דרך העבודה?"</p>
+<div class="lesson-tip">💡 כלל זהב: שאלה פתוחה → לקוח מדבר → אתה שומע → אתה יודע מה למכור.</div>
+`},
+'3.3':{id:'3.3',track:'sales',chapter:'c3',title:'התנגדויות ותשובות',desc:'"יקר", "יש לי שב"ן", "אחשוב"',xp:15,content:`
+<h3>3 התנגדויות עיקריות וכיצד להגיב</h3>
+<h4>💬 "זה יקר לי"</h4>
+<p><strong>תשובה:</strong> "129₪ לחודש זה 4.3₪ ביום – פחות מכוס קפה. ניתוח פרטי עולה 50,000-200,000₪. האם 4.3₪ ביום זה יקר אם זה מכסה ניתוח שלב?"</p>
+<h4>💬 "יש לי שב"ן, זה מספיק"</h4>
+<p><strong>תשובה:</strong> "שב"ן מכסה את הבסיס בלבד. תרופה אונקולוגית שלא בסל עולה 30,000₪ לחודש. ניתוח החלפת ירך – תור של 6 חודשים בציבורי. בשקל ראשון תקבל ניתוח תוך שבועיים עם הרופא שתבחר."</p>
+<h4>💬 "אחשוב על זה ואחזור"</h4>
+<p><strong>תשובה:</strong> "בטח. רק שאלה אחת – אם מחר תצטרך ניתוח דחוף, האם יהיה לך כיסוי? זה בדיוק הרגע שבו כדאי להחליט."</p>
+<div class="lesson-tip">💡 אל תתווכח – תשאל. "מה יגרום לך להרגיש שזה שווה?" מוביל את הלקוח לתת לך את הסגירה.</div>
+`},
+'3.4':{id:'3.4',track:'sales',chapter:'c3',title:'השוואה לשב"ן',desc:'כיצד להציג את היתרון',xp:15,content:`
+<h3>טבלת השוואה: שב"ן vs קולקטיב (שקל ראשון)</h3>
+<ul>
+<li><strong>ניתוחים:</strong> שב"ן = תור ממוצע 4-8 חודשים | קולקטיב = תוך 1-2 שבועות</li>
+<li><strong>בחירת רופא:</strong> שב"ן = מוגבל | קולקטיב = חופשי (בנמל חיפה)</li>
+<li><strong>תרופות חדשות:</strong> שב"ן = לא בסל | קולקטיב = עד 3M₪ כיסוי</li>
+<li><strong>השתלות:</strong> שב"ן = לא | קולקטיב = עד 5M₪</li>
+<li><strong>עלות:</strong> שב"ן = דמי ביטוח לאומי | קולקטיב = 110-129₪/חודש</li>
+</ul>
+<div class="lesson-tip">💡 "לשב"ן לוקח 6 חודשים לאשר ניתוח. בינתיים, הגידול גדל. השקל ראשון נותן לך תוך שבועיים. מה זה שווה לך?"</div>
+`},
+'3.5':{id:'3.5',track:'sales',chapter:'c3',title:'סגירה – מתי ואיך',desc:'טכניקות סגירה אפקטיביות',xp:15,content:`
+<h3>מתי לסגור?</h3>
+<p>הרגע הנכון לסגור הוא כשהלקוח מראה "<strong>קנייה רגשית</strong>" – הוא מציין חשש ספציפי, מדמה תרחיש עתידי, או שואל שאלות על פרטי הכיסוי.</p>
+<h3>טכניקות סגירה</h3>
+<h4>✅ ה"ברירת המחדל החיובית"</h4>
+<p>"מצוין, אז נתחיל עם מסלול ב שנותן כיסוי מלא – לאיזו כתובת לשלוח את הטפסים?"</p>
+<h4>✅ "הבחירה המוגבלת"</h4>
+<p>"מסלול א ב-110₪ או מסלול ב ב-129₪ – כמה ילדים תרצה לצרף?"</p>
+<h4>✅ "הדחיפות האמיתית"</h4>
+<p>"רק לידיעתך – ההצטרפות הבאה היא ב-1 לחודש הבא. אם נחכה, יש תקופת המתנה של 90 יום."</p>
+<div class="lesson-warn">⚠️ לעולם אל תלחץ. סגירה טובה = לקוח שמרגיש שהחלטה היא שלו.</div>
+`},
+'y.1':{id:'y.1',track:'licensing',chapter:'cy',title:'תום לב מוחלט',desc:'Utmost Good Faith – עקרון יסוד',xp:15,content:`
+<h3>Utmost Good Faith (Uberrimae Fidei)</h3>
+<p>עקרון בסיסי בדיני ביטוח: <strong>שני הצדדים</strong> (מבוטח וחברת ביטוח) חייבים לנהוג בתום לב מוחלט ולגלות כל מידע מהותי.</p>
+<h3>חובת הגילוי של המבוטח</h3>
+<p>המבוטח חייב לגלות <strong>כל עובדה מהותית</strong> שעשויה להשפיע על ההחלטה של המבטח לבטח ועל תנאי הביטוח. אי-גילוי = עילה לביטול הפוליסה.</p>
+<h3>דוגמה לבחינה</h3>
+<p>שאלה: "מבוטח לא גילה שעישן 20 שנה בטופס הבקשה. האם חברת הביטוח יכולה לסרב לשלם תביעה לסרטן ריאות?" תשובה: כן, בהתקיים עקרון תום הלב המוחלט.</p>
+<div class="lesson-tip">💡 לבחינה: תום לב מוחלט = חובה הדדית = גילוי כל מידע מהותי = עילה לביטול בהפרה.</div>
+`},
+'y.2':{id:'y.2',track:'licensing',chapter:'cy',title:'זיקת ביטוח',desc:'Insurable Interest – חובה לקיום חוזה',xp:15,content:`
+<h3>Insurable Interest (זיקת ביטוח)</h3>
+<p>כדי לבטח נכס או חיים, למבוטח חייבת להיות <strong>אינטרס כספי</strong> בשמירה על הנכס/האדם המבוטח.</p>
+<h3>מתי קיים אינטרס?</h3>
+<ul>
+<li>בעל נכס – מבטח את הנכס שלו</li>
+<li>בן/בת זוג – מבטח חיי בן הזוג</li>
+<li>מעסיק – מבטח עובד מפתח</li>
+<li>בנק – מבטח לווה משכנתה</li>
+</ul>
+<h3>מתי לא קיים אינטרס?</h3>
+<p>אדם זר ללא אינטרס כספי לא יכול לבטח חיי אחר – זה ייחשב כהימור, לא ביטוח.</p>
+<div class="lesson-tip">💡 לבחינה: ביטוח חיים – האינטרס צריך להתקיים <strong>בעת כריתת החוזה</strong>. ביטוח נכס – גם <strong>בעת קרות הנזק</strong>.</div>
+`},
+'y.3':{id:'y.3',track:'licensing',chapter:'cy',title:'עקרון השיפוי',desc:'Indemnity – לא להרוויח מביטוח',xp:15,content:`
+<h3>עקרון השיפוי (Indemnity)</h3>
+<p>המבוטח זכאי לפיצוי בגובה <strong>הנזק בפועל</strong> ולא יותר. לא ניתן להרוויח מאירוע ביטוחי.</p>
+<h3>יישום</h3>
+<ul>
+<li>רכב ישן שווה 30,000₪ נגנב → ישלמו 30,000₪, לא מה שביטחת</li>
+<li>ביטוח כפל: שני ביטוחים = כל אחד משלם חלק יחסי, לא כפול</li>
+</ul>
+<h3>חריגים לעקרון</h3>
+<p><strong>ביטוח אישי (חיים, CI, אכ"ע):</strong> לא כפוף לעקרון השיפוי! ניתן לקבל מספר תשלומים מפוליסות שונות כי הנזק (מוות, מחלה) אינו ניתן לכימות מדויק.</p>
+<div class="lesson-tip">💡 לבחינה: ביטוח רכוש = שיפוי (לא יותר מהנזק). ביטוח אישי = סכום קבוע (לא כפוף לשיפוי).</div>
+`},
+'y.4':{id:'y.4',track:'licensing',chapter:'cy',title:'תחלוף (סוברוגציה)',desc:'Subrogation – זכות חברת הביטוח',xp:15,content:`
+<h3>תחלוף (Subrogation)</h3>
+<p>לאחר שחברת הביטוח שילמה תביעה, היא <strong>נכנסת לנעלי המבוטח</strong> ורשאית לתבוע את האחראי לנזק.</p>
+<h3>דוגמה קלאסית</h3>
+<p>נהג פגע ברכבך וברח. חברת הביטוח שלך שילמה לך 80,000₪ לתיקון. כעת חברת הביטוח שלך יכולה לתבוע את הנהג הפוגע בשמה.</p>
+<h3>חשיבות עקרון התחלוף</h3>
+<ul>
+<li>מונע מהמבוטח לקבל כפל פיצוי (מביטוח + מהאחראי)</li>
+<li>מעביר את הנטל הכלכלי לאחראי האמיתי</li>
+</ul>
+<div class="lesson-tip">💡 לבחינה: תחלוף = ביטוח כן שילם → ביטוח תובע את המזיק. ביטוח אישי (חיים, CI) = אין תחלוף.</div>
+`},
+'y.5':{id:'y.5',track:'licensing',chapter:'cy',title:'ביטוח לאומי – פערים',desc:'מה ביטוח לאומי לא מכסה',xp:15,content:`
+<h3>ביטוח לאומי vs ביטוח פרטי</h3>
+<p>ביטוח לאומי מספק רשת ביטחון בסיסית – אבל עם פערים משמעותיים שפוליסה פרטית ממלאת.</p>
+<h3>מה ביטוח לאומי כן מכסה</h3>
+<ul>
+<li>דמי לידה לאמהות</li>
+<li>קצבת נכות כללית (מוגבלת)</li>
+<li>דמי אבטלה</li>
+<li>קצבת זקנה</li>
+<li>פגיעה בעבודה (קצבה חלקית)</li>
+</ul>
+<h3>פערים קריטיים לביטוח פרטי</h3>
+<ul>
+<li><strong>אכ"ע:</strong> ביטוח לאומי = 75% מהשכר הממוצע במשק (לא שכרך האישי!). רופא שמרוויח 30,000₪ יקבל ~5,000₪ מביטוח לאומי.</li>
+<li><strong>CI:</strong> ביטוח לאומי לא משלם סכום חד-פעמי במחלה קשה</li>
+<li><strong>סיעוד:</strong> שירות סיעודי מצומצם מאד</li>
+</ul>
+<div class="lesson-tip">💡 לבחינה: ביטוח לאומי = בסיס. ביטוח אישי = ממלא את הפער. המפתח = שיעור ההחלפה (replacement ratio).</div>
+`},
+'y.6':{id:'y.6',track:'licensing',chapter:'cy',title:'מעמד הסוכן – שלוח של הלקוח',desc:'ממי הסוכן מייצג?',xp:15,content:`
+<h3>הסוכן בחוק ישראלי</h3>
+<p>סוכן הביטוח הוא <strong>שלוח של המבוטח</strong> (הלקוח), לא של חברת הביטוח. זה ההגדרה המשפטית הרשמית בישראל.</p>
+<h3>המשמעות המעשית</h3>
+<ul>
+<li>הסוכן חייב לפעול <strong>לטובת הלקוח</strong>, לא לטובת חברת הביטוח</li>
+<li>אם הסוכן מסיר פוליסה שלא לטובת הלקוח – הוא עלול להיות אחראי</li>
+<li>ידיעת הסוכן = ידיעת המבוטח (לצורכי דיני חוזים)</li>
+</ul>
+<h3>חשוב לבחינה</h3>
+<p>שאלה: "לקוח מסר מידע שגוי לסוכן אך לא ידע שצריך לדווח לחברה. האם חברת הביטוח יכולה לטעון אי-גילוי?" תשובה: לא – ידיעת הסוכן = ידיעת החברה.</p>
+<div class="lesson-tip">💡 לבחינה: סוכן = שלוח הלקוח. משווק = עובד חברת הביטוח. יועץ = עצמאי, גובה שכר.</div>
+`},
+'y.7':{id:'y.7',track:'licensing',chapter:'cy',title:'מיסוי ביטוח',desc:'סעיף 47 (שכיר) ו-45א (עצמאי)',xp:15,content:`
+<h3>מיסוי פרמיות ביטוח</h3>
+<h4>סעיף 47 – שכיר</h4>
+<p>שכיר זכאי לניכוי מס על פרמיות לביטוח חיים ואכ"ע עד <strong>גובה תקרה</strong> (כ-8,600₪/שנה, כפוף לשינויים שנתיים). הניכוי מחושב כנגד ה-35% הראשונים מהפרמיה.</p>
+<h4>סעיף 45א – עצמאי</h4>
+<p>עצמאי (לא שכיר) זכאי לניכוי גדול יותר – עד <strong>5% מהכנסה החייבת</strong> לביטוח חיים ואכ"ע, ועוד 5% לקרן פנסיה/ביטוח מנהלים.</p>
+<h3>לבחינה</h3>
+<ul>
+<li>ביטוח חיים ואכ"ע = זכאי לניכוי מס</li>
+<li>ביטוח בריאות (CI, סיעוד) = <strong>לא</strong> זכאי לניכוי</li>
+</ul>
+<div class="lesson-tip">💡 הלקוח לא יודע שאפשר לחסוך במס. זה יתרון מכירה – "תשלום הפרמיה בפועל נמוך יותר בגלל הטבת המס."</div>
+`},
+'y.8':{id:'y.8',track:'licensing',chapter:'cy',title:'סוגי ביטוח',desc:'ריסק, מעורב, אכ"ע, סיעוד, תאונות',xp:15,content:`
+<h3>סוגי ביטוח חיים עיקריים</h3>
+<h4>🔵 ריסק (Term Life)</h4>
+<p>כיסוי מוות בלבד לתקופה קצובה. הכי זול. אין ערך פדיון.</p>
+<h4>🟡 מעורב (Endowment)</h4>
+<p>ריסק + חיסכון. בסוף התקופה – מקבל כסף גם אם חי. יקר יותר. פחות נפוץ היום.</p>
+<h4>🔴 אכ"ע (Income Protection)</h4>
+<p>קצבה חודשית אם אובד כושר עבודה. בדרך כלל 75% מהשכר, עד גיל 67.</p>
+<h4>🟣 סיעוד (Long Term Care)</h4>
+<p>קצבה חודשית אם אדם מאבד עצמאות תפקודית (ADL). 3 מתוך 6 ADL = זכאות.</p>
+<h4>🟢 תאונות אישיות (PA)</h4>
+<p>כיסוי נכות/מוות עקב תאונה בלבד. לא מחלה. זול מאד.</p>
+<div class="lesson-tip">💡 לבחינה: ריסק + CI = כיסוי מוות ומחלה. אכ"ע = כיסוי אובדן הכנסה. סיעוד = כיסוי תפקוד.</div>
+`},
+'g.1':{id:'g.1',track:'licensing',chapter:'cg',title:'קרנות פנסיה',desc:'מקיפה חדשה 18.5%, בסיסית, תקציבית',xp:15,content:`
+<h3>סוגי קרנות פנסיה</h3>
+<h4>🟢 מקיפה חדשה (Post-1995)</h4>
+<p>שיעורי הפקדה: <strong>עובד 6% + מעסיק 6.5% + פיצויים 6% = 18.5%</strong> מהשכר. הנפוצה ביותר בישראל כיום. אין ערבות תשואה.</p>
+<h4>🔵 מקיפה ישנה / בסיסית (Pre-1995)</h4>
+<p>פנסיה תקציבית – מעסיק מתחייב לקצבה מסוימת. כיום קיימת בעיקר במגזר הציבורי. גרעון אקטוארי.</p>
+<h4>🔴 תקציבית (Budget Pension)</h4>
+<p>פנסיה שמשולמת ישירות מתקציב המעסיק (לא מקרן). נפוץ בחברות ממשלתיות ישנות.</p>
+<h3>זכויות בקרן פנסיה</h3>
+<ul>
+<li>כיסוי נכות (אכ"ע) מתוך הפנסיה</li>
+<li>כיסוי שארים (ריסק) לחוסכים</li>
+<li>גמלת זקנה מגיל 67</li>
+</ul>
+<div class="lesson-tip">💡 לבחינה: 18.5% = 6 + 6.5 + 6. מקיפה חדשה = DC (מוגדרת הפקדה). תקציבית = DB (מוגדרת קצבה).</div>
+`},
+'g.2':{id:'g.2',track:'licensing',chapter:'cg',title:'ביטוח מנהלים',desc:'פוליסות 2004, 2013 – השינויים',xp:15,content:`
+<h3>ביטוח מנהלים – Timeline</h3>
+<h4>לפני 2004 – ה"זהב" הישן</h4>
+<p>פוליסות ישנות עם <strong>תשואה מובטחת</strong> (4%-4.5% ריאלי). נחשבות לעדיפות משמעותית. כבר לא ניתן לפתוח.</p>
+<h4>2004-2013 – תחום אפור</h4>
+<p>בוטלה תשואה מובטחת. ניתן לבטח עם <strong>מקדם קצבה מובטח</strong> – המרת חיסכון לקצבה לפי שיעור קבוע מראש.</p>
+<h4>אחרי 2013 – השינוי הגדול</h4>
+<p>בוטל מקדם הקצבה המובטח. כיום: מקדם קצבה לפי <strong>לוחות תמותה עדכניים</strong> – משתנה לפי תוחלת חיים. חוסך שחי זמן רב מקבל פחות!</p>
+<h3>השפעה מעשית</h3>
+<p>מי שיש לו פוליסה משנה 2013 עלול לקבל קצבה נמוכה בגלל שינויי לוחות תמותה. לכן – השוואה מול קרן פנסיה חשובה.</p>
+<div class="lesson-tip">💡 לבחינה: 2004 = ביטול תשואה מובטחת. 2013 = ביטול מקדם קצבה מובטח. מה שיש = לוחות תמותה.</div>
+`},
+'g.3':{id:'g.3',track:'licensing',chapter:'cg',title:"אכ\"ע עמוק",desc:'EP, עיסוק ספציפי, תקרה 75%',xp:15,content:`
+<h3>אכ"ע (אובדן כושר עבודה) – פרטים לבחינה</h3>
+<h4>הגדרות אובדן כושר</h4>
+<ul>
+<li><strong>עיסוק ספציפי:</strong> לא יכול לעבוד בעיסוקו הספציפי. הגדרה רחבה יותר = עדיפה למבוטח.</li>
+<li><strong>כל עיסוק:</strong> לא יכול לעבוד בשום עיסוק סביר. הגדרה מצמצמת = לא עדיפה.</li>
+</ul>
+<h4>תקרת הכיסוי</h4>
+<p>מקסימום <strong>75% מהשכר הברוטו</strong> (כולל הפקדות לפנסיה). מעל זה – לא ניתן לבטח. מטרה: שמירה על תמריץ לחזרה לעבודה.</p>
+<h4>EP (Excess Protection)</h4>
+<p>מנגנון שמאפשר בחלק מהפוליסות לכסות מעבר ל-75% בנסיבות מיוחדות. כיום פחות נפוץ.</p>
+<h4>תקופת המתנה (Waiting Period)</h4>
+<p>בדרך כלל 90 ימים מתחילת אובדן הכושר לפני שמשלמים. במהלך 90 הימים – ביטוח לאומי מכסה.</p>
+<div class="lesson-tip">💡 לבחינה: עיסוק ספציפי > כל עיסוק (מנקודת מבט המבוטח). תקרה 75%. המתנה 90 ימים.</div>
+`},
+'g.4':{id:'g.4',track:'licensing',chapter:'cg',title:'חוק ייעוץ פנסיוני',desc:'יועץ vs סוכן vs משווק',xp:15,content:`
+<h3>שלושה סוגי נותני שירות פנסיוני</h3>
+<h4>📋 יועץ פנסיוני</h4>
+<ul>
+<li>עצמאי, אינו קשור לחברת ביטוח</li>
+<li>גובה שכר ישירות מהלקוח (לא עמלות)</li>
+<li>מחויב לייעץ על מגוון רחב של מוצרים</li>
+<li>רישיון: יועץ פנסיוני</li>
+</ul>
+<h4>🤝 סוכן ביטוח (סוכן פנסיוני)</h4>
+<ul>
+<li>שלוח הלקוח, עובד עצמאי</li>
+<li>מקבל עמלות מחברות ביטוח</li>
+<li>יכול להציג מוצרים ממספר חברות</li>
+<li>חובת גילוי ניגוד עניינים</li>
+</ul>
+<h4>🏢 משווק פנסיוני</h4>
+<ul>
+<li>עובד חברת ביטוח ספציפית</li>
+<li>מוכר רק מוצרי החברה שלו</li>
+<li>לא מחויב לניטרליות</li>
+</ul>
+<div class="lesson-tip">💡 לבחינה: יועץ = ניטרלי + שכר ישיר. סוכן = שלוח לקוח + עמלות. משווק = עובד חברה.</div>
+`},
+'g.5':{id:'g.5',track:'licensing',chapter:'cg',title:'קופות גמל',desc:'להשקעה, פיצויים, קרן השתלמות, IRA',xp:15,content:`
+<h3>סוגי קופות גמל</h3>
+<h4>💰 קופת גמל להשקעה</h4>
+<p>חיסכון נזיל ללא מטרה ספציפית. ניתן למשיכה בכל עת. הטבת מס רק בגיל 60+.</p>
+<h4>🏦 קופת גמל לפיצויים</h4>
+<p>חיסכון לפיצויי פיטורים. ניתן למשיכה רק בפיטורים/פרישה (בתנאים מסוימים).</p>
+<h4>🎓 קרן השתלמות</h4>
+<p>חיסכון לטווח בינוני. <strong>נזיל לאחר 6 שנים</strong>. פטורה ממס! שכיר: 2.5% עובד + 7.5% מעסיק. עצמאי: עד 4.5% מהכנסה.</p>
+<h4>🏛️ IRA (Individual Retirement Account)</h4>
+<p>ניהול עצמי של קופת גמל. המבוטח בוחר בעצמו את ההשקעות. מתאים למשקיעים מנוסים.</p>
+<div class="lesson-tip">💡 לבחינה: קרן השתלמות = נזיל אחרי 6 שנים + פטור מס. קופת גמל להשקעה = נזיל בכל עת + חייב מס.</div>
+`}
+};
+
+// Chapter metadata
+const CHAPTERS = {
+  c1:{id:'c1',track:'sales',title:'יסודות הביטוח',icon:'🏗️',color:'blue',lessons:['1.1','1.2','1.3','1.4','1.5','1.6']},
+  c2:{id:'c2',track:'sales',title:'הקולקטיבים שלנו',icon:'🏢',color:'green',lessons:['2.1','2.2','2.3','2.4','2.5','2.6']},
+  c3:{id:'c3',track:'sales',title:'מיומנויות מכירה',icon:'💼',color:'gold',lessons:['3.1','3.2','3.3','3.4','3.5']},
+  cy:{id:'cy',track:'licensing',title:'יסודות הביטוח (רישוי)',icon:'📜',color:'purple',lessons:['y.1','y.2','y.3','y.4','y.5','y.6','y.7','y.8']},
+  cg:{id:'cg',track:'licensing',title:'גמר פנסיוני',icon:'🏛️',color:'blue',lessons:['g.1','g.2','g.3','g.4','g.5']}
+};
+
+// ===== QUIZ DATA (53 questions) =====
+const QUIZ_DATA = [
+{id:0,q:'מה ההבדל העיקרי בין שב"ן לביטוח קולקטיבי?',opts:['שניהם מכסים אותו דבר','קולקטיב נותן כיסוי נוסף לתורים קצרים ורופא מומחה','שב"ן יקר יותר','קולקטיב הוא חובה חוקית'],ans:1,exp:'שב"ן (ביטוח משלים של קופת חולים) אינו מבטיח ניתוח פרטי מהיר או בחירת מנתח. הקולקטיב (שקל ראשון) מנצל כוח קנייה קבוצתי ומאפשר ניתוח תוך שבוע–שבועיים, בחירת רופא, ותרופות שאינן בסל. שאלת מכירה: "הקופה תכסה — אבל מתי?" מקור: נוסח פוליסת קולקטיב; הנחיות רשות שוק ההון לביטוח בריאות.',topic:'collective'},
+{id:1,q:'מהם 3 סוגי ביטוח הבריאות בסדר מהזול ליקר?',opts:['פרטי, קולקטיב, שב"ן','שב"ן, קולקטיב, פרטי','קולקטיב, שב"ן, פרטי','שב"ן, פרטי, קולקטיב'],ans:1,exp:'שב"ן הוא הביטוח המשלים הבסיסי של קופת החולים (חובה), קולקטיב הוא ביטוח קבוצתי בכוח קנייה, ופרטי הוא אינדיבידואלי ויקר יותר. הסדר חשוב מכירתית: לרוב הלקוחות יש שב"ן — קולקטיב הוא השדרוג הגיוני הבא. מקור: מבנה שוק הבריאות הישראלי לפי חוק ביטוח בריאות ממלכתי.',topic:'collective'},
+{id:2,q:'מהי פרמיית עובד נמל חיפה – שקל ראשון מסלול ב?',opts:['110₪','129₪','220₪','179₪'],ans:1,exp:'מסלול א מכסה ניתוחים בישראל ותרופות; מסלול ב מוסיף ניתוחים בחו"ל עד 250% + השתלות עד 5,000,000₪. הפרש של 19₪ בחודש (פחות מ-1₪ ביום) קונה כיסוי ניתוחים בחו"ל — ערך מוסף אדיר. שאלת מכירה: "בשביל 19₪ בחודש יש לך ניתוח בחו"ל?" מקור: תעריפי פוליסת נמל חיפה – הראל 2025–2030.',topic:'namal'},
+{id:3,q:'מה ההגבלה החשובה בפוליסת קריית מוצקין (פניקס)?',opts:['אסור לבטח ילדים','ניתוחים ברשת פניקס בלבד','לא ניתן להצטרף מעל גיל 60','אין כיסוי לתרופות'],ans:1,exp:'בניגוד לנמל חיפה (רשת פתוחה), קריית מוצקין מחייבת ביצוע ניתוח אצל ספקים מוסכמים של פניקס. יתרון: כיסוי מלא ברשת; חיסרון: אין בחירת מנתח חופשית. שאלת מכירה: "האם הרופא שלך בתוך הרשת?" מקור: נוסח פוליסת קולקטיב קריית מוצקין – פניקס, סעיף 4.',topic:'kiryat'},
+{id:4,q:'CI = Critical Illness. מה זה גידול in situ?',opts:['גידול גרורתי','גידול בשלב מוקדם (לא פולשני)','מחלה אוטואימונית','כל מחלה כרונית'],ans:1,exp:'גידול in situ הוא שלב מוקדם לפני פלישה לרקמות — מאובחן לעיתים בבדיקות שגרה. לא כל הפוליסות מכסות in situ, ואלה שמכסות משלמות 20%–50% מסכום ה-CI. כדאי לבדוק עם הלקוח בדיוק מה כלול. מקור: הגדרות CI בנוסח פוליסות מנורה, הראל, מגדל; הנחיות רשות שוק ההון 2013.',topic:'ci'},
+{id:5,q:'מה זה "ימי שרידות" בביטוח CI?',opts:['מספר ימי אשפוז','תקופת המתנה לפני קבלת תשלום CI','ימי מחלה מותרים לשנה','תקופת ביטוח מינימלית'],ans:1,exp:'ימי שרידות (Survival Days) נועדו למנוע תביעות בגין מחלות שמהן מתאוששים מהר. 14 יום שרידות = פוליסה טובה יותר. בהשוואת פוליסות CI — ימי שרידות קצרים הם יתרון ברור ללקוח. מקור: הגדרות CI; נוסח פוליסות ריסק קריטי – הראל, מגדל, כלל.',topic:'ci'},
+{id:6,q:'לאיזה סכום כיסוי מגיעות ההשתלות בפוליסת נמל חיפה מסלול ב?',opts:['1,000,000₪','3,000,000₪','5,000,000₪','2,000,000₪'],ans:2,exp:'נמל חיפה (הראל) מסלול ב כולל כיסוי השתלות בחו"ל עד 5,000,000₪ — אחת ממסגרות הכיסוי הגבוהות בשוק. מקור: נוסח פוליסת נמל חיפה – הראל, טבלת סכומי ביטוח.',topic:'namal'},
+{id:7,q:'סיעוד – כמה ADL צריך לאבד לזכאות?',opts:['1 מתוך 6','2 מתוך 6','3 מתוך 6','4 מתוך 6'],ans:2,exp:'ההגדרה של 3 מתוך 6 ADL היא הסף לזכאות לגמלת סיעוד. הסף נקבע לזיהוי תלות קשה אמיתית. שאלת מכירה: "אתה יכול לאבד ADL בגלל שבץ — מה קורה לך ולמשפחתך?" מקור: הגדרת אירוע מבוטח בפוליסות סיעוד לפי תנאי רשות שוק ההון; חוק הסיעוד בביטוח לאומי.',topic:'siud'},
+{id:8,q:'מהי "פרנשייזה" בביטוח בריאות?',opts:['עמלת הסוכן','גבול תשלום ראשוני שמעבר אליו החברה משלמת','ביטוח כפל','ביטול פוליסה'],ans:1,exp:'פרנשייזה שונה מהשתתפות עצמית: בהשתתפות עצמית — המבטח תמיד מכסה את השאר; בפרנשייזה — אם הנזק מעל הסף, הביטוח משלם הכל (כולל הסכום שמתחת). חשוב להסביר ללקוח את ההבדל כדי שלא ייפגע בזמן תביעה. מקור: עקרונות ביטוח רכוש; חוק חוזה הביטוח, ס\' 58.',topic:'franchise'},
+{id:9,q:'מה זה "השבת גמול" (Clawback) בביטוח בריאות?',opts:['קנס על ביטול מוקדם','החזר פרמיה ללקוח','הפחתת תגמול סוכן בגין ביטול פוליסה','השלמת כיסוי'],ans:2,exp:'Clawback (השבת גמול) מחייב את הסוכן להחזיר עמלת הצטרפות אם הלקוח ביטל מוקדם. זהו תמריץ כלכלי לסוכן לשרת לקוחות לאורך זמן ולמנוע מכירות לא מתאימות. סוכן שמוכר נכון — מגן גם על הכנסתו שלו. מקור: תנאי שוק ביטוח ישראלי; הנחיות EIOPA ורגולציה מקומית.',topic:'clawback'},
+{id:10,q:'עד כמה שנה יש לשרוד עם CI (בפוליסה ממוצעת)?',opts:['7 ימים','14 ימים','30 ימים','60 ימים'],ans:1,exp:'ימי שרידות טיפוסיים: 14 ימים. יש פוליסות עם 30 ימים. חשוב לבדוק בפוליסה הספציפית.',topic:'ci'},
+{id:11,q:'אכ"ע – מהו שיעור ההכנסה שניתן לבטח (מקסימום)?',opts:['50%','65%','75%','100%'],ans:2,exp:'תקרת 75% נועדה לשמור על תמריץ לחזרה לעבודה. הרגולציה קובעת שסך ההכנסות (אכ"ע + ביטוח לאומי) לא יעלו על 75% מהשכר. שאלת מכירה: "האם אתה מכוסה עד לתקרה הזו?" מקור: חוזר רשות שוק ההון; תנאי אכ"ע תקן 2024.',topic:'ake'},
+{id:12,q:'מה ההבדל בין ביטוח קולקטיבי לפרטי?',opts:['קולקטיב ניתן ביטול בכל עת','קולקטיב קבוצתי וזול יותר, פרטי אישי ויקר יותר','פרטי תמיד עדיף','אין הבדל'],ans:1,exp:'קולקטיב מנצל כוח קנייה קבוצתי לתנאים שלא ניתן לקבל כיחיד — 15–30% זול יותר, עם ~98% אישור תביעות. ביטוח פרטי גמיש יותר אך יקר משמעותית. לרוב העובדים — קולקטיב הוא הפתרון האופטימלי. מקור: נתוני שוק; חוזר ביטוח קבוצתי — רשות שוק ההון.',topic:'collective'},
+{id:13,q:'מי יכול לבטח בביטוח קולקטיבי?',opts:['כל אדם עצמאית','רק בנקים','גוף קיבוצי (מעסיק, ועד, ארגון) עבור חבריו','רק חברות ציבוריות'],ans:2,exp:'לפי הרגולציה, ביטוח קבוצתי מחייב גוף קיבוצי בעל זיקה אמיתית לחבריו. זה מונע ספקולציה ומבטיח אינטרס ביטוחי. מינימום: 50 עמיתים. הסוכן עובד עם הגוף הקיבוצי (ועד/HR), לא עם כל פרט. מקור: פיקוח על שירותים פיננסיים; הנחיות רשות שוק ההון לביטוח קבוצתי.',topic:'collective'},
+{id:14,q:'מה זה "בסיס מדדי" בביטוח בריאות?',opts:['ביטוח צמוד לדולר','פרמיה שגדלה עם גיל המבוטח','הפרמיה מחושבת לפי גיל ומין בכניסה','הכל בעלייה ובירידה של מדד המחירים'],ans:2,exp:'בסיס מדדי (דמוגרפי): הפרמיה אינה קבועה — היא עולה עם הגיל. ככל שמצטרפים צעיר יותר, הפרמיה הראשונית נמוכה יותר. שאלת מכירה: "תצטרף עכשיו שהפרמיה נמוכה — מחר זה יהיה יקר יותר." מקור: תנאי פוליסת בריאות דמוגרפית; חוזרי רשות שוק ההון.',topic:'index'},
+{id:15,q:'מה שאלת "מה יהיה אם" בשיחת מכירה?',opts:['שאלה שמנסה לבלבל','שאלה שמציגה תרחיש שלילי כדי לעורר מודעות לסיכון','שאלה שמבקשת נתונים','שאלה לסיום השיחה'],ans:1,exp:'שאלות "מה יהיה אם" (What-if) מפעילות Loss Aversion — הפחד מהפסד עוצמתי מהרצון לנצח. הן מעבירות את הלקוח מ"הכל בסדר" לתרחיש של צורך אמיתי. לדוגמה: "מה יהיה אם ניתוח יקח 6 חודשי המתנה?" — יוצר דחיפות. טכניקה מרכזית ב-KAMP ובמכירות ביטוח.',topic:'sales'},
+{id:16,q:'מה אומר "הקמ"פ שלב אחד קדימה"?',opts:['ללכת מהמוצר לצורך','ללכת מהצורך לפתרון קונקרטי','לשאול שאלה ישירה על תקציב','לסיים מכירה מהר'],ans:1,exp:'KAMP (Know / Ask / Match / Present): הבנת צרכים → שאלות מעמיקות → התאמה → הצגת פתרון. "שלב אחד קדימה" = ברגע שהלקוח מזהה צורך, מציגים מיד את הפתרון הספציפי — לא מחכים. כך מקטינים חיכוך ומגדילים סגירה. טכניקה מרכזית בהכשרות מכירה לסוכנים.',topic:'sales'},
+{id:17,q:'מה זה "ביטול התנגדות מראש"?',opts:['לא להתייחס להתנגדויות','לשאול ישירות על נקודות כאב לפני שהלקוח מעלה אותן','להוריד מחיר מראש','לסיים מהר לפני שיש התנגדות'],ans:1,exp:'כשהסוכן מעלה ההתנגדות לפני הלקוח ("אני יודע שאתה חושב שזה יקר — בוא נדבר"), הוא בונה אמון ומסיר את כוחה. הלקוח לא יכול להשתמש בטיעון שכבר "נפל". טכניקה: Pre-Emptive Inoculation. מומלץ במיוחד להתנגדויות מחיר וסמכות ("צריך להתייעץ עם אשתי").',topic:'sales'},
+{id:18,q:'מהי פרמיית ילד בנמל חיפה שקל ראשון מסלול ב?',opts:['30₪','39.5₪','50₪','129₪'],ans:1,exp:'נמל חיפה – הראל: ילד עד גיל 21 — מסלול א=30₪, מסלול ב=39.5₪ לחודש. פרמיית ילד אטרקטיבית ביחס לביטוח פרטי. זהו נקודת כניסה מצוינת לשיחה על ביטוח ילדים. מקור: תעריפי פוליסת נמל חיפה 2025–2030.',topic:'namal'},
+{id:19,q:'מתי תוקף הסכם ביטוח נמל חיפה מסתיים?',opts:['דצמבר 2027','אוגוסט 2030','נובמבר 2029','מרץ 2028'],ans:1,exp:'הסכם הקולקטיב של נמל חיפה עם הראל בתוקף מספטמבר 2025 עד אוגוסט 2030 (5 שנים). בתום התקופה יש מכרז חדש — ייתכן שינוי בחברת הביטוח או בתנאים. מקור: הסכם קולקטיב נמל חיפה – הראל 2025.',topic:'namal'},
+{id:20,q:'מה פרמיית גמלאי נמל חיפה מסלול א?',opts:['220₪','258₪','300₪','129₪'],ans:0,exp:'נמל חיפה – הראל: גמלאי מסלול א=220₪, מסלול ב=258₪. גמלאים ממשיכים ליהנות מתעריפים קבוצתיים גם לאחר פרישה — יתרון בולט לעומת ביטוח פרטי שמתייקר עם הגיל. מקור: תעריפי פוליסת נמל חיפה 2025–2030.',topic:'namal'},
+{id:21,q:'מה כיסוי הניתוחים בחו"ל בנמל חיפה מסלול ב?',opts:['100% מהתעריף','200% מהתעריף','250% מהתעריף','ללא כיסוי'],ans:2,exp:'נמל חיפה מסלול ב: ניתוחים בחו"ל מכוסים עד 250% מהתעריף המקביל בישראל — לטיפולים שאינם זמינים בארץ. מקור: נוסח פוליסת נמל חיפה – הראל, סעיף ניתוחים בחו"ל.',topic:'namal'},
+{id:22,q:'מהי תקופת ההמתנה (Waiting Period) באכ"ע?',opts:['30 ימים','60 ימים','90 ימים','6 חודשים'],ans:2,exp:'90 ימי המתנה = 3 חודשים שבהם ביטוח לאומי משלם (עד ~75% שכר). לאחר 90 יום — האכ"ע נכנס לתוקף. שאלת מכירה: "3 חודשים ראשונים — ביטוח לאומי. מה קורה אחרי?" שים לב: יש פוליסות עם 30 או 60 יום המתנה (יקרות יותר). מקור: תנאי אכ"ע סטנדרטי; חוזר רשות שוק ההון.',topic:'ake'},
+{id:23,q:'פרמיית עובד קריית מוצקין מסלול ב?',opts:['110₪','129₪','137₪','179₪'],ans:3,exp:'קריית מוצקין: פרמיה אחידה — אין הבחנה בין עובד, בן-זוג, ילד או גמלאי. שונה מנמל חיפה שבו ילד משלם 39.5₪. למשפחה עם ילדים רבים — תעריף ילד של 179₪ (מסלול ב) יקר משמעותית לעומת 39.5₪ בנמל חיפה. מקור: תעריפי פוליסת קולקטיב קריית מוצקין – פניקס.',topic:'kiryat'},
+{id:24,q:'מה המניע הנפוץ ביותר ל"מגן" כסוג לקוח?',opts:['לחסוך כסף','להגן על המשפחה מאסון כלכלי','לקבל שירות VIP','לנצח בוויכוח'],ans:1,exp:'טיפוס "המגן" מונע מאחריות משפחתית ופחד מאסון — לא מחיסכון. הגישה הנכונה: הצג תרחיש: "מה קורה לילדים אם אתה לא יכול לעבוד?" אל תדבר על מחיר — דבר על הגנה. המגן יקנה ריסק (חיים), CI (מחלה קשה), ואכ"ע (אובדן כושר). מקור: מסגרת טיפוסי לקוחות — KAMP.',topic:'sales'},
+{id:'lic_1',q:'מה עקרון "תום לב מוחלט" בביטוח?',opts:['חובת המבטח לשלם','חובת שני הצדדים לגלות מידע מהותי','הגנה על הלקוח בלבד','עקרון כלכלי'],ans:1,exp:'Utmost Good Faith: בניגוד לחוזה רגיל, בביטוח הלקוח חייב לגלות מידע רפואי שהמבטח אינו יכול לבדוק — מחלות קיימות, תרופות, הרגלים. הפרה = ביטול פוליסה ו/או דחיית תביעה. שני הצדדים חייבים בגילוי. מקור: חוק חוזה הביטוח, 1981, ס\' 6–9.',topic:'licensing'},
+{id:'lic_2',q:'מהי "זיקת ביטוח"?',opts:['מסמך הצטרפות','אינטרס כספי של המבוטח בנכס/חיים המבוטחים','פוליסת כפל','מדד לחישוב פרמיה'],ans:1,exp:'ללא זיקת ביטוח — חוזה הביטוח בטל. אי אפשר לבטח נכס שאינו שלך, או חיי אדם שאין לך אינטרס כלכלי בהישארותם בחיים. זה מונע ביטוח ספקולטיבי (Moral Hazard). בני זוג, הורים וילדים — זיקה ביטוחית ברורה. מקור: חוק חוזה הביטוח, 1981, ס\' 1.',topic:'licensing'},
+{id:'lic_3',q:'עקרון השיפוי אומר שהמבוטח...',opts:['יכול לקבל יותר מהנזק','מקבל פיצוי שלא יעלה על הנזק בפועל','לא מקבל מזומן','מקבל חזרה את הפרמיה'],ans:1,exp:'עקרון השיפוי: המבוטח מקבל פיצוי בגובה הנזק בפועל בלבד – לא ניתן להרוויח מאירוע ביטוחי.',topic:'licensing'},
+{id:'lic_4',q:'מה זה "תחלוף" (סוברוגציה)?',opts:['ביטוח חיים','זכות חברת הביטוח לתבוע את המזיק לאחר תשלום','העברת פוליסה לאדם אחר','ביטול חוזה'],ans:1,exp:'תחלוף (Subrogation) מונע ממבוטח להרוויח פעמיים — פעם מהביטוח ופעם מהמזיק. בביטוח חיים ו-CI אין תחלוף (אין "נזק" ספציפי). אם לקוח ניזוק בתאונה ומקבל מהביטוח — לא ניתן לתבוע שוב. מקור: חוק חוזה הביטוח, 1981, ס\' 62.',topic:'licensing'},
+{id:'lic_5',q:'מה מביטוח לאומי לא מכוסה שכן בביטוח פרטי?',opts:['ביקורי רופא','CI (מחלות קשות) – סכום חד פעמי','ניתוחים דחופים','בדיקות דם'],ans:1,exp:'ביטוח לאומי לא משלם סכום חד-פעמי עם אבחנת מחלה קשה (CI). זה כיסוי ייחודי לביטוח פרטי.',topic:'licensing'},
+{id:'lic_6',q:'הסוכן בחוק ישראלי הוא שלוח של...',opts:['חברת הביטוח','הממשלה','הלקוח (המבוטח)','בית המשפט'],ans:2,exp:'בדין הישראלי, הסוכן הוא שלוח המבוטח — לא שלוח המבטח. ידיעת הסוכן נחשבת כידיעת הלקוח — אם הסוכן ידע על מחלה קודמת ולא גילה, המבוטח נושא באחריות. חובה לתעד כל שיחה ולגלות מידע מלא. מקור: חוק חוזה הביטוח, ס\' 33–35; פסיקת בית משפט עליון.',topic:'licensing'},
+{id:'lic_7',q:'סעיף 47 לפקודת מס הכנסה קובע...',opts:['חובת ביטוח','ניכוי מס על פרמיות ביטוח חיים לשכיר','ביטוח לאומי חובה','איסור על ביטוח כפל'],ans:1,exp:'סעיף 47 לפקודת מס הכנסה: שכיר יכול לנכות מהכנסתו החייבת פרמיות ביטוח חיים ואכ"ע — עד 5% מהכנסה חייבת (תקרה שנתית ~8,508₪). שאלת מכירה: "הביטוח מחזיר לך כסף דרך החזר מס." חשוב לקחת אישור בתחילת שנה. מקור: פקודת מס הכנסה, ס\' 47.',topic:'licensing'},
+{id:'lic_8',q:'מתי חל עקרון השיפוי? (מלא/חלקי)',opts:['תמיד בביטוח חיים','בביטוח רכוש, לא בביטוח חיים ו-CI','רק בביטוח רכב','רק בביטוח בריאות'],ans:1,exp:'עיקרון השיפוי (Indemnity) חל בביטוח רכוש: מכסים נזק בפועל — לא יותר. בביטוח אישי (חיים, CI, אכ"ע) — אין "נזק" מוגדר, ולכן ניתן לקבל סכום מכמה פוליסות במקביל. לקוח עם ריסק מחברה א\' ו-CI מחברה ב\' יכול לקבל שניהם. מקור: חוק חוזה הביטוח ס\' 59–60.',topic:'licensing'},
+{id:'lic_9',q:'קרן פנסיה מקיפה חדשה – שיעורי ההפקדה הם?',opts:['5%+5%+5%=15%','6%+6.5%+6%=18.5%','8%+8.5%+8%=24.5%','10%+10%=20%'],ans:1,exp:'קרן פנסיה מקיפה חדשה: עובד 6% + מעסיק 6.5% + פיצויים 6% = 18.5% סה"כ. הפקדות אלו חובה לכל שכיר מגיל 21 לפי חוק פנסיה חובה. לפי תקנות 2008, גיל הכניסה הורד לראשונה לכלל הענפים.',topic:'licensing'},
+{id:'lic_10',q:'מה ההבדל בין יועץ פנסיוני לסוכן?',opts:['אין הבדל','יועץ גובה שכר מהלקוח, סוכן גובה עמלות מחברת ביטוח','יועץ עובד בחברת ביטוח','סוכן עצמאי יותר'],ans:1,exp:'יועץ = ניטרלי, שכר ישיר מלקוח. סוכן = שלוח לקוח, עמלות מחברת ביטוח, חובת גילוי ניגוד עניינים.',topic:'licensing'},
+{id:35,q:'לקוח אומר "יש לי שב"ן, למה אני צריך קולקטיב?" – מה התשובה הטובה?',opts:['להסכים ולהפנות ל-CI','להזכיר שב"ן מכסה בסיס בלבד – ניתוח פרטי תוך שבוע vs. 6 חודשים','לנסות למכור ביטוח חיים במקום','לשאול אותו על גיל'],ans:1,exp:'ההתנגדות "יש לי שב"ן" נפוצה מאוד. תשובה נכונה: שב"ן = בסיס שהקופה מציעה. הקולקטיב = שכבה עצמאית: ניתוח פרטי תוך שבוע–שבועיים, בחירת מנתח, תרופות שאינן בסל עד 3M₪ (נמל חיפה). שאלת מכירה: "עם שב"ן לבד — כמה זמן ממוצע לניתוח? 6 חודשים?" ואז הצג קולקטיב.',topic:'objection'},
+{id:36,q:'לקוח אומר "זה יקר לי" על פרמיה של 129₪ – מה אומרת טכניקת "הפיכת מחיר"?',opts:['להוריד פרמיה','לחלק את הסכום ליום: 4.3₪ ביום = פחות מכוס קפה','לדחות לשנה הבאה','לבקש הפחתה מהחברה'],ans:1,exp:'4.3₪ ביום – הפיכת הסכום לאנלוגיה יומית מוכרת. ניתוח פרטי = 50,000-200,000₪.',topic:'objection'},
+{id:37,q:'לקוח אומר "אחשוב ואחזור" – כיצד להגיב?',opts:['להסכים ולחכות','לשאול "אם מחר תצטרך ניתוח דחוף – האם יהיה לך כיסוי?"','להוריד מחיר','להתקשר שוב שבוע לאחר מכן'],ans:1,exp:'שאלת דחיפות אמיתית: "אם מחר תצטרך ניתוח – מה יהיה?" מחזירה את הלקוח לצורך הממשי.',topic:'objection'},
+{id:38,q:'מה הפרמיה לגמלאי קריית מוצקין מסלול א?',opts:['137₪','179₪','220₪','258₪'],ans:0,exp:'קריית מוצקין: פרמיה אחידה לכל הסטטוסים (עובד/בן-זוג/ילד/גמלאי) – מסלול א=137₪.',topic:'collective'},
+{id:39,q:'ביטוח קולקטיבי – מה קורה ביום שהעובד עוזב?',opts:['הפוליסה ממשיכה אוטומטית','הביטוח יורד מיד עם עזיבת המעסיק (תלות במעסיק)','הפוליסה עוברת לפרטית','זה לא נוגע לסוכן'],ans:1,exp:'חסרון הקולקטיב: תלות במעסיק. פיטורים/עזיבה = אובדן ביטוח. כדאי לשאול את הלקוח על תוכניות עתידיות.',topic:'collective'},
+{id:40,q:'מה כיסוי תרופות שאינן בסל בנמל חיפה?',opts:['500,000₪','1,000,000₪','3,000,000₪','5,000,000₪'],ans:2,exp:'נמל חיפה – הראל: תרופות שאינן בסל הבריאות (כגון תרופות ביולוגיות ויקרות) מכוסות עד 3,000,000₪ לשנה. שאלת מכירה: "האם אתה או בני משפחתך לוקחים תרופה שאינה בסל?" מקור: נוסח פוליסת נמל חיפה, סעיף תרופות.',topic:'collective'},
+{id:41,q:'מה ה"פרגמטי" (סוג לקוח) צריך לשמוע?',opts:['סיפור אישי מרגש','נתונים, השוואות ותשואה ברורה על ההשקעה','הבטחה שכולם מבוטחים','תחושה שהסוכן בצד שלו'],ans:1,exp:'הפרגמטי מחליט לפי ROI — תשואה על ההשקעה. הצג: פרמיה שנתית 129₪×12=1,548₪ לעומת עלות ניתוח פרטי 80,000–200,000₪. סטטיסטיקות: 1 מ-3 ישראלים זקוק לניתוח בחייו. אל תדבר רגשות — דבר מספרים והשוואה אובייקטיבית.',topic:'sales'},
+{id:42,q:'מה הטעות הכי נפוצה בסגירת מכירה?',opts:['לשאול יותר מדי שאלות','ללחוץ יותר מדי – ולגרום ללקוח לסגת','להציג יותר מדי נתונים','לאמר מה כלול בפוליסה'],ans:1,exp:'סגירה טובה = לקוח מרגיש שהחלטה היא שלו. לחץ יתר = ביטול פוליסה לאחר מכן.',topic:'sales'},
+{id:43,q:'מה ניתן לבטח בקריית מוצקין מסלול ב?',opts:['השתלות בלבד','ניתוחים, תרופות, השתלות','ניתוחים ברשת פניקס + תרופות + השתלות','רק אשפוז'],ans:2,exp:'קריית מוצקין: ניתוחים (ברשת פניקס) + תרופות שאינן בסל (1M₪) + השתלות (3M₪).',topic:'collective'},
+{id:44,q:'מה ההבדל בין "שקל ראשון" ל"משלים שב"ן"?',opts:['אותו דבר','שקל ראשון משלם מהשקל הראשון; משלים שב"ן משלם רק מה שמעל הקופה','שקל ראשון זול יותר','משלים שב"ן נותן כיסוי מלא יותר'],ans:1,exp:'שקל ראשון = עצמאי מהקופה. משלים שב"ן = תלוי בתשלום הקופה ומשלם את השאר.',topic:'shekel'},
+{id:45,q:'אכ"ע "עיסוק ספציפי" – מה ההגדרה?',opts:['לא יכול לעבוד בשום עיסוק','לא יכול לעבוד בעיסוקו הספציפי שלו','אובד כל כושר עבודה','מחלה כרונית בלבד'],ans:1,exp:'הגדרת "עיסוק ספציפי" עדיפה על "כל עיסוק": רופא כירורג שלא יכול לנתח מקבל אכ"ע גם אם יכול לעבוד כמנהל מחלקה. "כל עיסוק" = מקבל אכ"ע רק אם לא יכול לעבוד בשום עיסוק. ההגדרה הספציפית יקרה יותר אך שווה כל שקל. מקור: נוסח אכ"ע תקן; חוזר רשות שוק ההון.',topic:'ake'},
+{id:46,q:'ביטוח מנהלים – מה קרה ב-2013?',opts:['הוכנסה תשואה מובטחת','בוטל מקדם הקצבה המובטח – עכשיו לפי לוחות תמותה','הוזלו הפרמיות','חויב כל עובד להצטרף'],ans:1,exp:'עד 2013, ביטוח מנהלים הבטיח מקדם קצבה קבוע (לדוגמה 200₪ קצבה לכל 1,000₪ חיסכון). רפורמת 2013 ביטלה הבטחה זו — כיום המקדם נקבע לפי לוחות תמותה עדכניים, שמשמעותם קצבה נמוכה יותר. ביטוח מנהלים שנרכש לפני 2013 הוא בעל ערך גבוה יותר. מקור: חוזר גמל 2013.',topic:'ci'},
+{id:47,q:'מה עקרון "בסיס מדדי" בפרמיות?',opts:['פרמיה קבועה לכל החיים','פרמיה גדלה עם גיל המבוטח','פרמיה יורדת לאורך השנים','פרמיה צמודה לדולר'],ans:1,exp:'בסיס מדדי/דמוגרפי = הפרמיה מחושבת לפי גיל בכניסה ועולה ככל שהמבוטח מתבגר.',topic:'index'},
+{id:48,q:'CI – האם ניתן לתבוע CI וגם אכ"ע על אותה מחלה?',opts:['לא – עקרון השיפוי','כן – CI הוא תשלום חד-פעמי ואכ"ע הוא קצבה חודשית, שניהם ניתנים','רק CI','רק אכ"ע'],ans:1,exp:'ביטוח אישי לא כפוף לעקרון השיפוי. ניתן לקבל גם CI (סכום חד-פעמי) וגם אכ"ע (קצבה).',topic:'ci'},
+{id:49,q:'קרן השתלמות – מתי ניתן למשוך?',opts:['בכל עת','אחרי 3 שנים','אחרי 6 שנים','רק בפרישה'],ans:2,exp:'קרן השתלמות: עד תקרה (18,480₪ לשנה לשכיר) הפקדות המעסיק פטורות ממס. לאחר 6 שנים — משיכה פטורה מרווחי הון. לעצמאי: עד 18,960₪ פטורים. שאלת מכירה: "יש לך חיסכון נוסף עם הטבת מס — מי יסרב?" מקור: פקודת מס הכנסה, ס\' 3(ה)4.',topic:'collective'},
+  {id:53,q:'מה המספר המינימלי של עמיתים הנדרש לביטוח קבוצתי/קולקטיב בישראל?',opts:['25 עמיתים','50 עמיתים','100 עמיתים','10 עמיתים'],ans:1,exp:'חוק הפיקוח על שירותים פיננסיים קובע מינימום של 50 עמיתים לפוליסת ביטוח קבוצתי. מתחת ל-50 — אי אפשר לפתוח קולקטיב.',topic:'יסודות ביטוח קבוצתי'},
+  {id:54,q:'מה האחוז המקובל לאישור תביעות בביטוח בריאות קבוצתי לעומת ביטוח פרטי?',opts:['70% לעומת 60%','98% לעומת 42%','80% לעומת 75%','95% לעומת 90%'],ans:1,exp:'ביטוח קבוצתי מאשר ~98% מהתביעות לעומת ~42% בביטוח פרטי — נתון מכירתי חזק ביותר.',topic:'יתרונות ביטוח קולקטיב'},
+  {id:55,q:'מתי בוטל ביטוח הסיעוד הפרטי בישראל?',opts:['ינואר 2015','ינואר 2018','ינואר 2020','ינואר 2016'],ans:1,exp:'בינואר 2018 ביטל רשות שוק ההון את ביטוח הסיעוד הפרטי. כיום קיים רק ביטוח סיעוד מבוסס שב"ן בתוך קולקטיבים מסוימים.',topic:'היסטוריית ביטוח בריאות'},
+  {id:56,q:'כמה זמן יש לעובד חדש להצטרף לקולקטיב של מקום עבודתו ללא חיתום רפואי?',opts:['30 יום','60 יום','90 יום','6 חודשים'],ans:2,exp:'עובד חדש זכאי להצטרף לקולקטיב ב-90 הימים הראשונים מתחילת עבודתו ללא שאלון בריאות. לאחר מכן, נדרש חיתום רפואי מלא.',topic:'הצטרפות לקולקטיב'},
+  {id:57,q:'מה מאפשר "סעיף המשכיות" בפוליסת קולקטיב?',opts:['הורדת הפרמיה בפרישה','המרה לפוליסה פרטית ללא חיתום חדש','הוספת בני משפחה ללא עלות','שמירת זכויות גמלה לפי וותק'],ans:1,exp:'סעיף המשכיות מאפשר לחבר שעוזב את מקום העבודה להמיר את הביטוח הקבוצתי לפוליסה פרטית — בלי שאלון בריאות חדש.',topic:'יתרונות ביטוח קולקטיב'},
+  {id:58,q:'לפי חוק חוזה הביטוח, מה דין תנאי מגביל שלא הודגש מספיק בפוליסה?',opts:['התנאי תקף אך ניתן לערעור','התנאי בטל ומבוטל','המבטח חייב להחזיר חלק מהפרמיה','על המבוטח להוכיח נזק'],ans:1,exp:'חוק חוזה הביטוח, סעיף 3: תנאי המגביל זכות מבוטח חייב להיות מובלט ומסומן בגוף הפוליסה. אם לא הובלט כנדרש — הוא בטל.',topic:'חוק חוזה הביטוח'},
+  {id:59,q:'מהי תקופת ההתיישנות של תביעה מכוח פוליסת ביטוח לפי חוק חוזה הביטוח?',opts:['שנה אחת','שלוש שנים','חמש שנים','שבע שנים'],ans:1,exp:'חוק חוזה הביטוח קובע התיישנות של 3 שנים מיום קרות מקרה הביטוח — בניגוד ל-7 שנים שבדין הכללי.',topic:'חוק חוזה הביטוח'},
+  {id:60,q:'מהו עיקרון "הסיבה הקרובה" (Proximate Cause) בדיני ביטוח?',opts:['יש לבחון רק את הסיבה האחרונה לנזק','המבטח אחראי כאשר הסיכון המכוסה הוא הגורם הפעיל הישיר לנזק','מספר סיבות מחולקות תמיד בשווה','המבוטח קובע את הסיבה המרכזית'],ans:1,exp:'עיקרון הסיבה הקרובה: המבטח אחראי כאשר הסיכון המכוסה הוא הגורם הפעיל והישיר העיקרי לנזק — גם אם היו גורמים אחרים תורמים.',topic:'עקרונות ביטוח'},
+  {id:61,q:'כיצד מתחלקת אחריות כאשר יש כפל ביטוח — שתי פוליסות המכסות אותו אירוע?',opts:['כל מבטח משלם את הסכום המלא','המבוטח בוחר ממי לגבות','כל מבטח משלם את חלקו היחסי','רק הפוליסה הראשונה שנכרתה משלמת'],ans:2,exp:'עיקרון "תרומה": כאשר קיים כפל ביטוח, כל מבטח משלם בפרופורציה לחלקו — כך שהמבוטח לא ירוויח מעל הנזק האמיתי.',topic:'עקרונות ביטוח'},
+  // ===== נמל חיפה – שאלות נוספות (3) =====
+  {id:63,q:'איזו חברת ביטוח מכסה את עובדי נמל חיפה בפוליסה 2025–2030?',opts:['מגדל','מנורה','הראל','כלל'],ans:2,exp:'הסכם 5 שנים בין נמל חיפה לחברת הראל — אחד ממכרזי הקולקטיב הגדולים בצפון. תוקף: ספטמבר 2025 – אוגוסט 2030. יציבות ל-5 שנים מאפשרת תכנון ארוך טווח. חידוש מכרז ב-2030 עלול להביא שינויי תנאים. מקור: הסכם קולקטיב נמל חיפה – הראל 2025.',topic:'namal'},
+  {id:64,q:'מה ייחודיות רשת הניתוחים בפוליסת נמל חיפה לעומת קריית מוצקין?',opts:['מוגבלת לרשת הראל','פתוחה – ניתן לבחור כל מנתח','מוגבלת ל-5 בתי חולים','ניתוחים בחו״ל בלבד'],ans:1,exp:'נמל חיפה = רשת פתוחה – הלקוח בוחר את המנתח. קריית מוצקן מוגבלת לרשת פניקס בלבד.',topic:'namal'},
+  {id:65,q:'מהיא פרמיית בן-זוג בנמל חיפה מסלול א?',opts:['₪30','₪110','₪129','₪220'],ans:1,exp:'בנמל חיפה בן/בת הזוג נהנה מאותו תעריף כמו העובד — 110₪ מסלול א, 129₪ מסלול ב. שאלת מכירה: "בסך הכל 258₪ ביחד לזוג — פחות מארוחת ערב בחוץ." הגדרת בן-זוג כוללת ידועים בציבור לפי ההסכם. מקור: תעריפי פוליסת נמל חיפה – הראל 2025.',topic:'namal'},
+
+  // ===== קריית מוצקין – פניקס (5 שאלות) =====
+  {id:66,q:'מהיא חברת הביטוח של קולקטיב קריית מוצקין?',opts:['הראל','כלל','מגדל','פניקס'],ans:3,exp:'פניקס מנהלת את הקולקטיב של קריית מוצקין. תוקף: דצמבר 2024 – נובמבר 2029 (5 שנות יציבות). ייחוד: ניתוחים מותנים ברשת ספקים של פניקס. 5 שנות תוקף מאפשרות תכנון בינוני. מקור: הסכם קולקטיב קריית מוצקין – פניקס 2024.',topic:'kiryat'},
+  {id:67,q:'מה סכום כיסוי הניתוחים בישראל בפוליסת קריית מוצקן?',opts:['₪1,000,000','₪3,000,000','₪5,000,000','₪500,000'],ans:3,exp:'קריית מוצקן: ניתוחים בישראל עד ₪500,000 לניתוח – בתוך רשת ספקים של פניקס בלבד.',topic:'kiryat'},
+  {id:68,q:'מה מייחד את מבנה הפרמיות בקריית מוצקן לעומת נמל חיפה?',opts:['תעריף מיוחד לגמלאים','הפרמיה זהה לכל הסטטוסים (עובד/בן-זוג/ילד/גמלאי)','ילדים מוזלים משמעותית','עובד זול, גמלאי יקר'],ans:1,exp:'קריית מוצקן: פרמיה אחידה לכל הסטטוסים – מסלול א=₪137, מסלול ב=₪179 לכולם.',topic:'kiryat'},
+  {id:69,q:'מהיא פרמיית ילד בקריית מוצקן מסלול ב?',opts:['₪30','₪39.5','₪137','₪179'],ans:3,exp:'קריית מוצקן: פרמיה אחידה לכל הסטטוסים כולל ילד – מסלול ב = ₪179.',topic:'kiryat'},
+  {id:70,q:'מה כיסוי ההשתלות בפוליסת קריית מוצקן?',opts:['₪1,000,000','₪3,000,000','₪5,000,000','₪500,000'],ans:1,exp:'קריית מוצקן: כיסוי השתלות עד ₪3,000,000 (לעומת ₪5,000,000 בנמל חיפה).',topic:'kiryat'},
+
+  // ===== דב"ס – עקרונות קולקטיב (5 שאלות) =====
+  {id:71,q:'מה עיקר הלמידה מקולקטיב דב"ס בקורס?',opts:['פרמיות ספציפיות של חברת דב"ס','עקרונות ביטוח קבוצי – יתרונות וחסרונות','שיטות מכירה מתקדמות','תנאי חיתום רפואי'],ans:1,exp:'דב"ס (YES) — חברת תקשורת גדולה עם מאות עובדים בסביבה טכנולוגית. הלמידה ממנו: כיצד קובעים תנאי פוליסה, מה הסוכן יכול לנהל, ומה קורה בשינויים ארגוניים (פיטורים/מיזוגים). חשיפה לסוגי עובדים שונים (טכנאים, ניהול, שירות). מקור: מסמך דב"ס-YES בקורס; עקרונות ביטוח קבוצתי.',topic:'davs'},
+  {id:72,q:'באיזה שיעור ביטוח קולקטיבי זול יותר מביטוח בריאות פרטי לאותו כיסוי?',opts:['5–10%','15–30%','40–50%','50–70%'],ans:1,exp:'כוח קנייה קבוצי מוריד עלויות מנהלה, שיווק ועמלות — 15–30% זול יותר מפרטי לאותו כיסוי. בנוסף: לרוב ללא חיתום רפואי מלא. שאלת מכירה: "לביטוח פרטי דומה תשלם 180₪ — כאן זה 129₪ עם כיסוי גבוה יותר." מקור: נתוני שוק הביטוח הקבוצתי בישראל.',topic:'davs'},
+  {id:73,q:'מה החסרון העיקרי של ביטוח קולקטיבי בעת עזיבת מקום העבודה?',opts:['חובה להמשיך לשלם פרמיה','הביטוח פוקע – תלות בהחלטת המעסיק','הפרמיה מוכפלת אוטומטית','ניתן להמשיך ללא תנאים'],ans:1,exp:'חסרון קולקטיב: תלות במעסיק. עזיבה/פיטורים = הביטוח פוקע. כדאי לבדוק אפשרות המשכייות.',topic:'davs'},
+  {id:74,q:'מי קובע את תנאי הכיסוי בפוליסה קולקטיבית?',opts:['כל עובד בנפרד','המבוטח עצמו','המעסיק / ועד העובדים','הסוכן'],ans:2,exp:'בביטוח קולקטיבי – הכיסוי נקבע על ידי המעסיק או ועד העובדים, לא הפרט.',topic:'davs'},
+  {id:75,q:'מה יתרון הקולקטיב לחבר עם מצב רפואי קיים?',opts:['אין יתרון – כולם מחוייבים בשאלון','מכוסה מיד ללא כל המתנה','מכוסה בדרך כלל לאחר תקופת המתנה','הביטוח מתבטל אוטומטית'],ans:2,exp:'יתרון גדול של קולקטיב: לקוח עם מצב קיים (סוכרת, לחץ דם, לב) שאינו יכול לקבל ביטוח פרטי — מצטרף לקולקטיב ומכוסה אחרי תקופת המתנה קצרה (6–12 חודש). בביטוח פרטי — ייתכן אי-קבלה או חריג קבוע. שאלת מכירה: "יש לך מחלה ידועה? בקולקטיב זה לא בעיה." מקור: תנאי הצטרפות קולקטיבים; הנחיות חיתום קבוצתי.',topic:'davs'},
+
+  // ===== רכבת ישראל (4 שאלות) =====
+  {id:76,q:'מה מאפיין את עובדי רכבת ישראל כלקוחות ביטוח?',opts:['מחזור עבודה גבוה','ותק גבוה ויציבות תעסוקתית','עצמאים ברובם','גיל ממוצע נמוך מאוד'],ans:1,exp:'רכבת ישראל — מעסיק ציבורי גדול עם עובדים בעלי ותק. הביטוח מוסכם דרך הסכם קיבוצי. שאלת מכירה לעובד ותיק: "מה קורה לביטוח שלך יום לאחר הפרישה?" — פותחת שיחה על ביטוח גמלאים. מקור: הסכם קיבוצי רכבת ישראל.',topic:'rakevet'},
+  {id:77,q:'מה הנושא החם ביותר לדיון עם עובד רכבת ישראל?',opts:['פרמיות נמוכות','גמלאות וביטוח בריאות לאחר פרישה','ביטוח ילדים בלבד','ניתוחי חירום'],ans:1,exp:'עובדי רכבת עם ותק יפרשו בקרוב – ביטוח גמלאים לאחר פרישה הוא נושא מרכזי בשיח.',topic:'rakevet'},
+  {id:78,q:'דרך מי נרכש הביטוח הקולקטיבי לעובדי רכבת ישראל?',opts:['ישירות מחברת הביטוח','ישירות מהסוכן','דרך ועד העובדים / הסכם קיבוצי','דרך הממשלה'],ans:2,exp:'ועד עובדים חזק כרכבת ישראל — הביטוח חלק מהסכם קיבוצי, מה שמוסיף יציבות. הסוכן עובד עם ועד/HR ולא ישירות עם כל עובד. חשוב להכיר: מי מחליט, מה ניתן לנהל, מתי חידוש ההסכם. מקור: הסכם קיבוצי רכבת ישראל; חוק הסכמים קיבוציים.',topic:'rakevet'},
+  {id:79,q:'מה שאלת הפתיחה המומלצת לשיחה עם עובד רכבת ישראל?',opts:['"כמה אתה מרוויח?"','"מה קורה לביטוח הבריאות שלך ביום שאתה פורש?"','"יש לך ביטוח חיים?"','"כמה ילדים יש לך?"'],ans:1,exp:'שאלת הפרישה פותחת דיון על ביטוח גמלאים – "נושא חם" לעובד רכבת בעל ותק.',topic:'rakevet'},
+  {id:89,q:'מה קורה לפרמיית רובד הבסיס ברכבת ישראל לאחר שעובד מקבל קביעות?',opts:['העובד ממשיך לשלם במלואה','המעסיק משלם את רובד הבסיס','הפרמיה מתחלקת 50/50','הפרמיה מבוטלת לחלוטין'],ans:1,exp:'לאחר קבלת קביעות ברכבת ישראל, רובד הבסיס של ביטוח הבריאות משולם על ידי המעסיק. זהו יתרון ייחודי שכדאי להדגיש בפגישה עם עובדי רכבת.',topic:'rakevet'},
+  {id:90,q:'מה הוא היתרון הייחודי של ביטוח הבריאות הקבוצתי לעובדי רכבת ישראל שקיבלו קביעות?',opts:['כיסוי רפואי גלובלי','רובד הבסיס ממומן על ידי המעסיק','אין תקופת המתנה לאחר קביעות','פרמיה אפסית לכל המסלולים'],ans:1,exp:'ברכבת ישראל, לאחר קביעות — רובד הבסיס של ביטוח הבריאות ממומן על ידי המעסיק. העובד משלם רק את ההשדרגה לרמה גבוהה יותר. שאלת מכירה: "כשתקבל קביעות, המעסיק ישלם את הבסיס — מה אתה רוצה מעל זה?" מקור: הסכם קיבוצי רכבת ישראל — תנאי ביטוח בריאות.',topic:'rakevet'},
+
+  // ===== תנובה (4 שאלות) =====
+  {id:80,q:'מה חשוב להדגיש בביטוח לעובדי מפעל תנובה?',opts:['ביטוח נסיעות בלבד','אכ"ע וכיסוי תאונות עבודה','ביטוח חיים בלבד','ביטוח שיניים'],ans:1,exp:'עובדי מפעל תנובה (הרמת משאות, עמידה ממושכת, קור תעשייתי) חשופים לתאונות, בעיות גב ופציעות. אכ"ע בהגדרת "עיסוק ספציפי" קריטי: עובד קו ייצור שנפגע בגב לא יכול לעמוד שעות. שאלת מכירה: "אם מחר לא תוכל לעמוד על הרגליים — מה ישלם את המשכנתא?" מקור: נתוני ביטוח לאומי; נוסח אכ"ע.',topic:'tnuva'},
+  {id:81,q:'מה מאפיין את פרופיל עובדי תנובה כקהל ביטוח?',opts:['עצמאים בעלי הכנסה גבוהה','מגוון גילאים ותפקידים (מפעל וניהול), רבים עם משפחות','גמלאים בלבד','עובדי טכנולוגיה'],ans:1,exp:'תנובה – חברת מזון גדולה עם אלפי עובדים: מפעל + ניהול, מגוון גילאים, רבים עם משפחות.',topic:'tnuva'},
+  {id:82,q:'כיצד נרכש ביטוח הבריאות הקולקטיבי של עובדי תנובה?',opts:['כל עובד קונה בנפרד','כחלק מהסכם קיבוצי','ישירות דרך קופת חולים','ישירות מהמדינה'],ans:1,exp:'תנובה — חברת מזון גדולה עם אלפי עובדים ומגוון תפקידים (ייצור + ניהול). הביטוח נרכש כחלק מהסכם קיבוצי → כוח קנייה → תנאים טובים. הסוכן הפונה לתנובה צריך להכיר את מבנה ההסכם הקיבוצי ולדבר עם ועד/HR. מקור: עקרונות ביטוח קבוצתי.',topic:'tnuva'},
+  {id:83,q:'מה הביטוח המרכזי לבדיקה אצל עובד ייצור בתנובה?',opts:['ביטוח רכב','ביטוח דירה','אובדן כושר עבודה (אכ"ע)','ביטוח מחמד'],ans:2,exp:'עובד ייצור בתנובה (קור תעשייתי, עומס פיזי, ציוד כבד) — סיכון גבוה לבעיות גב, ידיים ופרקים. אכ"ע מחליף עד 75% מהשכר. שאלת מכירה: "אם מחר לא תוכל לעמוד על הרגליים שעות — מה ישלם את המשכנתא?" מקור: סטטיסטיקות תאונות עבודה בתעשיית המזון — ביטוח לאומי.',topic:'tnuva'},
+
+  // ===== מספנות ישראל (5 שאלות) =====
+  {id:84,q:'איפה ממוקמת מספנות ישראל?',opts:['תל אביב','אשדוד','חיפה','אילת'],ans:2,exp:'מספנות ישראל ממוקמת בנמל חיפה ומעסיקה עובדי מקצועות ים, אוניות וטכניים. הסיכון המקצועי גבוה — עבודה בגובה, כלים כבדים, חשיפה לרעש ולכימיקלים.',topic:'msapanot'},
+  {id:85,q:'מה הביטוח הקריטי ביותר לעובדי מספנות?',opts:['ביטוח שיניים','ביטוח תאונות אישיות','ביטוח נסיעות לחו״ל','ביטוח חיים בלבד'],ans:1,exp:'עובדי מספנות חשופים לסיכונים ייחודיים: עבודה בגובה, רעש תעשייתי, כימיקלים ואוניות כבדות. קולקטיב מספנות-פניקס מכסה אשפוז מכל סיבה — כולל תאונת עבודה. "אם נפצעת — ניתוח תוך שבוע או 6 חודשי המתנה בקופה?" מקור: נוסח פוליסת קולקטיב מספנות – פניקס; ביטוח לאומי לענף הים.',topic:'msapanot'},
+  {id:86,q:'מה מאפיין את הגיל הממוצע של עובדי מספנות ישראל?',opts:['צעיר מאוד (מתחת ל-30)','גיל ממוצע גבוה יחסית','כולם כבר בפנסיה','אחיד לכל הגילאים'],ans:1,exp:'מספנות ישראל – גיל ממוצע גבוה יחסית. חשוב לדון בביטוח גמלאים ותכנון פרישה.',topic:'msapanot'},
+  {id:87,q:'מה שאלת המכירה המומלצת לעובד מספנות ישראל?',opts:['"כמה קרן השתלמות שלך?"','"אם נפצעת בעבודה, מה קורה לך ולמשפחתך?"','"האם אתה מרוצה מהשב"ן?"','"כמה ילדים יש לך?"'],ans:1,exp:'שאלה זו פותחת שיחה על הסיכון האמיתי: עובדי מספנות חשופים לתאונות עבודה ומחלות מקצוע (כגון רעש, כימיקלים, עבודה בגובה). הכיסוי בקולקטיב מספנות ישראל / פניקס כולל אשפוז כתוצאה מתאונה ומחלה — זה הכלי שעונה על השאלה. מקור: נוסח פוליסת קולקטיב מספנות ישראל — פניקס, סעיף כיסויים.',topic:'msapanot'},
+  {id:88,q:'מה מבנה הביטוח הרב-תחומי המומלץ לעובדי מספנות?',opts:['בריאות בלבד','חיים בלבד','פנסיה בלבד','בריאות + חיים + פנסיה'],ans:3,exp:'עובדי מספנות מומלץ לבדוק ביטוח רב-תחומי: בריאות + חיים + פנסיה – בשל הסיכון המקצועי הגבוה.',topic:'msapanot'},
+  // ===== רפורמות ביטוח (2 שאלות) =====
+  {id:91,q:'מה קרה לביטוח תאונות אישיות כמוצר עצמאי בישראל?',opts:['הפך לחובה על כל עובד','הוגבל/בוטל ברפורמת רשות שוק ההון','עלה משמעותית במחיר','עבר לאחריות ביטוח לאומי'],ans:1,exp:'ביטוח תאונות אישיות כמוצר עצמאי הוגבל ובוטל ברפורמת רשות שוק ההון. כיסוי תאונות קיים כיום בעיקר בתוך פוליסות קולקטיב ובריאות.',topic:'יסודות ביטוח'},
+  {id:92,q:'מה החלופה הנכונה להציע ללקוח שמחפש ביטוח תאונות אישיות?',opts:['לומר שאין פתרון','להצביע על כיסוי אשפוז ושקל ראשון בפוליסת הקולקטיב','להפנות לביטוח לאומי בלבד','לרכוש ביטוח חיים במקום'],ans:1,exp:'הכיסוי לתאונות קיים בתוך פוליסת הקולקטיב — מסלול שקל ראשון מכסה אשפוז כתוצאה מתאונה ומחלה. זו התשובה המקצועית הנכונה ללקוח.',topic:'יסודות ביטוח'}
+];
+
+// Quiz topic display names
+const TOPIC_NAMES = {
+  collective:'קולקטיב',namal:'נמל חיפה',kiryat:'קריית מוצקין',ci:'מחלות קשות',
+  siud:'סיעוד',franchise:'פרנשייזה',clawback:'קלובק',ake:'אכ"ע',
+  index:'בסיס מדדי',sales:'מכירה',objection:'התנגדויות',
+  shekel:'שקל ראשון',licensing:'רישוי',davs:'דב"ס',rakevet:'רכבת ישראל',tnuva:'תנובה',msapanot:'מספנות ישראל'
+};
+
+const LESSON_TOPIC_MAP = {
+  '1.1':'collective','1.2':'collective','1.3':'namal','1.4':'ci',
+  '1.5':'siud','1.6':'ake',
+  '2.1':'namal','2.2':'kiryat','2.3':'davs','2.4':'rakevet',
+  '2.5':'tnuva','2.6':'msapanot',
+  '3.1':'sales','3.2':'sales','3.3':'objection','3.4':'objection','3.5':'sales',
+  'y.1':'licensing','y.2':'licensing','y.3':'licensing','y.4':'licensing',
+  'y.5':'licensing','y.6':'licensing','y.7':'licensing','y.8':'licensing',
+  'g.1':'licensing','g.2':'licensing','g.3':'licensing','g.4':'licensing','g.5':'licensing'
+};
+
+
+// ===== SCENARIOS DATA (8 sims) =====
+const SCENARIOS = [
+{id:0,name:'דני אביגיל',icon:'🤨',type:'הסקפטי',desc:'עובד נמל חיפה ותיק, 40. "יש לי שב"ן, לא צריך כלום."',
+steps:[
+{lbl:'פתיחה',sit:'דני מסתכל בך בספקנות: "אדוני, יש לי כיסוי קופת חולים מלא. לא מבין למה אני צריך משהו נוסף."',
+choices:[
+{txt:'להסכים ולהמשיך לנושא אחר',quality:'bad',fb:'❌ הסכמת מהר מדי. לא הגעת לצורך האמיתי.'},
+{txt:'"בדיוק – השב"ן מצוין לבסיס. שאלה: אם מחר תצטרך ניתוח ירך – כמה תחכה בציבורי?"',quality:'great',fb:'✅ מעולה! שאלה ספציפית שחושפת את המגבלה מבלי לתקוף.'},
+{txt:'להתחיל להסביר את כל המוצרים',quality:'neutral',fb:'🟡 רלוונטי אבל מוקדם. קודם זהה את הצורך.'}
+]},
+{lbl:'התנגדות',sit:'דני: "בסדר, אולי יש תורים, אבל 129₪ לחודש זה הוצאה שאני לא צריך."',
+choices:[
+{txt:'להוריד מחיר',quality:'bad',fb:'❌ אל תיכנע. הוזלה מיידית פוגעת בערך המוצר.'},
+{txt:'"129₪ = 4.3₪ ביום. פחות מכוס קפה. ניתוח פרטי עולה 80,000-200,000₪. מה הגיוני יותר?"',quality:'great',fb:'✅ מעולה! הפיכת המחיר לאנלוגיה יומית + השוואה לנזק.'},
+{txt:'לדבר על ביטוח חיים',quality:'neutral',fb:'🟡 נושא שונה מדי – אל תאבד את מה שהתחלת.'}
+]},
+{lbl:'סגירה',sit:'דני מתמשמש: "טוב, אולי יש היגיון... אבל אני צריך לחשוב."',
+choices:[
+{txt:'לחכות שיחזור',quality:'bad',fb:'❌ "לחשוב" = איבוד. צריך לתת לו עוגן.'},
+{txt:'"בטח. רק שאלה אחת – ההצטרפות הבאה היא ב-1 לחודש. אם נחכה, יש 90 יום המתנה. רוצה שאשלח טופס?"',quality:'great',fb:'✅ מעולה! דחיפות אמיתית + call to action ספציפי.'},
+{txt:'"מתי נוח לדבר שוב?"',quality:'neutral',fb:'🟡 בסדר, אבל לא מספיק חזק. נסה להוביל לפעולה.'}
+]}
+]},
+{id:1,name:'ד"ר אריאל כהן',icon:'📊',type:'האנליטי',desc:'מהנדס, קריית מוצקין, 42. "הוכח לי עם מספרים."',
+steps:[
+{lbl:'פתיחה',sit:'אריאל: "בסדר, אני מוכן לשמוע. אבל אני צריך נתונים קונקרטיים לפני שאחליט."',
+choices:[
+{txt:'לדבר על תחושות ורגשות',quality:'bad',fb:'❌ אנליטי לא נוגע ברגשות. נתונים בלבד.'},
+{txt:'"מצוין. ניתוח ממוצע בישראל עולה 35,000-150,000₪. הפרמיה השנתית שלך: 179₪×12=2,148₪. תשואה על ההשקעה ברורה."',quality:'great',fb:'✅ מדויק! מספרים + תשואה על ההשקעה = שפת האנליטי.'},
+{txt:'להציג את כל הפוליסות שיש',quality:'neutral',fb:'🟡 יותר מדי מידע בפעם אחת. מרכז על הנתונים הרלוונטיים.'}
+]},
+{lbl:'השוואה',sit:'אריאל: "ראיתי שיש הגבלה ברשת פניקס. מה ההשלכות?"',
+choices:[
+{txt:'להמעיט בחשיבות ההגבלה',quality:'bad',fb:'❌ אנליטי ישים לב. שקיפות מוחלטת חיונית.'},
+{txt:'"שאלה מצוינת. ברשת פניקס יש 200+ מנתחים מוסמכים. עם זאת, אם חשוב לך לבחור מנתח חיצוני, נמל חיפה עדיף – 129₪ ורשת פתוחה."',quality:'great',fb:'✅ מעולה! כנות + נתונים + הפנייה לאלטרנטיבה הרלוונטית.'},
+{txt:'לעצור ולהסיר את ההגבלה מהשיחה',quality:'neutral',fb:'🟡 לא כנה מספיק. אנליטי ידע לאתר.'}
+]},
+{lbl:'סגירה',sit:'אריאל: "אני שוקל. מה תוחלת ה-ROI לאורך זמן?"',
+choices:[
+{txt:'לא יודע, אחזור מחר',quality:'bad',fb:'❌ אנליטי לא יחכה. הכן נתונים מראש.'},
+{txt:'"בגיל 42, סטטיסטית 40% מהאוכלוסיה יצרכו ניתוח לפני גיל 65. 2,148₪/שנה × 23 שנה = 49,404₪. ניתוח אחד = כיסוי 23 שנה."',quality:'great',fb:'✅ מדהים! חישוב מדויק + הסתברות = האנליטי שלך.'},
+{txt:'"סמוך עלי"',quality:'neutral',fb:'🟡 אנליטי לא סומך על תחושות. צריך מספרים.'}
+]}
+]},
+{id:2,name:'אורי לוי',icon:'⚡',type:'הממהר',desc:'מנהל דב"ס, 45. "אין לי זמן. תהיה קצר."',
+steps:[
+{lbl:'פתיחה',sit:'אורי מסתכל על השעון: "יש לי 5 דקות. מה אתה מוכר?"',
+choices:[
+{txt:'להתחיל מהתחלה עם כל ההסברים',quality:'bad',fb:'❌ איבדת אותו בשנייה השלישית.'},
+{txt:'"60 שניות: ניתוח פרטי תוך שבוע, רופא שתבחר, 129₪/חודש. רוצה לשמוע עוד?"',quality:'great',fb:'✅ מושלם! פתיחה ב-15 שניות + שאלת הסכמה.'},
+{txt:'לבקש פגישה חדשה',quality:'neutral',fb:'🟡 בסדר, אבל אל תפספס את ה-5 הדקות שיש לך.'}
+]},
+{lbl:'כניסה לפרטים',sit:'אורי: "בסדר. מה הלכידה?"',
+choices:[
+{txt:'להסביר שאין לכידות',quality:'bad',fb:'❌ יש הגבלות. כנות חיונית.'},
+{txt:'"תקופת חוזה עד 2030. קריית מוצקין – ניתוחים ברשת פניקס. זה הכל."',quality:'great',fb:'✅ קצר, ישיר, כנה. הממהר מעריך.'},
+{txt:'להסביר את כל המסמכים',quality:'neutral',fb:'🟡 יותר מדי. תהיה ממוקד.'}
+]},
+{lbl:'סגירה',sit:'אורי: "נשמע בסדר. מה הצעד הבא?"',
+choices:[
+{txt:'"שלח לי מייל ואני אחזור"',quality:'neutral',fb:'🟡 ממהר כבר עבר לנושא הבא. הוביל לפעולה.'},
+{txt:'"שלח לי את מספר ת.ז. ואשלח לך טופס עכשיו. 2 דקות."',quality:'great',fb:'✅ מצוין! קריאה לפעולה מיידית עם הגדרת זמן.'},
+{txt:'להמשיך להסביר על היתרונות',quality:'bad',fb:'❌ הוא כבר נכנס! הפסקת לפני הסגירה.'}
+]}
+]},
+{id:3,name:'ריבה שפירא',icon:'🏥',type:'המרוצה מהשב"ן',desc:'ותיקה ברכבת ישראל, 52. "קופת החולים שלי מכסה הכל."',
+steps:[
+{lbl:'פתיחה',sit:'ריבה: "אני רשומה לקופת חולים הכי טובה. לא חסר לי כלום."',
+choices:[
+{txt:'להתחיל לבקר את הקופה',quality:'bad',fb:'❌ התקפה = הגנה. ריבה תסגר.'},
+{txt:'"מצוין! קופה טובה היא הבסיס. שאלה קטנה: אם תצטרכי ניתוח קטרקט – כמה זמן ממוצע בקופה שלך?"',quality:'great',fb:'✅ אישרת את בחירתה + שאלה ספציפית שחושפת את הפער.'},
+{txt:'"הקופה שלך לא מכסה הכל"',quality:'neutral',fb:'🟡 נכון אבל אגרסיבי. גרם אותה להגן.'}
+]},
+{lbl:'המחשה',sit:'ריבה: "ניתוח קטרקט? לא יודעת. מה המסקנה?"',
+choices:[
+{txt:'להסביר שהיא צריכה כיסוי',quality:'neutral',fb:'🟡 נכון אבל כללי מדי.'},
+{txt:'"בממוצע 6-8 חודשים תור לניתוח קטרקט בציבורי. בשקל ראשון – 10 ימים. בגיל 52 זמן הוא לא מותרות."',quality:'great',fb:'✅ נתון ספציפי + רלוונטי לגיל = מדויק.'},
+{txt:'להפנות לנמל חיפה',quality:'bad',fb:'❌ ריבה ברכבת, לא נמל. בדוק את הקולקטיב שלה!'}
+]},
+{lbl:'סגירה',sit:'ריבה: "170₪ לחודש... הרבה בשבילי."',
+choices:[
+{txt:'להסכים שזה הרבה',quality:'bad',fb:'❌ אישרת את ההתנגדות. הוסף ערך.'},
+{txt:'"170₪ = 5.7₪ ביום. ניתוח קטרקט פרטי = 12,000₪. שנה אחת של פרמיה = 2,040₪ לעומת 12,000₪. מה זה שווה?"',quality:'great',fb:'✅ התשואה על ההשקעה ברורה ופשוטה. מדהים.'},
+{txt:'להפחית פרמיה',quality:'neutral',fb:'🟡 לא הטכניקה הנכונה ראשונה. נסה ערך לפני הנחה.'}
+]}
+]},
+{id:4,name:'שרה מזרחי',icon:'💰',type:'מתנגד במחיר',desc:'עובדת תנובה, 36. "יקר מדי, אין כסף."',
+steps:[
+{lbl:'פתיחה',sit:'שרה: "תראה, אין לי תקציב לביטוח נוסף. ממש אין."',
+choices:[
+{txt:'לוותר ולסיים',quality:'bad',fb:'❌ מהר מדי. "אין כסף" לרוב = "לא ראיתי ערך."'},
+{txt:'"מבינה. שאלה אחת – אם מחר יגידו לך שיש לך מחלה וצריך ניתוח דחוף, מה תעשי פיננסית?"',quality:'great',fb:'✅ שאלת "מה יהיה אם" – חושפת את האמת מאחורי ה"אין כסף."'},
+{txt:'להציע תשלומים',quality:'neutral',fb:'🟡 מוקדם מדי. קודם עורר את הצורך.'}
+]},
+{lbl:'ירידה למחיר',sit:'שרה: "ניתוח? אני בריאה. לא יקרה לי."',
+choices:[
+{txt:'להסכים שהיא צעירה ובריאה',quality:'bad',fb:'❌ זה בדיוק מה שאנשים אומרים לפני שמשהו קורה.'},
+{txt:'"בגיל 36, סרטן שד הוא הגורם הראשון לתמותה בנשים. 1 מ-8 נשים. תרופת immunotherapy אחת = 30,000₪/חודש – לא בסל."',quality:'great',fb:'✅ סטטיסטיקה רלוונטית + מחיר ספציפי = עורר מודעות.'},
+{txt:'"אנשים אחרים גם חושבים כך"',quality:'neutral',fb:'🟡 כללי מדי. ספציפיות עובדת יותר.'}
+]},
+{lbl:'סגירה',sit:'שרה: "בסדר, אולי כדאי. כמה הכי זול?"',
+choices:[
+{txt:'לתת את הכי זול ולסגור',quality:'neutral',fb:'🟡 בסדר, אבל אולי היא תוכל קצת יותר?'},
+{txt:'"המינימום הוא מסלול א – 110₪/חודש. מסלול ב נותן כיסוי כפול תמורת 19₪ נוסף. מה עדיף לך?"',quality:'great',fb:'✅ הצגת שתי אפשרויות – בחירה לקוחה. לא הכרחת, הצעת.'},
+{txt:'להתחיל לדבר על CI',quality:'bad',fb:'❌ היא ביקשה זול. אל תכביד עליה עכשיו.'}
+]}
+]},
+{id:5,name:'רמי ברקוביץ',icon:'👫',type:'מחליט זוגי',desc:'מספנות ישראל, 44. "אני צריך לדבר עם אשתי."',
+steps:[
+{lbl:'פתיחה',sit:'רמי: "הצגה מעניינת... אבל אני לא מקבל החלטות לבד. אשתי חייבת להיות בתמונה."',
+choices:[
+{txt:'ללחוץ עליו להחליט לבד',quality:'bad',fb:'❌ זה יהרוס את הזוגיות שלהם ואת המכירה.'},
+{txt:'"זה בדיוק הגישה הנכונה! אפשר לסגור פגישה לשניכם ביחד? 30 דקות בלבד."',quality:'great',fb:'✅ כיבוד הדינמיקה הזוגית + הצעת פגישה משותפת.'},
+{txt:'לשלוח חומרים ולחכות',quality:'neutral',fb:'🟡 בסדר, אבל קשה להניע זוג ב-PDF. פגישה עדיפה.'}
+]},
+{lbl:'הפגישה הזוגית',sit:'רמי + אשתו: "אז למה אנחנו בכלל צריכים ביטוח נוסף?"',
+choices:[
+{txt:'לדבר עם רמי בלבד',quality:'bad',fb:'❌ התעלמת מהאשה – היא מקבלת ההחלטות!'},
+{txt:'"שאלה מצוינת. אם רמי לא יוכל לעבוד חצי שנה – כיצד תתפרנסו? הקולקטיב = 129₪ לחודש לביטחון."',quality:'great',fb:'✅ פנייה לשניהם + שאלה שנוגעת לשניהם.'},
+{txt:'להסביר רק את המוצר',quality:'neutral',fb:'🟡 חסרה שאלה שיוצרת מחויבות רגשית.'}
+]},
+{lbl:'סגירה',sit:'האשה: "נשמע הגיוני. מה צריך לחתום?"',
+choices:[
+{txt:'לשלוח טפסים למייל',quality:'neutral',fb:'🟡 בסדר, אבל נסה לסגור על הרגע.'},
+{txt:'"מצוין! בעוד 10 דקות אמלא את הטופס לשניכם. אוכל לרשום גם את הילדים בפרמיה מיוחדת."',quality:'great',fb:'✅ מצוין! אפסל = הוסף ילדים. וסגרת על הרגע!'},
+{txt:'לקחת זמן לחשוב',quality:'bad',fb:'❌ הם מוכנים לסגור! אל תפסיד את הרגע.'}
+]}
+]},
+{id:6,name:'יוסי מלכה',icon:'🤝',type:'הסוחר',desc:'נמל חיפה, 55. "אני רוצה הנחה."',
+steps:[
+{lbl:'פתיחה',sit:'יוסי: "שמע חביבי, אם תתן לי הנחה טובה, אני סוגר עכשיו."',
+choices:[
+{txt:'לתת הנחה מיידית',quality:'bad',fb:'❌ הנחה מיידית = הורדת ערך. יוסי יבקש עוד.'},
+{txt:'"יוסי, הפרמיות קבועות בחוזה הקולקטיבי – אין גמישות שם. מה שכן – אני אוכל להוסיף את כל המשפחה בפרמיה המיוחדת לחברי הנמל."',quality:'great',fb:'✅ מעולה! לא הנחה כספית, אלא ערך נוסף.'},
+{txt:'להגיד שאין הנחות',quality:'neutral',fb:'🟡 נכון אבל סגר את השיחה. תציע ערך חלופי.'}
+]},
+{lbl:'מחלוקת',sit:'יוסי: "גם השכן שלי ביטח דרכך ואתה נתת לו משהו."',
+choices:[
+{txt:'להסכים ולתת הנחה',quality:'bad',fb:'❌ לעולם אל תשחק להשוואה עם לקוח אחר.'},
+{txt:'"כל לקוח מקבל את אותם תנאי הקולקטיב – כולם שווים. מה שאני כן יכול: להוסיף בן-זוג וגמלאים בפגישה אחת."',quality:'great',fb:'✅ שמרת על עקרוניות + הצעת ערך אמיתי.'},
+{txt:'לא לענות על השאלה',quality:'neutral',fb:'🟡 הימנעות = אי-אמינות. הגב בביטחון.'}
+]},
+{lbl:'סגירה',sit:'יוסי: "בסדר, מה אני מקבל שאחרים לא מקבלים?"',
+choices:[
+{txt:'לא כלום',quality:'bad',fb:'❌ זה לא ייסגר. תמיד יש משהו שאפשר לתת.'},
+{txt:'"אתה מקבל ליווי אישי – כל שאלה, כל תביעה, אני עוזר. זה מה שמבדיל בין סוכן לטופס אינטרנטי."',quality:'great',fb:'✅ שירות אישי = ערך אמיתי שאי אפשר לתמחר.'},
+{txt:'להציע שירות לאחר מכירה בלבד',quality:'neutral',fb:'🟡 בסדר אבל לא מספיק חזק.'}
+]}
+]},
+{id:7,name:'מיכאל גרינברג',icon:'😰',type:'מפחד מהחלטות',desc:'נמל חיפה, 38. "מה אם אחרטה? מה אם לא שווה?"',
+steps:[
+{lbl:'פתיחה',sit:'מיכאל: "אני לא יודע... יש כל כך הרבה אפשרויות. מה אם אבחר לא נכון?"',
+choices:[
+{txt:'לתת לו את כל האפשרויות',quality:'bad',fb:'❌ יותר מדי מידע = שיתוק החלטה.'},
+{txt:'"מיכאל, אפשט לך: שני מסלולים. מסלול א = בסיסי ב-110₪. מסלול ב = מורחב ב-129₪. ברוב המקרים – מסלול ב כי ההבדל 19₪."',quality:'great',fb:'✅ פשטות = מתנה למפחד מהחלטות.'},
+{txt:'להסביר את כל היתרונות',quality:'neutral',fb:'🟡 יותר מדי. פשטות עדיפה.'}
+]},
+{lbl:'פחד מחרטה',sit:'מיכאל: "מה אם בעוד שנה אחליט שלא רוצה?"',
+choices:[
+{txt:'לומר שאין אפשרות לביטול',quality:'bad',fb:'❌ לא נכון. ויש כאן הסתרת מידע.'},
+{txt:'"ניתן לבטל בכל עת עם הודעה של 30 ימים. אין קנסות. נסה 3 חודשים – אם לא מרוצה, אבטל בשבילך."',quality:'great',fb:'✅ מעולה! ביטחון + הוצאת סיכון מהמשוואה.'},
+{txt:'לא לדבר על ביטול',quality:'neutral',fb:'🟡 הוא ישאל בכל מקרה. עדיף להקדים.'}
+]},
+{lbl:'סגירה',sit:'מיכאל: "בסדר... אבל מה אם אני לא משתמש בביטוח?"',
+choices:[
+{txt:'לומר שהוא צריך להשתמש',quality:'neutral',fb:'🟡 לא מייעץ אבל לא מקדם.'},
+{txt:'"הביטוח הטוב הוא זה שלא צריך להשתמש בו. כשיצטרך – הוא שם. שקט נפשי = ערך ממשי."',quality:'great',fb:'✅ ביקשת להרגיש בטוח. נתת לו בדיוק את זה.'},
+{txt:'להשאיר אותו לחשוב',quality:'bad',fb:'❌ מפחד = צריך סגירה חמה. אל תשאיר אותו לבד.'}
+]}
+]}
+];
+
+// SALES INSIGHTS for home tip
+const SALES_INSIGHTS = [
+  {title:'זהה את המניע האמיתי',text:'"יקר" = לא ראה ערך. "אחשוב" = לא סיים לשכנע. פענח מה מאחורי כל תשובה.'},
+  {title:'מספרים קונקרטיים',text:'129₪/חודש = 4.3₪/יום. ניתוח פרטי = 80,000₪. אנלוגיות יומיות = נגישות.'},
+  {title:'דחיפות אמיתית',text:'ההצטרפות הבאה ב-1 לחודש. תקופת המתנה 90 יום. כל חודש שעובר = סיכון.'},
+  {title:'טכניקת השיקוף',text:'שחזר את מה שהלקוח אמר: "אז אתה אומר שחשוב לך שהמשפחה תהיה מוגנת?" – הוא מסכים לבד.'},
+  {title:'קמ"פ שלב קדימה',text:'מצאת את הכאב? עבור לפתרון: "זה בדיוק מה שה-X מטפל בו."'},
+  {title:'שאלת "מה יהיה אם"',text:'"מה יקרה למשפחה אם לא תוכל לעבוד שנה?" – התשובה שלו היא הסגירה.'},
+  {title:'ביטול התנגדות מראש',text:'אמור בעצמך: "אני יודע ש-129₪ נשמע... אבל כשמחלקים ל-4.3₪ ביום..."'}
+];
+
+// XP / GAMIFICATION
+const XP_CONFIG = {lesson:15,chapter:50,quizCorrect:5,quizComplete:30,roleplay:25,dailyLogin:10};
+const LEVELS = [
+  {min:0,max:99,name:'מתחיל',icon:'🌱',num:1},
+  {min:100,max:299,name:"סוכן ג'",icon:'⭐',num:2},
+  {min:300,max:599,name:"סוכן ב'",icon:'⭐⭐',num:3},
+  {min:600,max:999,name:'סוכן בכיר',icon:'⭐⭐⭐',num:4},
+  {min:1000,max:Infinity,name:'מומחה',icon:'🏆',num:5}
+];
+const BADGES_DEF = [
+  {id:'first_lesson',icon:'📖',name:'לומד ראשון',desc:'השלם שיעור אחד',check:s=>s.completedLessons.length>=1},
+  {id:'foundations',icon:'🏗️',name:'יסודות',desc:'סיים פרק 1',check:s=>['1.1','1.2','1.3','1.4','1.5','1.6'].every(id=>s.completedLessons.includes(id))},
+  {id:'namal_expert',icon:'⚓',name:'מומחה נמל',desc:'השלם שיעור 2.1',check:s=>s.completedLessons.includes('2.1')},
+  {id:'field_ready',icon:'🏢',name:'שטח-מוכן',desc:'סיים את כל הקולקטיבים',check:s=>['2.1','2.2','2.3','2.4','2.5','2.6'].every(id=>s.completedLessons.includes(id))},
+  {id:'first_sale',icon:'🎯',name:'מכירה ראשונה',desc:'סיים סימולטור',check:s=>Object.keys(s.simScores).length>=1},
+  {id:'streak3',icon:'🔥',name:'רצף 3 ימים',desc:'3 ימים רצופים',check:s=>s.streak.count>=3},
+  {id:'quiz_ace',icon:'🏆',name:'מלך החידון',desc:'90%+ בחידון',check:s=>s.quizBestPct!=null&&s.quizBestPct>=90},
+  {id:'master',icon:'💎',name:'מאסטר',desc:'סיים 20+ שיעורים',check:s=>s.completedLessons.length>=20}
+];
+
+// ===== STATE =====
+const SK = 'kidma_v1';
+let S = getState();
+
+function getState() {
+  try {
+    const d = localStorage.getItem(SK);
+    if (!d) return initState();
+    const p = JSON.parse(d);
+    // Migrate old format
+    if (!p.quizHistory) p.quizHistory = {};
+    if (!p.notRelevant) p.notRelevant = [];
+    if (!p.simScores) p.simScores = {};
+    if (!p.xpLog) p.xpLog = [];
+    if (p.quizBestPct == null) p.quizBestPct = null;
+    if (!p.activityLog) p.activityLog = {};
+    if (!p.confLog) p.confLog = [];
+    if (!p.errorLog) p.errorLog = [];
+    return p;
+  } catch(e) { return initState(); }
+}
+
+function initState() {
+  return {
+    xp:0, level:1,
+    streak:{count:0, last:null},
+    completedLessons:[],
+    badges:[],
+    quizHistory:{},
+    notRelevant:[],
+    simScores:{},
+    xpLog:[],
+    activeTrack:'sales',
+    quizBestPct:null,
+    activityLog:{},
+    confLog:[],
+    errorLog:[]
+  };
+}
+
+function save() {
+  try { localStorage.setItem(SK, JSON.stringify(S)); } catch(e){}
+}
+
+// ===== EVENT DELEGATION =====
+const ACTIONS = {
+  'tab': id => showTab(id),
+  'switch-track': t => switchTrack(t),
+  'toggle-chapter': id => toggleChapter(id),
+  'lesson': id => openLesson(id),
+  'close-modal': () => closeModal(),
+  'complete-lesson': id => completeLesson(id),
+  'start-quiz': () => startQuiz(),
+  'quiz-mode': m => setQuizMode(m),
+  'quiz-filter': f => setQuizFilter(f),
+  'quiz-answer': (idx, el) => submitAnswer(parseInt(idx), el),
+  'quiz-confidence': conf => showAnswerFeedback(parseInt(conf)),
+  'pretest-answer': idx => pretestAnswer(parseInt(idx)),
+  'posttest-answer': idx => posttestAnswer(parseInt(idx)),
+  'quiz-next': () => nextQuestion(),
+  'quiz-rate': r => rateAnswer(parseInt(r)),
+  'not-relevant': i => toggleNotRelevant(parseInt(i)),
+  'sim-start': id => startSim(parseInt(id)),
+  'sim-choice': (idx, el) => simChoice(parseInt(idx), el),
+  'sim-next': () => simNext(),
+  'sim-back': () => showSimSelect(),
+  'sim-restart': () => showSimSelect(),
+  'reset-progress': () => { if(confirm('לאפס את כל ההתקדמות?')){localStorage.removeItem(SK);S=initState();save();renderAll();showTab('home');} }
+};
+
+document.addEventListener('click', function(e) {
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  e.preventDefault();
+  const a = el.dataset.action;
+  const p = el.dataset.param;
+  if (ACTIONS[a]) ACTIONS[a](p, el);
+}, {passive:false});
+
+// ===== TAB SYSTEM =====
+let currentTab = 'home';
+function showTab(id) {
+  try {
+    // Use getElementsByClassName for maximum iOS compatibility (no NodeList.forEach needed)
+    var panes = document.getElementsByClassName('tab-pane');
+    for (var i = 0; i < panes.length; i++) {
+      panes[i].style.display = 'none';
+    }
+    var target = document.getElementById('tab-' + id);
+    if (target) { target.style.display = 'block'; }
+    var btns = document.getElementsByClassName('nav-btn');
+    for (var j = 0; j < btns.length; j++) {
+      btns[j].classList.remove('active');
+    }
+    var activeBtn = document.querySelector('[data-param="' + id + '"]');
+    if (activeBtn) { activeBtn.classList.add('active'); }
+    var main = document.getElementById('app-main');
+    if (main) { main.scrollTop = 0; }
+    // Render tab content
+    if (id === 'home') renderHome();
+    else if (id === 'learn') renderLearn();
+    else if (id === 'quiz') renderQuizShell();
+    else if (id === 'sim') showSimSelect();
+    else if (id === 'perf') renderPerf();
+  } catch(err) {
+    // Show error in the debug badge
+    var dbg = document.getElementById('nd');
+    if (dbg) {
+      dbg.textContent = 'ERR:' + err.message.substring(0, 40);
+      dbg.style.background = 'rgba(239,68,68,.95)';
+      dbg.style.opacity = '1';
+    }
+    // Also try to show in the tab itself
+    var errTarget = document.getElementById('tab-' + id);
+    if (errTarget) {
+      errTarget.style.display = 'block';
+      errTarget.innerHTML = '<div style="color:#ef4444;padding:20px;font-size:13px;direction:ltr;word-break:break-all"><strong>JS Error in showTab(' + id + '):</strong><br>' + err.message + '<br><br>' + (err.stack||'').substring(0,500) + '</div>';
+    }
+  }
+}
+
+// ===== LEARN TAB =====
+let openChapters = new Set(['c1']); // first chapter open by default
+
+function switchTrack(t) {
+  S.activeTrack = t;
+  save();
+  document.querySelectorAll('.track-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.param === t);
+  });
+  renderLearn();
+}
+
+function toggleChapter(id) {
+  if (openChapters.has(id)) openChapters.delete(id);
+  else openChapters.add(id);
+  renderLearn();
+}
+
+function renderLearn() {
+  const container = document.getElementById('learn-chapters');
+  if (!container) return;
+  const track = S.activeTrack;
+  const trackChapters = Object.values(CHAPTERS).filter(c => c.track === track);
+  
+  container.innerHTML = trackChapters.map(ch => {
+    const lessons = ch.lessons.map(lid => LESSONS[lid]).filter(Boolean);
+    const done = lessons.filter(l => S.completedLessons.includes(l.id)).length;
+    const pct = lessons.length ? Math.round(done/lessons.length*100) : 0;
+    const isOpen = openChapters.has(ch.id);
+    
+    return `<div class="chapter-card ${isOpen?'open':''}" id="chapter-${ch.id}">
+      <div class="chap-hdr" data-action="toggle-chapter" data-param="${ch.id}">
+        <div class="chap-icon ci-${ch.color}">${ch.icon}</div>
+        <div class="chap-info">
+          <div class="chap-title">${ch.title}</div>
+          <div class="chap-meta">${lessons.length} שיעורים · ${done}/${lessons.length} הושלמו</div>
+          <div class="chap-prog-bar"><div class="chap-prog-fill" style="width:${pct}%;background:var(--${ch.color==='blue'?'blue':ch.color==='green'?'green':ch.color==='gold'?'gold':'purple'})"></div></div>
+        </div>
+        <div class="chap-chevron">▾</div>
+      </div>
+      <div class="chap-body">
+        <div class="lesson-list">
+          ${lessons.map((l, i) => {
+            const isDone = S.completedLessons.includes(l.id);
+            const isNext = !isDone && i > 0 && S.completedLessons.includes(lessons[i-1]?.id);
+            const isCurrent = !isDone && (i === 0 || isNext);
+            return `<div class="lesson-item ${isDone?'done':isCurrent?'current':''}" data-action="lesson" data-param="${l.id}">
+              <div class="l-num">${isDone?'✓':(i+1)}</div>
+              <div class="l-info">
+                <div class="l-title">${l.title}</div>
+                <div class="l-desc">${l.desc}</div>
+              </div>
+              <div class="l-xp">+${l.xp} XP</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== LESSON MODAL =====
+function openLesson(id) {
+  const l = LESSONS[id];
+  if (!l) return;
+  const lessonTopic = LESSON_TOPIC_MAP[id];
+  const candidates = lessonTopic ? QUIZ_DATA.filter(q => q.topic === lessonTopic) : [];
+  const pretestQ = candidates.length > 0
+    ? candidates[Math.floor(Math.random() * candidates.length)]
+    : QUIZ_DATA[Math.floor(Math.random() * QUIZ_DATA.length)];
+  QS._pretest = {q: pretestQ, lessonId: id, chosenIdx: null, correct: null};
+  document.getElementById('modal-title').textContent = l.title;
+  document.getElementById('modal-body').innerHTML = `
+    <div class="pretest-screen">
+      <p class="pretest-intro">🧪 בדיקת פתיחה — נסה לענות לפני שלמדת</p>
+      <p class="pretest-note">אין נקודות, רק להפעיל את המוח</p>
+      <div class="pretest-q">${pretestQ.q}</div>
+      <div class="pretest-opts">
+        ${pretestQ.opts.map((opt,i)=>`<button class="q-opt" data-action="pretest-answer" data-param="${i}"><span class="ol">${String.fromCharCode(65+i)}</span><span>${opt}</span></button>`).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('modal-footer').innerHTML = '';
+  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('app-main').style.overflowY = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+  document.getElementById('app-main').style.overflowY = 'scroll';
+}
+
+function completeLesson(id) {
+  if (S.completedLessons.includes(id)) return;
+  S.completedLessons.push(id);
+  addXP(XP_CONFIG.lesson, 'שיעור: '+LESSONS[id]?.title);
+  const ch = Object.values(CHAPTERS).find(c => c.lessons.includes(id));
+  if (ch && ch.lessons.every(lid => S.completedLessons.includes(lid))) {
+    addXP(XP_CONFIG.chapter, 'פרק הושלם: '+ch.title);
+  }
+  checkBadges();
+  save();
+  renderLearn();
+  renderHome();
+  updateHeader();
+
+  // Pretesting Effect: post-test if pretest was answered
+  if (QS._pretest && QS._pretest.lessonId === id && QS._pretest.chosenIdx !== null) {
+    const _ptQ  = QS._pretest.q;
+    const _ptOk = QS._pretest.correct;
+    const _ptTxt = _ptQ.opts[QS._pretest.chosenIdx];
+    QS._posttestQ = _ptQ;
+    QS._pretest = null;
+    document.getElementById('modal-body').innerHTML = `
+      <div class="posttest-screen">
+        <p class="posttest-hdr">🔁 אותה שאלה שוב</p>
+        <p class="posttest-note">בתחילה ${_ptOk ? '✅ ענית נכון' : '❌ ענית: "'+_ptTxt+'"'}</p>
+        <div class="pretest-q">${_ptQ.q}</div>
+        <div class="pretest-opts">
+          ${_ptQ.opts.map((opt,i)=>`<button class="q-opt" data-action="posttest-answer" data-param="${i}"><span class="ol">${String.fromCharCode(65+i)}</span><span>${opt}</span></button>`).join('')}
+        </div>
+      </div>
+    `;
+    document.getElementById('modal-footer').innerHTML = '';
+  } else {
+    QS._pretest = null;
+    closeModal();
+  }
+}
+
+function pretestAnswer(idx) {
+  if (!QS._pretest) return;
+  const q = QS._pretest.q;
+  const isCorrect = idx === q.ans;
+  QS._pretest.chosenIdx = idx;
+  QS._pretest.correct = isCorrect;
+  document.querySelectorAll('.pretest-opts .q-opt').forEach((b,i) => {
+    b.classList.add('locked'); b.dataset.action = '';
+    if (i === idx) b.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect && i === q.ans) b.classList.add('correct');
+  });
+  const id = QS._pretest.lessonId;
+  const l = LESSONS[id];
+  const isDone = S.completedLessons.includes(id);
+  setTimeout(() => {
+    const badge = isCorrect
+      ? `<div class="pretest-result ok">✅ נכון! בוא נבין למה</div>`
+      : `<div class="pretest-result err">❌ לא בדיוק — בוא נלמד</div>`;
+    document.getElementById('modal-body').innerHTML = badge + `<div class="lesson-content">${l.content}</div>`;
+    document.getElementById('modal-footer').innerHTML = `
+      <button class="complete-btn ${isDone?'done':''}" data-action="complete-lesson" data-param="${id}">
+        ${isDone ? '✓ הושלם' : '✅ סיום שיעור +'+l.xp+' XP'}
+      </button>`;
+  }, 550);
+}
+
+function posttestAnswer(idx) {
+  const q = QS._posttestQ;
+  if (!q) { closeModal(); return; }
+  const isCorrect = idx === q.ans;
+  document.querySelectorAll('.pretest-opts .q-opt').forEach((b,i) => {
+    b.classList.add('locked'); b.dataset.action = '';
+    if (i === idx) b.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect && i === q.ans) b.classList.add('correct');
+  });
+  QS._posttestQ = null;
+  setTimeout(() => {
+    document.getElementById('modal-footer').innerHTML = `<button class="complete-btn done" onclick="closeModal()">✓ סגור</button>`;
+  }, 400);
+}
+
+function startFocusedPractice(qIds) {
+  const idSet = new Set(qIds);
+  const pool = QUIZ_DATA.filter(q => idSet.has(q.id ?? QUIZ_DATA.indexOf(q))).map((q,_) => ({...q, idx: QUIZ_DATA.indexOf(q)}));
+  if (pool.length === 0) return;
+  QS.mode = 'practice';
+  QS.filter = 'all';
+  QS.pool = pool.sort(() => Math.random() - 0.5);
+  QS.idx = 0; QS.correct = 0; QS.hearts = 3;
+  QS.total = QS.pool.length; QS.sessionDone = false; QS.sessionAnswers = [];
+  document.querySelectorAll('.qms-btn').forEach(b => b.classList.toggle('active', b.dataset.param === 'practice'));
+  showTab('quiz');
+  startTimer();
+  showQuestion();
+}
+
+// ===== QUIZ ENGINE =====
+let QS = { // Quiz state
+  mode:'srs', filter:'all', pool:[], idx:0,
+  correct:0, total:0, sessionDone:false, sessionAnswers:[], hearts:3
+};
+
+function getQuizPool() {
+  let pool = QUIZ_DATA.map((q,i) => ({...q, idx:i}))
+    .filter(q => !S.notRelevant.includes(typeof q.id === 'number' ? q.id : QUIZ_DATA.indexOf(q)));
+
+  if (QS.filter !== 'all') {
+    pool = pool.filter(q => {
+      if (QS.filter === 'namal') return q.topic === 'namal';
+      if (QS.filter === 'kiryat') return q.topic === 'kiryat';
+      if (QS.filter === 'davs') return ['davs','yes','dbs'].includes(q.topic);
+      if (QS.filter === 'rakevet') return q.topic === 'rakevet';
+      if (QS.filter === 'tnuva') return q.topic === 'tnuva';
+      if (QS.filter === 'msapanot') return q.topic === 'msapanot';
+      if (QS.filter === 'sales') return ['sales','objection','shekel','collective'].includes(q.topic);
+      if (QS.filter === 'licensing') return q.topic === 'licensing';
+      return true;
+    });
+  }
+
+  if (QS.mode === 'srs') {
+    pool = pool.filter(q => isDue(q.id));
+    pool.sort((a,b) => {
+      const ha = S.quizHistory[a.id];
+      const hb = S.quizHistory[b.id];
+      if (!ha) return -1;
+      if (!hb) return 1;
+      const da = ha.nextSeen ? new Date(ha.nextSeen) : new Date(0);
+      const db = hb.nextSeen ? new Date(hb.nextSeen) : new Date(0);
+      return da - db;
+    });
+    if (pool.length === 0) pool = QUIZ_DATA.map((q,i) => ({...q, idx:i})).filter(q => !S.notRelevant.includes(i)).slice(0, 10);
+  } else if (QS.mode === 'interleave') {
+    // Interleave: 5 weakest-topic + 5 SRS-due + 5 random different-topics
+    const tStats = {};
+    pool.forEach(q => {
+      const t = q.topic || 'other';
+      if (!tStats[t]) tStats[t] = {correct:0, total:0};
+      const h = S.quizHistory[q.id ?? q.idx];
+      if (h && h.attempts > 0) { tStats[t].total++; if ((h.correct||0) > 0) tStats[t].correct++; }
+    });
+    const topicAcc = Object.entries(tStats).filter(([,v])=>v.total>0)
+      .map(([t,v])=>({topic:t,pct:v.correct/v.total})).sort((a,b)=>a.pct-b.pct);
+    const weakTopic = topicAcc.length>0 ? topicAcc[0].topic : null;
+    const weakPool = weakTopic ? pool.filter(q=>q.topic===weakTopic).sort(()=>Math.random()-.5).slice(0,5) : [];
+    const weakIds = new Set(weakPool.map(q=>q.id??q.idx));
+    const srsPool = pool.filter(q=>isDue(q.id??q.idx)&&!weakIds.has(q.id??q.idx)).sort(()=>Math.random()-.5).slice(0,5);
+    const usedIds = new Set([...weakPool,...srsPool].map(q=>q.id??q.idx));
+    const usedTopics = new Set([...weakPool,...srsPool].map(q=>q.topic||'other'));
+    const randPool = [];
+    pool.filter(q=>!usedIds.has(q.id??q.idx)).sort(()=>Math.random()-.5).forEach(q=>{
+      if(randPool.length<5 && !usedTopics.has(q.topic||'other')){randPool.push(q);usedTopics.add(q.topic||'other');}
+    });
+    pool = [...weakPool,...srsPool,...randPool].sort(()=>Math.random()-.5).slice(0,15);
+  } else {
+    // Practice: shuffle
+    pool.sort(() => Math.random() - 0.5);
+    pool = pool.slice(0, 15);
+    // Interleave: prevent same topic back-to-back
+    function interleave(arr) {
+      const result = [];
+      const byTopic = {};
+      arr.forEach(q => {
+        const t = q.topic || 'other';
+        if (!byTopic[t]) byTopic[t] = [];
+        byTopic[t].push(q);
+      });
+      const topics = Object.keys(byTopic);
+      let last = null;
+      while (result.length < arr.length) {
+        const avail = topics.filter(t => byTopic[t].length > 0 && t !== last);
+        if (!avail.length) break;
+        const t = avail[Math.floor(Math.random() * avail.length)];
+        result.push(byTopic[t].shift());
+        last = t;
+      }
+      return result;
+    }
+    pool = interleave(pool);
+  }
+  return pool;
+}
+
+function isDue(qid) {
+  const h = S.quizHistory[qid];
+  if (!h || !h.nextSeen) return true;
+  return new Date(h.nextSeen) <= new Date();
+}
+
+function getDueCount() {
+  return QUIZ_DATA.filter((q,i) => !S.notRelevant.includes(i) && isDue(q.id ?? i)).length;
+}
+
+function setQuizMode(m) {
+  QS.mode = m;
+  document.querySelectorAll('.qms-btn').forEach(b => b.classList.toggle('active', b.dataset.param === m));
+  renderQuizShell();
+}
+
+function setQuizFilter(f) {
+  QS.filter = f;
+  document.querySelectorAll('.qf-btn').forEach(b => b.classList.toggle('active', b.dataset.param === f));
+  renderQuizShell();
+}
+
+function renderQuizShell() {
+  const dueCount = getDueCount();
+  const badge = document.getElementById('srs-due-badge');
+  if (badge) badge.textContent = dueCount;
+  const sub = document.getElementById('quiz-sub');
+  if (sub) sub.textContent = QS.mode === 'srs' ? `${dueCount} שאלות לחזרה היום` : QS.mode === 'interleave' ? '🔀 מעורב – 15 שאלות מגוונות' : 'תרגול חופשי – 15 שאלות';
+}
+
+function startQuiz() {
+  QS.pool = getQuizPool();
+  QS.idx = 0;
+  QS.correct = 0;
+  QS.hearts = 3;
+  QS.total = QS.pool.length;
+  QS.sessionDone = false;
+  QS.sessionAnswers = [];
+  startTimer();
+  if (QS.pool.length === 0) {
+    document.getElementById('quiz-area').innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted)"><div style="font-size:2rem;margin-bottom:10px">🎉</div><p style="color:#fff;font-weight:700">אין שאלות לחזרה!</p><p>חזור מחר או עבור לתרגול חופשי.</p></div>`;
+    return;
+  }
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = QS.pool[QS.idx];
+  if (!q) { showQuizResult(); return; }
+  const pct = QS.total > 1 ? Math.round(QS.idx / QS.total * 100) : 0;
+  const topicName = TOPIC_NAMES[q.topic] || q.topic || '';
+  const topicTagHtml = QS.mode === 'interleave' ? `<div class="interleave-tag">[${topicName}]</div>` : `<div class="q-topic-tag">${topicName}</div>`;
+  const qRealId = q.id ?? QS.pool[QS.idx].idx;
+  const h = S.quizHistory[qRealId];
+  const isNR = S.notRelevant.includes(qRealId);
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="qprog-wrap">
+      <div class="qprog-bg"><div class="qprog-fill" style="width:${pct}%"></div></div>
+      <span class="q-timer" id="q-timer">⏱ 0:00</span>
+      <div class="q-hearts" id="q-hearts">${QS.mode !== 'srs' ? '❤️'.repeat(QS.hearts||3)+'🖤'.repeat(Math.max(0,3-(QS.hearts||3))) : ''}</div>
+      <div class="qprog-txt">${QS.idx+1}/${QS.total}</div>
+    </div>
+    <div class="card-scene">
+      <div class="card-3d" id="quiz-card-3d">
+        <div class="card-face card-front">
+          ${topicTagHtml}
+          <div class="q-text">${q.q}</div>
+          <div class="q-options">
+            ${q.opts.map((opt, i) => `<button class="q-opt" data-action="quiz-answer" data-param="${i}">
+              <span class="ol">${String.fromCharCode(65+i)}</span>
+              <span>${opt}</span>
+            </button>`).join('')}
+          </div>
+          <div class="q-not-rel">
+            <button class="nr-btn ${isNR?'marked':''}" data-action="not-relevant" data-param="${qRealId}">
+              ${isNR ? '✓ לא רלוונטי' : 'לא רלוונטי לי'}
+            </button>
+            ${h ? `<span>ניסיונות: ${h.attempts||0} | נכון: ${h.correct||0}</span>` : ''}
+          </div>
+        </div>
+        <div class="card-face card-back" id="quiz-card-back"></div>
+      </div>
+    </div>
+  `;
+  setTimeout(() => {
+    const c3d = document.getElementById('quiz-card-3d');
+    const cf = c3d && c3d.querySelector('.card-front');
+    if (c3d && cf) c3d.style.height = cf.scrollHeight + 'px';
+  }, 50);
+}
+
+function submitAnswer(ansIdx, el) {
+  const q = QS.pool[QS.idx];
+  if (!q) return;
+  const opts = document.querySelectorAll('.q-opt');
+  opts.forEach(b => { b.classList.add('locked'); b.dataset.action = ''; });
+
+  const isCorrect = ansIdx === q.ans;
+  opts[ansIdx].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    opts[q.ans].classList.add('correct');
+    // Error Pattern Tracking
+    S.errorLog = S.errorLog || [];
+    const _eqid = q.id ?? QS.pool[QS.idx].idx;
+    S.errorLog.push({qId:_eqid, chosenIdx:ansIdx, correctIdx:q.ans, topic:q.topic||'other', timestamp:new Date().toISOString()});
+  }
+
+  if (isCorrect) {
+    QS.correct++;
+    addXP(XP_CONFIG.quizCorrect, 'תשובה נכונה');
+  } else if (QS.mode !== 'srs') {
+    QS.hearts = (QS.hearts !== undefined) ? QS.hearts - 1 : 2;
+    updateHearts();
+    if (QS.hearts <= 0) {
+      QS.sessionAnswers = QS.sessionAnswers || [];
+      QS.sessionAnswers.push({topic: q.topic || 'other', correct: false});
+      const _hqid = q.id ?? QS.pool[QS.idx].idx;
+      const _hh = S.quizHistory[_hqid] || {correct:0,attempts:0,interval:1,ease:2.5,nextSeen:null};
+      _hh.attempts = (_hh.attempts||0) + 1;
+      S.quizHistory[_hqid] = _hh;
+      const _todayH = new Date().toISOString().split('T')[0];
+      S.activityLog = S.activityLog || {};
+      S.activityLog[_todayH] = (S.activityLog[_todayH]||0)+1;
+      save();
+      setTimeout(() => showQuizResult(), 800);
+      return;
+    }
+  }
+
+  // Store pending answer for Metacognitive Calibration check
+  QS._pendingAnswer = {ansIdx, isCorrect, q};
+
+  // Show confidence check before feedback
+  const back = document.getElementById('quiz-card-back');
+  if (back) {
+    back.innerHTML = `
+      <div class="conf-check-wrap">
+        <p>כמה היית בטוח?</p>
+        <div class="conf-check-btns">
+          <button class="conf-pick-btn" data-action="quiz-confidence" data-param="1">😰 ניחוש</button>
+          <button class="conf-pick-btn" data-action="quiz-confidence" data-param="2">🤔 50/50</button>
+          <button class="conf-pick-btn" data-action="quiz-confidence" data-param="3">💪 בטוח</button>
+        </div>
+      </div>
+    `;
+    setTimeout(() => {
+      const c3d = document.getElementById('quiz-card-3d');
+      const cf = c3d && c3d.querySelector('.card-front');
+      if (c3d && cf && back) {
+        c3d.style.height = Math.max(cf.scrollHeight, back.scrollHeight) + 'px';
+        c3d.classList.add('flipped');
+      }
+    }, 50);
+  }
+}
+
+function showAnswerFeedback(confidence) {
+  if (!QS._pendingAnswer) return;
+  const {isCorrect, q} = QS._pendingAnswer;
+  QS._pendingAnswer = null;
+
+  const qid = q.id ?? QS.pool[QS.idx].idx;
+
+  // Save Metacognitive Calibration log
+  S.confLog = S.confLog || [];
+  S.confLog.push({qId:qid, correct:isCorrect, confidence:confidence, timestamp:new Date().toISOString()});
+
+  // Update quiz history
+  const h = S.quizHistory[qid] || {correct:0, attempts:0, interval:1, ease:2.5, nextSeen:null};
+  h.attempts = (h.attempts||0) + 1;
+  if (isCorrect) h.correct = (h.correct||0) + 1;
+  S.quizHistory[qid] = h;
+
+  QS.sessionAnswers = QS.sessionAnswers || [];
+  QS.sessionAnswers.push({topic: q.topic || 'other', correct: isCorrect});
+
+  const iv = h.interval || 1;
+  const _fsD = h.D || 5;
+  const _fsS = h.S || 1;
+  const ivAgain = 1;
+  const ivHard = Math.max(1, Math.round(iv * 1.2));
+  const ivGood = Math.max(1, Math.round(_fsS * (1 + 0.1 * (11 - _fsD))));
+  const ivEasy = Math.max(1, Math.round(_fsS * (1 + 0.15 * (11 - _fsD)) * 1.3));
+  const _topicAcc = getTopicAccuracy(q.topic);
+  const _topicAccHtml = _topicAcc !== null ? `<div class="topic-acc">\u{1F4CA} דיוק שלך ב${TOPIC_NAMES[q.topic]||q.topic}: ${_topicAcc}%</div>` : '';
+  function ivLabel(d) { return d === 1 ? '1 יום' : d + ' ימים'; }
+
+  const qRealId = q.id ?? QS.pool[QS.idx].idx;
+  const isNR = S.notRelevant.includes(qRealId);
+  const back = document.getElementById('quiz-card-back');
+  if (back) {
+    back.innerHTML = `
+      <div class="q-fb show ${isCorrect ? 'ok' : 'err'}">
+        <strong>${isCorrect ? '✅ נכון!' : '❌ לא נכון'}</strong>${q.exp}${_topicAccHtml}
+      </div>
+      <div class="quiz-confidence">
+        <div class="confidence-label">כמה ידעת?</div>
+        <div class="confidence-btns">
+          <button class="conf-btn conf-again" data-action="quiz-rate" data-param="0">
+            🔴 שכחתי<span class="conf-interval">${ivLabel(ivAgain)}</span>
+          </button>
+          <button class="conf-btn conf-hard" data-action="quiz-rate" data-param="3">
+            🟡 קשה<span class="conf-interval">${ivLabel(ivHard)}</span>
+          </button>
+          <button class="conf-btn conf-good" data-action="quiz-rate" data-param="4">
+            🟢 ידעתי<span class="conf-interval">${ivLabel(ivGood)}</span>
+          </button>
+          <button class="conf-btn conf-easy" data-action="quiz-rate" data-param="5">
+            ⚡ קל<span class="conf-interval">${ivLabel(ivEasy)}</span>
+          </button>
+        </div>
+      </div>
+      <div class="q-not-rel" style="margin-top:8px">
+        <button class="nr-btn ${isNR?'marked':''}" data-action="not-relevant" data-param="${qRealId}">
+          ${isNR ? '✓ לא רלוונטי' : 'לא רלוונטי לי'}
+        </button>
+      </div>
+      <div class="kb-hint">מקשי קיצור: 1 · 2 · 3 · 4</div>
+    `;
+    setTimeout(() => {
+      const c3d = document.getElementById('quiz-card-3d');
+      if (c3d && back) {
+        c3d.style.height = Math.max(c3d.scrollHeight, back.scrollHeight) + 'px';
+      }
+    }, 50);
+  }
+
+  const _today = new Date().toISOString().split('T')[0];
+  S.activityLog = S.activityLog || {};
+  S.activityLog[_today] = (S.activityLog[_today]||0)+1;
+  save();
+}
+function nextQuestion() {
+  QS.idx++;
+  if (QS.idx >= QS.pool.length) { showQuizResult(); return; }
+  showQuestion();
+}
+
+function fsrsUpdate(card, rating) {
+  // rating: 1=Again, 2=Hard, 3=Good, 4=Easy
+  card.D = card.D || 5;
+  card.S = card.S || 1;
+  card.reps = (card.reps || 0) + 1;
+  if (rating === 1) { // Again
+    card.D = Math.min(10, card.D + 2);
+    card.S = Math.max(0.5, card.S * 0.5);
+    card.interval = 1;
+  } else if (rating === 2) { // Hard
+    card.D = Math.min(10, card.D + 0.5);
+    card.S = card.S * 0.8;
+    card.interval = Math.max(1, Math.round((card.interval || 1) * 1.2));
+  } else if (rating === 3) { // Good
+    card.D = Math.max(1, card.D - 0.2);
+    card.S = card.S * (1 + 0.1 * (11 - card.D));
+    card.interval = Math.round(card.S);
+  } else { // Easy
+    card.D = Math.max(1, card.D - 0.5);
+    card.S = card.S * (1 + 0.15 * (11 - card.D));
+    card.interval = Math.round(card.S * 1.3);
+  }
+  card.interval = Math.max(1, Math.min(card.interval, 365));
+  return card;
+}
+
+function rateAnswer(rating) {
+  const q = QS.pool[QS.idx];
+  if (!q) return;
+  const qid = q.id ?? QS.pool[QS.idx].idx;
+  const h = S.quizHistory[qid] || {correct:0, attempts:0, interval:1, ease:2.5, nextSeen:null, D:5, S:1, reps:0};
+  // Map button params (0/3/4/5) → FSRS ratings (1/2/3/4)
+  const fsrsRating = rating === 0 ? 1 : rating === 3 ? 2 : rating === 4 ? 3 : 4;
+  fsrsUpdate(h, fsrsRating);
+  const nextDate = new Date();
+  nextDate.setDate(nextDate.getDate() + h.interval);
+  h.nextSeen = nextDate.toISOString();
+  S.quizHistory[qid] = h;
+  save();
+  nextQuestion();
+}
+
+function showQuizResult() {
+  QS.sessionDone = true;
+  stopTimer();
+  const pct = QS.total > 0 ? Math.round(QS.correct / QS.total * 100) : 0;
+  if (S.quizBestPct == null || pct > S.quizBestPct) S.quizBestPct = pct;
+  addXP(XP_CONFIG.quizComplete, `חידון הושלם: ${pct}%`);
+  checkBadges();
+  save();
+
+  if (QS.correct === QS.total && QS.total >= 5) launchConfetti();
+
+  const secs = QS_startTime ? Math.floor((Date.now() - QS_startTime) / 1000) : 0;
+  const timeStr = secs > 0 ? ` · ⏱ ${Math.floor(secs/60)}:${(secs%60).toString().padStart(2,'0')}` : '';
+
+  const msg = pct >= 90 ? '🏆 מצוין! מסיים ברמה גבוהה' : pct >= 70 ? '✅ כל הכבוד!' : '💪 המשך להתאמן';
+
+  const topicBreakdown = {};
+  (QS.sessionAnswers || []).forEach(a => {
+    if (!topicBreakdown[a.topic]) topicBreakdown[a.topic] = {c:0, t:0};
+    topicBreakdown[a.topic].t++;
+    if (a.correct) topicBreakdown[a.topic].c++;
+  });
+  const topicHtml = Object.entries(topicBreakdown).map(([t,v]) => {
+    const p = Math.round(v.c / v.t * 100);
+    const color = p >= 75 ? 'var(--green)' : p >= 50 ? 'var(--gold)' : 'var(--red)';
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">`
+      + `<span style="font-size:.78rem;color:#ccc;flex:1">${TOPIC_NAMES[t] || t}</span>`
+      + `<span style="font-size:.78rem;font-weight:700;color:${color}">${v.c}/${v.t}</span>`
+      + `</div>`;
+  }).join('');
+
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="quiz-result">
+      <div class="res-circle"><div class="res-score">${pct}%</div><div class="res-of">${QS.correct}/${QS.total}</div></div>
+      <div class="res-msg">${msg}</div>
+      <div class="res-sub">נכון: ${QS.correct} · טעויות: ${QS.total-QS.correct}${timeStr}</div>
+      ${topicHtml ? `<div class="result-topics" style="margin:14px 0;text-align:right;border-top:1px solid var(--border);padding-top:12px">${topicHtml}</div>` : ''}
+      <button class="q-next-btn show" data-action="start-quiz">שחק שוב →</button>
+    </div>
+  `;
+  updateHeader();
+}
+
+function toggleNotRelevant(i) {
+  const idx = S.notRelevant.indexOf(i);
+  if (idx === -1) S.notRelevant.push(i);
+  else S.notRelevant.splice(idx, 1);
+  save();
+  // Update button
+  const btn = document.querySelector('.nr-btn');
+  if (btn) {
+    btn.classList.toggle('marked', S.notRelevant.includes(i));
+    btn.textContent = S.notRelevant.includes(i) ? '✓ לא רלוונטי' : 'לא רלוונטי לי';
+  }
+}
+
+// ===== SIMULATOR ENGINE =====
+let SS = { simId:null, step:0, score:0, chosen:null };
+
+function showSimSelect() {
+  SS = { simId:null, step:0, score:0, chosen:null };
+  document.getElementById('sim-area').innerHTML = `
+    <p class="sim-intro">בחר לקוח לתרגל שיחת מכירה:</p>
+    <div class="persona-grid">
+      ${SCENARIOS.map(sc => {
+        const best = S.simScores[sc.id];
+        return `<button class="persona-card" data-action="sim-start" data-param="${sc.id}">
+          <span class="pc-emoji">${sc.icon}</span>
+          <div class="pc-name">${sc.name}</div>
+          <div class="pc-desc">${sc.desc}</div>
+          <div>
+            ${best != null ? `<span class="pc-score">שיא: ${best}/3</span>` : ''}
+            <span class="pc-type">${sc.type}</span>
+          </div>
+        </button>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function startSim(id) {
+  SS.simId = id;
+  SS.step = 0;
+  SS.score = 0;
+  SS.chosen = null;
+  renderSimStep();
+}
+
+function renderSimStep() {
+  const sc = SCENARIOS[SS.simId];
+  if (!sc) return;
+  const step = sc.steps[SS.step];
+  if (!step) { showSimResult(); return; }
+  
+  document.getElementById('sim-area').innerHTML = `
+    <button class="sim-back-btn" data-action="sim-back">← חזור לרשימה</button>
+    <div class="sim-profile">
+      <div class="sim-emoji-big">${sc.icon}</div>
+      <div class="sim-profile-info">
+        <h3>${sc.name}</h3>
+        <p>${sc.desc}</p>
+        <span class="sim-type-badge">${sc.type}</span>
+      </div>
+    </div>
+    <div class="sim-step-card">
+      <div class="sim-step-lbl">שלב ${SS.step+1}/${sc.steps.length} · ${step.lbl}</div>
+      <div class="sim-situation">"${step.sit}"</div>
+      <div class="sim-opts">
+        ${step.choices.map((c, i) => `<button class="sim-opt" data-action="sim-choice" data-param="${i}">${c.txt}</button>`).join('')}
+      </div>
+      <div class="sim-fb" id="sim-fb"></div>
+      <button class="sim-next-btn" id="sim-next" data-action="sim-next">המשך →</button>
+    </div>
+  `;
+}
+
+function simChoice(idx, el) {
+  const sc = SCENARIOS[SS.simId];
+  const step = sc.steps[SS.step];
+  const choice = step.choices[idx];
+  
+  // Lock all options
+  document.querySelectorAll('.sim-opt').forEach(b => {
+    b.classList.add('locked');
+    b.dataset.action = '';
+  });
+  
+  // Mark chosen
+  const chosenEl = document.querySelectorAll('.sim-opt')[idx];
+  if (chosenEl) chosenEl.classList.add(choice.quality);
+  
+  // Score
+  if (choice.quality === 'great') SS.score++;
+  
+  // Feedback
+  const fb = document.getElementById('sim-fb');
+  if (fb) {
+    fb.className = `sim-fb show ${choice.quality}`;
+    fb.textContent = choice.fb;
+  }
+  
+  const next = document.getElementById('sim-next');
+  if (next) next.classList.add('show');
+}
+
+function simNext() {
+  SS.step++;
+  const sc = SCENARIOS[SS.simId];
+  if (SS.step >= sc.steps.length) { showSimResult(); return; }
+  renderSimStep();
+}
+
+function showSimResult() {
+  const sc = SCENARIOS[SS.simId];
+  const total = sc.steps.length;
+  const prev = S.simScores[SS.simId];
+  if (prev == null || SS.score > prev) S.simScores[SS.simId] = SS.score;
+  addXP(XP_CONFIG.roleplay, `סימולטור: ${sc.name}`);
+  checkBadges();
+  save();
+  
+  const stars = '⭐'.repeat(SS.score) + '☆'.repeat(total - SS.score);
+  const msg = SS.score === total ? '🏆 מושלם! שליטה מלאה' : SS.score >= 2 ? '✅ כל הכבוד!' : '💪 תרגל שוב';
+  
+  document.getElementById('sim-area').innerHTML = `
+    <div class="sim-score-card">
+      <div style="font-size:1.5rem;margin-bottom:8px">${sc.icon} ${sc.name}</div>
+      <div class="sim-score-num">${SS.score}/${total}</div>
+      <div style="font-size:1.5rem;margin:8px 0">${stars}</div>
+      <div style="font-size:1rem;font-weight:700;color:#fff;margin-bottom:4px">${msg}</div>
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:18px">+${XP_CONFIG.roleplay} XP</div>
+      <button class="sim-next-btn show" data-action="sim-back">בחר לקוח נוסף →</button>
+      &nbsp;
+      <button class="sim-next-btn show" style="background:var(--blue)" data-action="sim-start" data-param="${SS.simId}">נסה שוב</button>
+    </div>
+  `;
+  updateHeader();
+}
+
+// ===== TIMER =====
+let QS_timer = null;
+let QS_startTime = null;
+
+function startTimer() {
+  stopTimer();
+  QS_startTime = Date.now();
+  QS_timer = setInterval(() => {
+    const secs = Math.floor((Date.now() - QS_startTime) / 1000);
+    const m = Math.floor(secs/60), s = secs%60;
+    const el = document.getElementById('q-timer');
+    if (el) el.textContent = `⏱ ${m}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+}
+
+function stopTimer() {
+  if (QS_timer) { clearInterval(QS_timer); QS_timer = null; }
+}
+
+// ===== CONFETTI =====
+function launchConfetti() {
+  const colors = ['#6366f1','#a855f7','#10b981','#f59e0b','#ef4444'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.style.cssText = `position:fixed;top:0;left:${Math.random()*100}vw;width:8px;height:8px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.5?'50%':'2px'};pointer-events:none;z-index:9999;animation:confettiFall ${1.5+Math.random()*1.5}s ease forwards`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }, i * 30);
+  }
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+function handleKeyPress(e) {
+  if (!['1','2','3','4'].includes(e.key)) return;
+  const idx = parseInt(e.key) - 1;
+  const btns = document.querySelectorAll('.conf-btn');
+  if (btns[idx]) btns[idx].click();
+}
+document.addEventListener('keydown', handleKeyPress);
+
+// ===== TODAY'S PLAN =====
+function buildTodayPlan() {
+  const plan = [];
+  const dueCount = getDueCount();
+  if (dueCount > 0) plan.push({icon:'🔁', text:`חזור על ${Math.min(dueCount,20)} שאלות SRS`, action:'tab:quiz'});
+  const allIds = Object.keys(LESSONS);
+  const nextLesson = allIds.find(id => !S.completedLessons.includes(id));
+  if (nextLesson) plan.push({icon:'📖', text:`למד: ${LESSONS[nextLesson]?.title}`, action:'lesson:'+nextLesson});
+  const stats = getTopicStats();
+  const weakest = Object.entries(stats).filter(([,v])=>v.total>0).sort((a,b)=>a[1].correct/a[1].total-b[1].correct/b[1].total)[0];
+  if (weakest) plan.push({icon:'🎯', text:`חזק נושא חלש: ${TOPIC_NAMES[weakest[0]]||weakest[0]}`, action:'tab:quiz'});
+  if (plan.length === 0) plan.push({icon:'🏆', text:'כל המשימות הושלמו! נהדר', action:''});
+  return plan;
+}
+
+// ===== STREAK XP MULTIPLIER =====
+function getStreakMultiplier() {
+  const s = S.streak.count;
+  if (s >= 30) return 2.0;
+  if (s >= 14) return 1.5;
+  if (s >= 7) return 1.25;
+  if (s >= 3) return 1.1;
+  return 1.0;
+}
+
+// ===== XP & GAMIFICATION =====
+function addXP(amount, reason) {
+  const mult = getStreakMultiplier();
+  const actual = Math.round(amount * mult);
+  S.xp += actual;
+  const ts = new Date().toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'});
+  S.xpLog.unshift({amount: actual, reason, ts});
+  if (S.xpLog.length > 30) S.xpLog.pop();
+  const newLevel = LEVELS.findIndex(l => S.xp >= l.min && S.xp <= l.max);
+  if (newLevel !== -1 && newLevel + 1 !== S.level) {
+    S.level = newLevel + 1;
+    showLevelUp(S.level);
+  }
+  save();
+  const multStr = mult > 1 ? ` 🔥×${mult}` : '';
+  showXPToast(`+${actual} XP${multStr} · ${reason}`);
+  updateHeader();
+}
+
+function updateHearts() {
+  const el = document.getElementById('q-hearts');
+  if (!el) return;
+  el.textContent = '❤️'.repeat(QS.hearts) + '🖤'.repeat(Math.max(0, 3 - QS.hearts));
+  el.classList.remove('pulse');
+  void el.offsetWidth;
+  el.classList.add('pulse');
+}
+
+function getTopicAccuracy(topic) {
+  const entries = Object.entries(S.quizHistory).filter(([id, c]) => {
+    const qObj = QUIZ_DATA.find(q => q.id === parseInt(id));
+    return qObj && qObj.topic === topic && (c.attempts || 0) > 0;
+  });
+  if (entries.length === 0) return null;
+  const correct = entries.filter(([id, c]) => (c.correct || 0) > 0).length;
+  return Math.round(correct / entries.length * 100);
+}
+
+function showLevelUp(level) {
+  const lvl = LEVELS.find(l => l.num === level);
+  const name = lvl ? lvl.name : 'רמה ' + level;
+  const overlay = document.createElement('div');
+  overlay.className = 'levelup-overlay';
+  overlay.innerHTML = `<div class="levelup-card"><div class="levelup-icon">⭐</div><div class="levelup-title">עלית רמה!</div><div class="levelup-sub">${name}</div></div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => overlay.remove(), 2500);
+}
+
+function showXPToast(msg) {
+  const t = document.getElementById('xp-toast');
+  document.getElementById('xp-toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function getLevel() {
+  return LEVELS.find(l => S.xp >= l.min && S.xp <= l.max) || LEVELS[0];
+}
+
+function checkBadges() {
+  BADGES_DEF.forEach(b => {
+    if (!S.badges.includes(b.id) && b.check(S)) {
+      S.badges.push(b.id);
+      showXPToast(`🏅 הישג חדש: ${b.name}`);
+    }
+  });
+}
+
+function checkStreak() {
+  const today = new Date().toDateString();
+  const last = S.streak.last;
+  if (last === today) return;
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (last === yesterday.toDateString()) {
+    S.streak.count++;
+  } else if (last !== today) {
+    S.streak.count = 1;
+  }
+  S.streak.last = today;
+  if (!last || last !== today) {
+    addXP(XP_CONFIG.dailyLogin, 'כניסה יומית');
+  }
+  save();
+}
+
+function calcFieldReadiness() {
+  const totalLessons = Object.keys(LESSONS).length;
+  const doneLessons = S.completedLessons.length;
+  const lessonPct = totalLessons ? doneLessons / totalLessons : 0;
+  
+  const totalQ = QUIZ_DATA.length;
+  const attempted = Object.values(S.quizHistory).filter(h => h.attempts > 0).length;
+  const qPct = totalQ ? attempted / totalQ : 0;
+  
+  const simPct = Object.keys(S.simScores).length / SCENARIOS.length;
+  
+  return Math.round((lessonPct * 0.5 + qPct * 0.3 + simPct * 0.2) * 100);
+}
+
+function getTopicStats() {
+  // Returns {topic: {correct, total}} for all quiz history
+  const stats = {};
+  QUIZ_DATA.forEach((q, i) => {
+    const t = q.topic || 'other';
+    if (!stats[t]) stats[t] = {correct:0, total:0};
+    const h = S.quizHistory[q.id ?? i];
+    if (h && h.attempts > 0) {
+      stats[t].total++;
+      stats[t].correct += (h.correct || 0) > 0 ? 1 : 0;
+    }
+  });
+  return stats;
+}
+
+function updateHeader() {
+  const lv = getLevel();
+  document.getElementById('header-xp').textContent = `⭐ ${S.xp} XP · ${lv.name} ${lv.icon}`;
+  const strkEl = document.getElementById('header-streak');
+  if (strkEl) {
+    const mult = getStreakMultiplier();
+    const multStr = mult > 1 ? ` ×${mult}` : '';
+    strkEl.textContent = `🔥 ${S.streak.count}${multStr}`;
+  }
+}
+
+// ===== HOME TAB =====
+function renderHome() {
+  const readiness = calcFieldReadiness();
+  
+  // Update ring
+  const circ = document.getElementById('rr-circle');
+  if (circ) {
+    const r = 33, circum = 2 * Math.PI * r;
+    circ.style.strokeDashoffset = circum - (circum * readiness / 100);
+  }
+  const pctEl = document.getElementById('home-readiness-pct');
+  if (pctEl) pctEl.textContent = readiness + '%';
+  
+  // Greeting
+  const h = new Date().getHours();
+  const gr = h < 12 ? 'בוקר טוב' : h < 18 ? 'צהריים טובים' : 'ערב טוב';
+  const gEl = document.getElementById('home-greeting');
+  if (gEl) gEl.textContent = `${gr} מתן 👋`;
+  
+  const msgEl = document.getElementById('home-readiness-msg');
+  if (msgEl) msgEl.textContent = readiness < 30 ? 'מתחיל! בחר שיעור להתחיל' : readiness < 70 ? 'מתקדם יפה – המשך כך!' : 'מוכן לשטח! 🚀';
+  
+  // Due count
+  const dueCount = getDueCount();
+  const dueEl = document.getElementById('home-due-count');
+  if (dueEl) dueEl.textContent = dueCount;
+  const dueSubEl = document.getElementById('home-due-sub');
+  if (dueSubEl) dueSubEl.textContent = dueCount > 0 ? `${dueCount} שאלות לחזרה` : 'מעודכן!';
+  
+  // Next lesson
+  const allIds = Object.keys(LESSONS);
+  const next = allIds.find(id => !S.completedLessons.includes(id));
+  const nextEl = document.getElementById('home-next-num');
+  const nextSubEl = document.getElementById('home-next-sub');
+  if (next && nextEl) {
+    const done = S.completedLessons.length;
+    nextEl.textContent = `${done+1}/${allIds.length}`;
+    if (nextSubEl) nextSubEl.textContent = LESSONS[next]?.title || '';
+  } else if (nextEl) {
+    nextEl.textContent = '✓';
+    if (nextSubEl) nextSubEl.textContent = 'כל השיעורים הושלמו!';
+  }
+  
+  // Weakness
+  const stats = getTopicStats();
+  const weakTopics = Object.entries(stats)
+    .filter(([,v]) => v.total > 0)
+    .map(([t, v]) => ({t, pct: Math.round(v.correct/v.total*100)}))
+    .sort((a,b) => a.pct - b.pct)
+    .slice(0, 3);
+  
+  const wsec = document.getElementById('home-weakness-section');
+  const wlist = document.getElementById('home-weakness-list');
+  if (wsec && wlist && weakTopics.length > 0) {
+    wsec.style.display = '';
+    wlist.innerHTML = weakTopics.map(({t, pct}) => {
+      const color = pct < 50 ? 'var(--red)' : pct < 75 ? 'var(--gold)' : 'var(--green)';
+      return `<div class="w-row">
+        <div class="w-label">${TOPIC_NAMES[t] || t}</div>
+        <div class="w-bar-wrap"><div class="w-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="w-pct">${pct}%</div>
+      </div>`;
+    }).join('');
+  } else if (wsec) wsec.style.display = 'none';
+  
+  // Quiz stats card
+  const totalAnswered = Object.values(S.quizHistory).reduce((s,h) => s + (h.attempts||0), 0);
+  const qstA = document.getElementById('qst-answered');
+  if (qstA) qstA.textContent = totalAnswered;
+  const qstS = document.getElementById('qst-streak');
+  if (qstS) qstS.textContent = S.streak.count;
+  const qstD = document.getElementById('qst-due');
+  if (qstD) qstD.textContent = getDueCount();
+
+  // Daily tip
+  const tip = SALES_INSIGHTS[new Date().getDate() % SALES_INSIGHTS.length];
+  const tipEl = document.getElementById('home-tip-text');
+  if (tipEl && tip) tipEl.innerHTML = `<strong>${tip.title}:</strong> ${tip.text}`;
+  
+  // Exam badges
+  const now = new Date();
+  function daysTo(dateStr) {
+    const d = new Date(dateStr);
+    return Math.max(0, Math.ceil((d - now) / 86400000));
+  }
+  function examBadgeHtml(id, dateStr) {
+    const days = daysTo(dateStr);
+    const el = document.getElementById(id);
+    if (!el) return;
+    const cls = days > 90 ? 'eb-ok' : days > 30 ? 'eb-soon' : 'eb-urgent';
+    el.className = 'exam-badge ' + cls;
+    el.textContent = `${days} ימים`;
+  }
+  // Today plan
+  const planItems = document.getElementById('plan-items');
+  if (planItems) {
+    const plan = buildTodayPlan();
+    planItems.innerHTML = plan.map(p =>
+      `<div class="plan-item"><div class="plan-check">${p.icon}</div><span>${p.text}</span></div>`
+    ).join('');
+  }
+  examBadgeHtml('eb-yesodot', '2026-12-09');
+}
+
+
+function renderHeatmap() {
+  var el = document.getElementById('perf-heatmap');
+  if (!el) return;
+  var log = S.activityLog || {};
+  var today = new Date();
+  var streak = S.streak.count || 0;
+  var cells = '';
+  for (var i = 69; i >= 0; i--) {
+    var d = new Date(today);
+    d.setDate(d.getDate() - i);
+    var key = d.toISOString().split('T')[0];
+    var cnt = log[key] || 0;
+    var lvl = cnt === 0 ? '' : cnt < 5 ? 'l1' : cnt < 10 ? 'l2' : 'l3';
+    var isToday = i === 0 ? ' hm-today' : '';
+    cells += '<div class="hm-cell ' + lvl + isToday + '" title="' + key + ': ' + cnt + ' שאלות"></div>';
+  }
+  el.innerHTML = '<div class="hm-card">'
+    + '<div class="ws-title">📅 10 שבועות אחרונות · ' + streak + ' ימי רצף 🔥</div>'
+    + '<div class="heatmap-grid">' + cells + '</div>'
+    + '</div>';
+}
+
+function renderForecast() {
+  var el = document.getElementById('perf-forecast');
+  if (!el) return;
+  var todayD = new Date();
+  todayD.setHours(0, 0, 0, 0);
+  var DAY_NAMES = [
+    'ראשון', 'שני', 'שלישי',
+    'רביעי', 'חמישי',
+    'שישי', 'שבת'
+  ];
+  var counts = [0, 0, 0, 0, 0, 0, 0];
+  Object.values(S.quizHistory).forEach(function(h) {
+    if (!h.nextSeen) return;
+    var ns = new Date(h.nextSeen);
+    ns.setHours(0, 0, 0, 0);
+    var diff = Math.round((ns - todayD) / 86400000);
+    if (diff >= 0 && diff < 7) counts[diff]++;
+  });
+  var maxCount = Math.max.apply(null, counts.concat([1]));
+  var bars = '';
+  for (var i = 0; i < 7; i++) {
+    var d2 = new Date(todayD);
+    d2.setDate(d2.getDate() + i);
+    var dayName = i === 0 ? 'היום' : i === 1 ? 'מחר' : DAY_NAMES[d2.getDay()];
+    var barH = Math.max(4, Math.round((counts[i] / maxCount) * 60));
+    var color = i === 0 ? 'var(--blue)' : i === 1 ? 'var(--gold)' : 'rgba(148,163,184,.4)';
+    bars += '<div class="fc-bar-wrap">'
+      + '<div class="fc-count">' + (counts[i] > 0 ? counts[i] : '') + '</div>'
+      + '<div class="fc-bar" style="height:' + barH + 'px;background:' + color + '"></div>'
+      + '<div class="fc-day">' + dayName + '</div>'
+      + '</div>';
+  }
+  el.innerHTML = '<div class="fc-card">'
+    + '<div class="ws-title">📅 תחזית חזרות — 7 ימים קרובים</div>'
+    + '<div class="forecast-bars">' + bars + '</div>'
+    + '</div>';
+}
+
+function renderMastery() {
+  var el = document.getElementById('perf-mastery');
+  if (!el) return;
+  var COLS = [
+    {key:'namal',   name:'נמל חיפה',            emoji:'⚓️'},
+    {key:'kiryat',  name:'קריית מוצקין', emoji:'🏘️'},
+    {key:'davs',    name:'דב"ס',                                      emoji:'🔧'},
+    {key:'rakevet', name:'רכבת ישראל', emoji:'🚂'},
+    {key:'tnuva',   name:'תנובה',                           emoji:'🥛'},
+    {key:'msapanot',name:'מספנות ישראל', emoji:'🚢'}
+  ];
+  var stats = getTopicStats();
+  var rows = '';
+  COLS.forEach(function(c) {
+    var s = stats[c.key] || {correct:0, total:0};
+    var pct = s.total > 0 ? Math.round(s.correct / s.total * 100) : 0;
+    var stars = pct >= 80 ? '★★★' : pct >= 60 ? '★★☆' : pct >= 40 ? '★☆☆' : '☆☆☆';
+    var color = s.total === 0 ? 'var(--dim)' : pct >= 75 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+    rows += '<div class="ms-row">'
+      + '<div class="ms-name">' + c.emoji + ' ' + c.name + '</div>'
+      + '<div class="ms-stars" style="color:' + color + '">' + stars + '</div>'
+      + '<div class="ms-bar-bg"><div class="ms-bar-f" style="width:' + pct + '%;background:' + color + '"></div></div>'
+      + '<div class="ms-pct">' + (s.total > 0 ? pct + '%' : '—') + '</div>'
+      + '</div>';
+  });
+  el.innerHTML = '<div class="ms-card">'
+    + '<div class="ws-title">🏆 מאסטרי קולקטיב</div>'
+    + rows + '</div>';
+}
+
+function renderCalibration() {
+  const el = document.getElementById('perf-calibration');
+  if (!el) return;
+  const log = S.confLog || [];
+  if (log.length === 0) { el.innerHTML = ''; return; }
+  const byConf = {1:{c:0,t:0},2:{c:0,t:0},3:{c:0,t:0}};
+  log.forEach(e => {
+    const lvl = e.confidence || 1;
+    if (!byConf[lvl]) byConf[lvl] = {c:0,t:0};
+    byConf[lvl].t++;
+    if (e.correct) byConf[lvl].c++;
+  });
+  const pct = lvl => byConf[lvl].t > 0 ? Math.round(byConf[lvl].c / byConf[lvl].t * 100) : null;
+  const pGuess = pct(1), pHalf = pct(2), pSure = pct(3);
+  const gapWarn = (pGuess !== null && pSure !== null && Math.abs(pSure - pGuess) < 15)
+    ? `<div class="cal-warn">⚠️ אזור עיוור: אתה בטוח אך הפער מהדיוק של כללר קטן מ-15%</div>` : '';
+  el.innerHTML = `<div class="sw-section"><h3 style="font-size:.9rem;font-weight:800;color:#fff;margin-bottom:10px">🧠 כיול בטחון עצמי</h3>
+    <div class="cal-grid">
+      <div class="cal-box"><div class="cal-lbl">😰 ניחוש</div><div class="cal-val">${pGuess !== null ? pGuess+'%' : 'אין'}</div></div>
+      <div class="cal-box"><div class="cal-lbl">🤔 50/50</div><div class="cal-val">${pHalf !== null ? pHalf+'%' : 'אין'}</div></div>
+      <div class="cal-box"><div class="cal-lbl">💪 בטוח</div><div class="cal-val">${pSure !== null ? pSure+'%' : 'אין'}</div></div>
+    </div>${gapWarn}</div>`;
+}
+
+function renderErrorPatterns() {
+  const el = document.getElementById('perf-errors');
+  if (!el) return;
+  const log = S.errorLog || [];
+  if (log.length === 0) { el.innerHTML = ''; return; }
+  const counts = {};
+  log.forEach(e => { counts[e.qId] = (counts[e.qId] || 0) + 1; });
+  const top3 = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0,3);
+  if (top3.length === 0) { el.innerHTML = ''; return; }
+  const rows = top3.map(([qid, cnt]) => {
+    const q = QUIZ_DATA.find(q => String(q.id ?? QUIZ_DATA.indexOf(q)) === String(qid));
+    if (!q) return '';
+    const shortQ = q.q.length > 60 ? q.q.slice(0,60)+'…' : q.q;
+    return `<div class="err-item">
+      <div class="err-q-txt">${shortQ}</div>
+      <div class="err-cnt">×${cnt}</div>
+      <button class="err-drill" onclick="startFocusedPractice([${JSON.stringify(q.id ?? QUIZ_DATA.indexOf(q))}])">תרגול</button>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="sw-section"><h3 style="font-size:.9rem;font-weight:800;color:#fff;margin-bottom:10px">🔴 הטעויות הנפוצות שלך</h3>${rows}</div>`;
+}
+
+
+// ===== PERFORMANCE TAB =====
+function renderPerf() {
+  const lv = getLevel();
+  const nextLv = LEVELS[lv.num] || lv;
+  const xpInLevel = S.xp - lv.min;
+  const xpForLevel = lv.max === Infinity ? 1000 : lv.max - lv.min + 1;
+  const pct = Math.min(100, Math.round(xpInLevel / xpForLevel * 100));
+  
+  // Hero
+  const icon = document.getElementById('perf-level-icon');
+  if (icon) icon.textContent = lv.icon;
+  const nameEl = document.getElementById('perf-level-name');
+  if (nameEl) nameEl.textContent = lv.name;
+  const subEl = document.getElementById('perf-level-sub');
+  if (subEl) subEl.textContent = `${S.xp} XP · שלב ${lv.num} מתוך 5`;
+  const bar = document.getElementById('perf-xp-bar');
+  if (bar) bar.style.width = pct + '%';
+  const cur = document.getElementById('perf-xp-cur');
+  if (cur) cur.textContent = S.xp + ' XP';
+  const nxt = document.getElementById('perf-xp-next');
+  if (nxt) nxt.textContent = (lv.max === Infinity ? '∞' : lv.max + 1) + ' XP';
+  
+  // Stats grid
+  const statsEl = document.getElementById('perf-stats');
+  if (statsEl) {
+    const correctTotal = Object.values(S.quizHistory).reduce((s,h) => s + (h.correct||0), 0);
+    const attempted = Object.values(S.quizHistory).filter(h => h.attempts > 0).length;
+    const pctCorrect = attempted > 0 ? Math.round(correctTotal / attempted * 100) : 0;
+    statsEl.innerHTML = `
+      <div class="stat-box"><div class="stat-num sn-blue">${S.completedLessons.length}</div><div class="stat-label">שיעורים</div></div>
+      <div class="stat-box"><div class="stat-num sn-gold">${S.streak.count}</div><div class="stat-label">ימי רצף 🔥</div></div>
+      <div class="stat-box"><div class="stat-num sn-green">${pctCorrect}%</div><div class="stat-label">חידון נכון</div></div>
+      <div class="stat-box"><div class="stat-num sn-purple">${Object.keys(S.simScores).length}</div><div class="stat-label">סימולטורים</div></div>
+      <div class="stat-box"><div class="stat-num sn-red">${S.notRelevant.length}</div><div class="stat-label">לא רלוונטי</div></div>
+      <div class="stat-box"><div class="stat-num sn-blue">${calcFieldReadiness()}%</div><div class="stat-label">כשירות</div></div>
+    `;
+  }
+  
+  // Strengths / Weaknesses
+  const swEl = document.getElementById('perf-sw');
+  if (swEl) {
+    const stats = getTopicStats();
+    const rows = Object.entries(stats)
+      .filter(([,v]) => v.total > 0)
+      .map(([t, v]) => ({name: TOPIC_NAMES[t]||t, pct: Math.round(v.correct/v.total*100)}))
+      .sort((a,b) => b.pct - a.pct);
+    
+    if (rows.length === 0) {
+      swEl.innerHTML = '<h3>חוזקות ו חולשות</h3><p style="color:var(--muted);font-size:.82rem">פתור שאלות כדי לראות את הניתוח</p>';
+    } else {
+      swEl.innerHTML = `<h3>💪 חוזקות & חולשות</h3>
+        ${rows.map(r => {
+          const color = r.pct >= 75 ? 'var(--green)' : r.pct >= 50 ? 'var(--gold)' : 'var(--red)';
+          return `<div class="sw-row">
+            <div class="sw-label">${r.name}</div>
+            <div class="sw-bar-bg"><div class="sw-bar-f" style="width:${r.pct}%;background:${color}"></div></div>
+            <div class="sw-pct" style="color:${color}">${r.pct}%</div>
+          </div>`;
+        }).join('')}`;
+    }
+  }
+  
+  // Exam countdown
+  const now = new Date();
+  function daysTo(ds) { return Math.max(0, Math.ceil((new Date(ds)-now)/86400000)); }
+  function makeEB(id, ds) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const d = daysTo(ds);
+    const cls = d > 90 ? 'eb-ok' : d > 30 ? 'eb-soon' : 'eb-urgent';
+    el.className = 'exam-badge ' + cls;
+    el.textContent = `${d} ימים`;
+  }
+  makeEB('perf-eb-2', '2026-12-09');
+  
+  // Badges
+  const bdgEl = document.getElementById('perf-badges');
+  if (bdgEl) {
+    bdgEl.innerHTML = `<h3>🏅 הישגים</h3><div class="badges-grid">
+      ${BADGES_DEF.map(b => {
+        const earned = S.badges.includes(b.id);
+        return `<div class="badge-item ${earned ? 'earned' : 'locked-b'}">
+          <span class="badge-emoji-b">${b.icon}</span>
+          <div class="badge-name">${b.name}</div>
+          <div class="badge-desc">${b.desc}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+  
+  // XP Log
+  const logEl = document.getElementById('perf-xp-log');
+  if (logEl) {
+    logEl.innerHTML = `<h3>📈 פעילות אחרונה</h3>
+      <div class="xp-log-list">
+        ${S.xpLog.length === 0 ? '<div style="color:var(--muted);font-size:.8rem;padding:4px">אין פעילות עדיין</div>' :
+          S.xpLog.slice(0,15).map(e => `<div class="xp-log-item">
+            <span>${e.ts}</span>
+            <span>${e.reason}</span>
+            <span class="xa">+${e.amount}</span>
+          </div>`).join('')
+        }
+      </div>`;
+  }
+  renderHeatmap();
+  renderForecast();
+  renderMastery();
+  renderCalibration();
+  renderErrorPatterns();
+}
+
+// ===== RENDER ALL =====
+function renderAll() {
+  updateHeader();
+  renderHome();
+}
+
+// ===== PWA SETUP =====
+(function setupPWA() {
+  const manifest = {
+    name:'ביטוח Pro - מערכת לימוד',
+    short_name:'ביטוח Pro',
+    start_url:'./',
+    display:'standalone',
+    background_color:'#070710',
+    theme_color:'#070710',
+    orientation:'portrait',
+    icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%236366f1"/><text y=".9em" font-size="80">🛡️</text></svg>',sizes:'any',type:'image/svg+xml'}]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  document.getElementById('pwa-manifest').href = url;
+})();
+
+// ===== INIT =====
+function init() {
+  S.confLog = S.confLog || [];
+  S.errorLog = S.errorLog || [];
+  checkStreak();
+  renderAll();
+  showTab('home');
+  // Open first chapter by default
+  openChapters.add('c1');
+}
+
+init();
+</script>
+
+</body>
+</html>
+

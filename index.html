@@ -202,7 +202,7 @@ a{color:var(--blue);text-decoration:none}
 .sim-fb.great{background:var(--green-dim);border:1px solid var(--green-ring);color:#c0ffd6}
 .sim-fb.neutral{background:var(--gold-dim);border:1px solid var(--gold-ring);color:#fff0c0}
 .sim-fb.bad{background:var(--red-dim);border:1px solid var(--red-ring);color:#ffd0d0}
-.sim-next-btn{background:var(--purple);border:none;color:#fff;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:700;margin-top:9px;display:none;font-family:inherit;transition:all .18s}
+.sim-next-btn{background:var(--purple);border:none;color:#fff;padding:9px 20px;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:700;margin-top:9px;margin-bottom:16px;display:none;font-family:inherit;transition:all .18s}
 .sim-next-btn.show{display:inline-block}
 .sim-next-btn:hover{opacity:.85}
 .sim-score-card{background:var(--card);border:1px solid var(--purple-ring);border-radius:var(--r-lg);padding:22px;text-align:center;animation:fadeUp .3s}
@@ -248,13 +248,13 @@ a{color:var(--blue);text-decoration:none}
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:16px;animation:fadeIn .2s;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);width:100%;max-width:640px;max-height:calc(100vh - 32px);overflow:hidden;display:flex;flex-direction:column;animation:slideUp .28s cubic-bezier(.16,1,.3,1);box-sizing:border-box}
+.modal-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r-lg);width:100%;max-width:640px;max-height:calc(100vh - 32px - var(--nav-h,60px) - env(safe-area-inset-bottom,0px));overflow:hidden;display:flex;flex-direction:column;animation:slideUp .28s cubic-bezier(.16,1,.3,1);box-sizing:border-box}
 @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:17px 17px 13px;border-bottom:1px solid var(--border);gap:10px;flex-shrink:0;position:sticky;top:0;background:var(--surface);z-index:10}
 .modal-header h2{font-size:1rem;font-weight:800;color:#fff;line-height:1.3}
 .modal-close{background:none;border:1px solid var(--border);color:var(--muted);padding:5px 9px;border-radius:7px;cursor:pointer;font-size:1.1rem;font-family:inherit;flex-shrink:0;transition:all .18s;line-height:1}
 .modal-close:hover{background:var(--border);color:var(--text)}
-.modal-body{padding:17px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.modal-body{padding:17px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 80px);overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
 .lesson-content{font-size:.86rem;color:#c8d0dc;line-height:1.75}
 .lesson-content h3{color:#fff;font-size:.93rem;margin:13px 0 7px;font-weight:700}
 .lesson-content h4{color:var(--blue-b);font-size:.84rem;margin:10px 0 5px;font-weight:700}
@@ -264,7 +264,7 @@ a{color:var(--blue);text-decoration:none}
 .lesson-content li{margin-bottom:3px}
 .lesson-tip{background:var(--blue-dim);border:1px solid var(--blue-ring);border-radius:8px;padding:10px 13px;margin:11px 0;font-size:.81rem;color:#b0d0ff;line-height:1.5}
 .lesson-warn{background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:8px;padding:10px 13px;margin:11px 0;font-size:.81rem;color:#ffe8a0;line-height:1.5}
-.modal-footer{padding:12px 17px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;background:var(--surface)}
+.modal-footer{padding:12px 17px calc(env(safe-area-inset-bottom,0px) + 16px);border-top:1px solid var(--border);display:flex;align-items:center;gap:9px;flex-shrink:0;background:var(--surface)}
 .complete-btn{background:var(--green);border:none;color:#fff;padding:10px 22px;border-radius:9px;cursor:pointer;font-size:.88rem;font-weight:700;font-family:inherit;flex:1;transition:all .18s}
 .complete-btn:hover{background:#0ea472}
 .complete-btn.done{background:var(--green-dim);border:1px solid var(--green-ring);color:var(--green);cursor:default;pointer-events:none}
@@ -1492,7 +1492,7 @@ let openChapters = new Set(['c1']); // first chapter open by default
 function switchTrack(t) {
   S.activeTrack = t;
   save();
-  document.querySelectorAll('.track-btn').forEach(b => {
+  Array.from(document.querySelectorAll('.track-btn')).forEach(b => {
     b.classList.toggle('active', b.dataset.param === t);
   });
   renderLearn();
@@ -1621,7 +1621,7 @@ function pretestAnswer(idx) {
   const isCorrect = idx === q.ans;
   QS._pretest.chosenIdx = idx;
   QS._pretest.correct = isCorrect;
-  document.querySelectorAll('.pretest-opts .q-opt').forEach((b,i) => {
+  Array.from(document.querySelectorAll('.pretest-opts .q-opt')).forEach((b,i) => {
     b.classList.add('locked'); b.dataset.action = '';
     if (i === idx) b.classList.add(isCorrect ? 'correct' : 'wrong');
     if (!isCorrect && i === q.ans) b.classList.add('correct');
@@ -1645,7 +1645,7 @@ function posttestAnswer(idx) {
   const q = QS._posttestQ;
   if (!q) { closeModal(); return; }
   const isCorrect = idx === q.ans;
-  document.querySelectorAll('.pretest-opts .q-opt').forEach((b,i) => {
+  Array.from(document.querySelectorAll('.pretest-opts .q-opt')).forEach((b,i) => {
     b.classList.add('locked'); b.dataset.action = '';
     if (i === idx) b.classList.add(isCorrect ? 'correct' : 'wrong');
     if (!isCorrect && i === q.ans) b.classList.add('correct');
@@ -1665,7 +1665,7 @@ function startFocusedPractice(qIds) {
   QS.pool = pool.sort(() => Math.random() - 0.5);
   QS.idx = 0; QS.correct = 0; QS.hearts = 3;
   QS.total = QS.pool.length; QS.sessionDone = false; QS.sessionAnswers = [];
-  document.querySelectorAll('.qms-btn').forEach(b => b.classList.toggle('active', b.dataset.param === 'practice'));
+  Array.from(document.querySelectorAll('.qms-btn')).forEach(b => b.classList.toggle('active', b.dataset.param === 'practice'));
   showTab('quiz');
   startTimer();
   showQuestion();
@@ -1770,13 +1770,13 @@ function getDueCount() {
 
 function setQuizMode(m) {
   QS.mode = m;
-  document.querySelectorAll('.qms-btn').forEach(b => b.classList.toggle('active', b.dataset.param === m));
+  Array.from(document.querySelectorAll('.qms-btn')).forEach(b => b.classList.toggle('active', b.dataset.param === m));
   renderQuizShell();
 }
 
 function setQuizFilter(f) {
   QS.filter = f;
-  document.querySelectorAll('.qf-btn').forEach(b => b.classList.toggle('active', b.dataset.param === f));
+  Array.from(document.querySelectorAll('.qf-btn')).forEach(b => b.classList.toggle('active', b.dataset.param === f));
   renderQuizShell();
 }
 
@@ -2161,7 +2161,7 @@ function simChoice(idx, el) {
   const choice = step.choices[idx];
   
   // Lock all options
-  document.querySelectorAll('.sim-opt').forEach(b => {
+  Array.from(document.querySelectorAll('.sim-opt')).forEach(b => {
     b.classList.add('locked');
     b.dataset.action = '';
   });

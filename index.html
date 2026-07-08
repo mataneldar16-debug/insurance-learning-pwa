@@ -272,6 +272,24 @@ a{color:var(--blue);text-decoration:none}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+/* 3D CARD FLIP */
+.card-scene{perspective:800px;width:100%;margin-bottom:10px}
+.card-3d{position:relative;width:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.card-3d.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-front{transform:rotateY(0deg)}
+.card-back{transform:rotateY(180deg);background:var(--card2);border:1px solid var(--border2);border-radius:var(--r);padding:15px}
+/* CONFETTI */
+@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+/* TIMER */
+.q-timer{font-size:.72rem;color:var(--muted);margin-right:8px}
+/* TODAY PLAN */
+.plan-card{background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(168,85,247,.05));border:1px solid var(--blue-ring);border-radius:var(--r);padding:13px;margin-bottom:13px}
+.plan-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:.83rem}
+.plan-item:last-child{border-bottom:none}
+.plan-check{width:18px;height:18px;border-radius:4px;background:var(--blue-dim);border:1px solid var(--blue-ring);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+/* KEYBOARD HINT */
+.kb-hint{font-size:.65rem;color:var(--dim);text-align:center;margin-top:6px}
 /* QUIZ STATS CARD */
 .quiz-stats-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:13px}
 .qs-row{display:flex;gap:8px}
@@ -354,6 +372,10 @@ a{color:var(--blue);text-decoration:none}
       <h3 id="home-greeting">👋 שלום מתן</h3>
       <p id="home-readiness-msg">מוכן להתחיל? בחר שיעור למטה</p>
     </div>
+  </div>
+  <div class="plan-card" id="today-plan">
+    <div class="tip-lbl">📋 תוכנית היום</div>
+    <div id="plan-items"></div>
   </div>
   <div class="today-grid">
     <div class="today-card" data-action="tab" data-param="quiz">
@@ -1583,6 +1605,7 @@ function startQuiz() {
   QS.total = QS.pool.length;
   QS.sessionDone = false;
   QS.sessionAnswers = [];
+  startTimer();
   if (QS.pool.length === 0) {
     document.getElementById('quiz-area').innerHTML = `<div style="text-align:center;padding:24px;color:var(--muted)"><div style="font-size:2rem;margin-bottom:10px">🎉</div><p style="color:#fff;font-weight:700">אין שאלות לחזרה!</p><p>חזור מחר או עבור לתרגול חופשי.</p></div>`;
     return;
@@ -1598,29 +1621,40 @@ function showQuestion() {
   const qRealId = q.id ?? QS.pool[QS.idx].idx;
   const h = S.quizHistory[qRealId];
   const isNR = S.notRelevant.includes(qRealId);
-  
+
   document.getElementById('quiz-area').innerHTML = `
     <div class="qprog-wrap">
       <div class="qprog-bg"><div class="qprog-fill" style="width:${pct}%"></div></div>
+      <span class="q-timer" id="q-timer">⏱ 0:00</span>
       <div class="qprog-txt">${QS.idx+1}/${QS.total}</div>
     </div>
-    <div class="q-topic-tag">${topicName}</div>
-    <div class="q-text">${q.q}</div>
-    <div class="q-options">
-      ${q.opts.map((opt, i) => `<button class="q-opt" data-action="quiz-answer" data-param="${i}">
-        <span class="ol">${String.fromCharCode(65+i)}</span>
-        <span>${opt}</span>
-      </button>`).join('')}
+    <div class="card-scene">
+      <div class="card-3d" id="quiz-card-3d">
+        <div class="card-face card-front">
+          <div class="q-topic-tag">${topicName}</div>
+          <div class="q-text">${q.q}</div>
+          <div class="q-options">
+            ${q.opts.map((opt, i) => `<button class="q-opt" data-action="quiz-answer" data-param="${i}">
+              <span class="ol">${String.fromCharCode(65+i)}</span>
+              <span>${opt}</span>
+            </button>`).join('')}
+          </div>
+          <div class="q-not-rel">
+            <button class="nr-btn ${isNR?'marked':''}" data-action="not-relevant" data-param="${qRealId}">
+              ${isNR ? '✓ לא רלוונטי' : 'לא רלוונטי לי'}
+            </button>
+            ${h ? `<span>ניסיונות: ${h.attempts||0} | נכון: ${h.correct||0}</span>` : ''}
+          </div>
+        </div>
+        <div class="card-face card-back" id="quiz-card-back"></div>
+      </div>
     </div>
-    <div class="q-fb" id="q-fb"></div>
-    <div class="q-not-rel">
-      <button class="nr-btn ${isNR?'marked':''}" data-action="not-relevant" data-param="${qRealId}">
-        ${isNR ? '✓ לא רלוונטי' : 'לא רלוונטי לי'}
-      </button>
-      ${h ? `<span>ניסיונות: ${h.attempts||0} | נכון: ${h.correct||0}</span>` : ''}
-    </div>
-    <button class="quiz-confidence" id="q-confidence"></div>
   `;
+  setTimeout(() => {
+    const c3d = document.getElementById('quiz-card-3d');
+    const cf = c3d && c3d.querySelector('.card-front');
+    if (c3d && cf) c3d.style.height = cf.scrollHeight + 'px';
+  }, 50);
 }
 
 function submitAnswer(ansIdx, el) {
@@ -1633,13 +1667,6 @@ function submitAnswer(ansIdx, el) {
   opts[ansIdx].classList.add(isCorrect ? 'correct' : 'wrong');
   if (!isCorrect) opts[q.ans].classList.add('correct');
 
-  const fb = document.getElementById('q-fb');
-  if (fb) {
-    fb.className = `q-fb show ${isCorrect ? 'ok' : 'err'}`;
-    fb.innerHTML = `<strong>${isCorrect ? '✅ נכון!' : '❌ לא נכון'}</strong>${q.exp}`;
-  }
-
-  // Track answer for session stats
   if (isCorrect) {
     QS.correct++;
     addXP(XP_CONFIG.quizCorrect, 'תשובה נכונה');
@@ -1647,14 +1674,12 @@ function submitAnswer(ansIdx, el) {
   QS.sessionAnswers = QS.sessionAnswers || [];
   QS.sessionAnswers.push({topic: q.topic || 'other', correct: isCorrect});
 
-  // Update attempt/correct count in history
   const qid = q.id ?? QS.pool[QS.idx].idx;
   const h = S.quizHistory[qid] || {correct:0, attempts:0, interval:1, ease:2.5, nextSeen:null};
   h.attempts = (h.attempts||0) + 1;
   if (isCorrect) h.correct = (h.correct||0) + 1;
   S.quizHistory[qid] = h;
 
-  // Calculate SM-2 preview intervals for confidence buttons
   const iv = h.interval || 1;
   const ease = h.ease || 2.5;
   const ivAgain = 1;
@@ -1663,28 +1688,48 @@ function submitAnswer(ansIdx, el) {
   const ivEasy = Math.max(1, Math.round(iv * ease * 1.3));
   function ivLabel(d) { return d === 1 ? '1 יום' : d + ' ימים'; }
 
-  // Show SM-2 confidence rating buttons
-  const conf = document.getElementById('q-confidence');
-  if (conf) {
-    conf.innerHTML = `
-      <div class="confidence-label">כמה ידעת?</div>
-      <div class="confidence-btns">
-        <button class="conf-btn conf-again" data-action="quiz-rate" data-param="0">
-          🔴 שכחתי<span class="conf-interval">${ivLabel(ivAgain)}</span>
-        </button>
-        <button class="conf-btn conf-hard" data-action="quiz-rate" data-param="3">
-          🟡 קשה<span class="conf-interval">${ivLabel(ivHard)}</span>
-        </button>
-        <button class="conf-btn conf-good" data-action="quiz-rate" data-param="4">
-          🟢 ידעתי<span class="conf-interval">${ivLabel(ivGood)}</span>
-        </button>
-        <button class="conf-btn conf-easy" data-action="quiz-rate" data-param="5">
-          ⚡ קל<span class="conf-interval">${ivLabel(ivEasy)}</span>
+  const back = document.getElementById('quiz-card-back');
+  const qRealId = q.id ?? QS.pool[QS.idx].idx;
+  const isNR = S.notRelevant.includes(qRealId);
+  if (back) {
+    back.innerHTML = `
+      <div class="q-fb show ${isCorrect ? 'ok' : 'err'}">
+        <strong>${isCorrect ? '✅ נכון!' : '❌ לא נכון'}</strong>${q.exp}
+      </div>
+      <div class="quiz-confidence">
+        <div class="confidence-label">כמה ידעת?</div>
+        <div class="confidence-btns">
+          <button class="conf-btn conf-again" data-action="quiz-rate" data-param="0">
+            🔴 שכחתי<span class="conf-interval">${ivLabel(ivAgain)}</span>
+          </button>
+          <button class="conf-btn conf-hard" data-action="quiz-rate" data-param="3">
+            🟡 קשה<span class="conf-interval">${ivLabel(ivHard)}</span>
+          </button>
+          <button class="conf-btn conf-good" data-action="quiz-rate" data-param="4">
+            🟢 ידעתי<span class="conf-interval">${ivLabel(ivGood)}</span>
+          </button>
+          <button class="conf-btn conf-easy" data-action="quiz-rate" data-param="5">
+            ⚡ קל<span class="conf-interval">${ivLabel(ivEasy)}</span>
+          </button>
+        </div>
+      </div>
+      <div class="q-not-rel" style="margin-top:8px">
+        <button class="nr-btn ${isNR?'marked':''}" data-action="not-relevant" data-param="${qRealId}">
+          ${isNR ? '✓ לא רלוונטי' : 'לא רלוונטי לי'}
         </button>
       </div>
+      <div class="kb-hint">מקשי קיצור: 1 · 2 · 3 · 4</div>
     `;
+    setTimeout(() => {
+      const c3d = document.getElementById('quiz-card-3d');
+      const cf = c3d && c3d.querySelector('.card-front');
+      if (c3d && cf && back) {
+        c3d.style.height = Math.max(cf.scrollHeight, back.scrollHeight) + 'px';
+        c3d.classList.add('flipped');
+      }
+    }, 50);
   }
-  // Track daily activity
+
   const _today = new Date().toISOString().split('T')[0];
   S.activityLog = S.activityLog || {};
   S.activityLog[_today] = (S.activityLog[_today]||0)+1;
@@ -1728,15 +1773,20 @@ function rateAnswer(rating) {
 
 function showQuizResult() {
   QS.sessionDone = true;
+  stopTimer();
   const pct = QS.total > 0 ? Math.round(QS.correct / QS.total * 100) : 0;
   if (S.quizBestPct == null || pct > S.quizBestPct) S.quizBestPct = pct;
   addXP(XP_CONFIG.quizComplete, `חידון הושלם: ${pct}%`);
   checkBadges();
   save();
 
+  if (QS.correct === QS.total && QS.total >= 5) launchConfetti();
+
+  const secs = QS_startTime ? Math.floor((Date.now() - QS_startTime) / 1000) : 0;
+  const timeStr = secs > 0 ? ` · ⏱ ${Math.floor(secs/60)}:${(secs%60).toString().padStart(2,'0')}` : '';
+
   const msg = pct >= 90 ? '🏆 מצוין! מסיים ברמה גבוהה' : pct >= 70 ? '✅ כל הכבוד!' : '💪 המשך להתאמן';
 
-  // Build per-topic breakdown from session answers
   const topicBreakdown = {};
   (QS.sessionAnswers || []).forEach(a => {
     if (!topicBreakdown[a.topic]) topicBreakdown[a.topic] = {c:0, t:0};
@@ -1756,7 +1806,7 @@ function showQuizResult() {
     <div class="quiz-result">
       <div class="res-circle"><div class="res-score">${pct}%</div><div class="res-of">${QS.correct}/${QS.total}</div></div>
       <div class="res-msg">${msg}</div>
-      <div class="res-sub">נכון: ${QS.correct} · טעויות: ${QS.total-QS.correct}</div>
+      <div class="res-sub">נכון: ${QS.correct} · טעויות: ${QS.total-QS.correct}${timeStr}</div>
       ${topicHtml ? `<div class="result-topics" style="margin:14px 0;text-align:right;border-top:1px solid var(--border);padding-top:12px">${topicHtml}</div>` : ''}
       <button class="q-next-btn show" data-action="start-quiz">שחק שוב →</button>
     </div>
@@ -1900,19 +1950,87 @@ function showSimResult() {
   updateHeader();
 }
 
+// ===== TIMER =====
+let QS_timer = null;
+let QS_startTime = null;
+
+function startTimer() {
+  stopTimer();
+  QS_startTime = Date.now();
+  QS_timer = setInterval(() => {
+    const secs = Math.floor((Date.now() - QS_startTime) / 1000);
+    const m = Math.floor(secs/60), s = secs%60;
+    const el = document.getElementById('q-timer');
+    if (el) el.textContent = `⏱ ${m}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+}
+
+function stopTimer() {
+  if (QS_timer) { clearInterval(QS_timer); QS_timer = null; }
+}
+
+// ===== CONFETTI =====
+function launchConfetti() {
+  const colors = ['#6366f1','#a855f7','#10b981','#f59e0b','#ef4444'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.style.cssText = `position:fixed;top:0;left:${Math.random()*100}vw;width:8px;height:8px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.5?'50%':'2px'};pointer-events:none;z-index:9999;animation:confettiFall ${1.5+Math.random()*1.5}s ease forwards`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }, i * 30);
+  }
+}
+
+// ===== KEYBOARD SHORTCUTS =====
+function handleKeyPress(e) {
+  if (!['1','2','3','4'].includes(e.key)) return;
+  const idx = parseInt(e.key) - 1;
+  const btns = document.querySelectorAll('.conf-btn');
+  if (btns[idx]) btns[idx].click();
+}
+document.addEventListener('keydown', handleKeyPress);
+
+// ===== TODAY'S PLAN =====
+function buildTodayPlan() {
+  const plan = [];
+  const dueCount = getDueCount();
+  if (dueCount > 0) plan.push({icon:'🔁', text:`חזור על ${Math.min(dueCount,20)} שאלות SRS`, action:'tab:quiz'});
+  const allIds = Object.keys(LESSONS);
+  const nextLesson = allIds.find(id => !S.completedLessons.includes(id));
+  if (nextLesson) plan.push({icon:'📖', text:`למד: ${LESSONS[nextLesson]?.title}`, action:'lesson:'+nextLesson});
+  const stats = getTopicStats();
+  const weakest = Object.entries(stats).filter(([,v])=>v.total>0).sort((a,b)=>a[1].correct/a[1].total-b[1].correct/b[1].total)[0];
+  if (weakest) plan.push({icon:'🎯', text:`חזק נושא חלש: ${TOPIC_NAMES[weakest[0]]||weakest[0]}`, action:'tab:quiz'});
+  if (plan.length === 0) plan.push({icon:'🏆', text:'כל המשימות הושלמו! נהדר', action:''});
+  return plan;
+}
+
+// ===== STREAK XP MULTIPLIER =====
+function getStreakMultiplier() {
+  const s = S.streak.count;
+  if (s >= 30) return 2.0;
+  if (s >= 14) return 1.5;
+  if (s >= 7) return 1.25;
+  if (s >= 3) return 1.1;
+  return 1.0;
+}
+
 // ===== XP & GAMIFICATION =====
 function addXP(amount, reason) {
-  S.xp += amount;
+  const mult = getStreakMultiplier();
+  const actual = Math.round(amount * mult);
+  S.xp += actual;
   const ts = new Date().toLocaleTimeString('he-IL', {hour:'2-digit',minute:'2-digit'});
-  S.xpLog.unshift({amount, reason, ts});
+  S.xpLog.unshift({amount: actual, reason, ts});
   if (S.xpLog.length > 30) S.xpLog.pop();
-  // Level up check
   const newLevel = LEVELS.findIndex(l => S.xp >= l.min && S.xp <= l.max);
   if (newLevel !== -1 && newLevel + 1 !== S.level) {
     S.level = newLevel + 1;
   }
   save();
-  showXPToast(`+${amount} XP · ${reason}`);
+  const multStr = mult > 1 ? ` 🔥×${mult}` : '';
+  showXPToast(`+${actual} XP${multStr} · ${reason}`);
   updateHeader();
 }
 
@@ -1987,7 +2105,11 @@ function updateHeader() {
   const lv = getLevel();
   document.getElementById('header-xp').textContent = `⭐ ${S.xp} XP · ${lv.name} ${lv.icon}`;
   const strkEl = document.getElementById('header-streak');
-  if (strkEl) strkEl.textContent = `🔥 ${S.streak.count}`;
+  if (strkEl) {
+    const mult = getStreakMultiplier();
+    const multStr = mult > 1 ? ` ×${mult}` : '';
+    strkEl.textContent = `🔥 ${S.streak.count}${multStr}`;
+  }
 }
 
 // ===== HOME TAB =====
@@ -2082,6 +2204,14 @@ function renderHome() {
     const cls = days > 90 ? 'eb-ok' : days > 30 ? 'eb-soon' : 'eb-urgent';
     el.className = 'exam-badge ' + cls;
     el.textContent = `${days} ימים`;
+  }
+  // Today plan
+  const planItems = document.getElementById('plan-items');
+  if (planItems) {
+    const plan = buildTodayPlan();
+    planItems.innerHTML = plan.map(p =>
+      `<div class="plan-item"><div class="plan-check">${p.icon}</div><span>${p.text}</span></div>`
+    ).join('');
   }
   examBadgeHtml('eb-yesodot', '2026-12-09');
 }

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -2252,6 +2252,7 @@ function launchConfetti() {
 
 // ===== KEYBOARD SHORTCUTS =====
 function handleKeyPress(e) {
+  if (e.key === 'Escape') { closeModal(); return; }
   if (!['1','2','3','4'].includes(e.key)) return;
   const idx = parseInt(e.key) - 1;
   const btns = document.querySelectorAll('.conf-btn');
@@ -2802,4 +2803,5 @@ init();
 
 </body>
 </html>
+
 

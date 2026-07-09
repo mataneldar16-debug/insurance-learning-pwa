@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -39,7 +39,7 @@ a{color:var(--blue);text-decoration:none}
 .header-logo span{background:linear-gradient(90deg,var(--blue-b),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .header-xp{display:inline-flex;align-items:center;gap:5px;background:var(--gold-dim);border:1px solid var(--gold-ring);border-radius:20px;padding:4px 11px;font-size:.75rem;color:var(--gold);font-weight:700;white-space:nowrap}
 .header-streak{display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);border-radius:20px;padding:4px 10px;font-size:.75rem;color:#fc6a6a;font-weight:700}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;z-index:10001;pointer-events:auto;touch-action:manipulation}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));padding-bottom:env(safe-area-inset-bottom,0px);background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;z-index:10001;will-change:transform}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 0;background:none;border:none;cursor:pointer;color:var(--muted);font-size:.6rem;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .nav-btn.active{color:var(--blue)}
 .nav-icon{font-size:1.2rem;line-height:1}
@@ -416,11 +416,11 @@ a{color:var(--blue);text-decoration:none}
   <div class="header-streak" id="header-streak">🔥 0</div>
 </header>
 <nav class="bottom-nav" id="app-nav">
-  <button class="nav-btn active" data-action="tab" data-param="home"><span class="nav-icon">🏠</span><span class="nav-label">בית</span></button>
-  <button class="nav-btn" data-action="tab" data-param="learn"><span class="nav-icon">📚</span><span class="nav-label">למידה</span></button>
-  <button class="nav-btn" data-action="tab" data-param="quiz"><span class="nav-icon">🎯</span><span class="nav-label">חידון</span></button>
-  <button class="nav-btn" data-action="tab" data-param="sim"><span class="nav-icon">🎮</span><span class="nav-label">סימולטור</span></button>
-  <button class="nav-btn" data-action="tab" data-param="perf"><span class="nav-icon">🏆</span><span class="nav-label">ביצועים</span></button>
+  <button class="nav-btn active" data-param="home" onclick="showTab('home')"><span class="nav-icon">🏠</span><span class="nav-label">בית</span></button>
+  <button class="nav-btn" data-param="learn" onclick="showTab('learn')"><span class="nav-icon">📚</span><span class="nav-label">למידה</span></button>
+  <button class="nav-btn" data-param="quiz" onclick="showTab('quiz')"><span class="nav-icon">🎯</span><span class="nav-label">חידון</span></button>
+  <button class="nav-btn" data-param="sim" onclick="showTab('sim')"><span class="nav-icon">🎮</span><span class="nav-label">סימולטור</span></button>
+  <button class="nav-btn" data-param="perf" onclick="showTab('perf')"><span class="nav-icon">🏆</span><span class="nav-label">ביצועים</span></button>
 </nav>
 <main id="app-main">
 <!-- TAB 1: HOME -->
